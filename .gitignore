@@ -5,3 +5,6 @@ _NCrunch_Algolia.SitecoreProvider/Algolia.SitecoreProvider.crunchsolution.cache
 Algolia.SitecoreProvider.v2.ncrunchsolution
 Algolia.SitecoreProviderTests/Algolia.SitecoreProviderTests.v2.ncrunchproject
 Algolia.SitecoreProvider/Algolia.SitecoreProvider.v2.ncrunchproject
+Algolia.SitecoreProvider/obj/
+Algolia.SitecoreProviderTests/obj/
+*.suo

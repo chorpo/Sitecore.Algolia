@@ -74,6 +74,8 @@
     <Compile Include="AlgoliaCrowler.cs" />
     <Compile Include="AlgoliaRepository.cs" />
     <Compile Include="Abstract\IAlgoliaRepository.cs" />
+    <Compile Include="IndexOperations.cs" />
+    <Compile Include="ProviderUpdateContext.cs" />
     <Compile Include="SearchIndex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchIndexConfig.cs" />
