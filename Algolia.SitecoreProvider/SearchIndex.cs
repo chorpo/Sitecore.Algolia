@@ -31,123 +31,132 @@ namespace Algolia.SitecoreProvider
 
         public void AddStrategy(IIndexUpdateStrategy strategy)
         {
-            throw new NotImplementedException();
+            
         }
 
         public void Rebuild()
         {
-            throw new NotImplementedException();
+            
         }
 
         public void Rebuild(IndexingOptions indexingOptions)
         {
-            throw new NotImplementedException();
+            
         }
 
         public Task RebuildAsync(IndexingOptions indexingOptions, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.Run(() => Console.WriteLine(""));
         }
 
         public void Refresh(IIndexable indexableStartingPoint)
         {
-            throw new NotImplementedException();
+           Refresh(indexableStartingPoint, IndexingOptions.Default);
         }
 
         public void Refresh(IIndexable indexableStartingPoint, IndexingOptions indexingOptions)
         {
-            throw new NotImplementedException();
+            using (var context = this.CreateUpdateContext())
+            {
+                foreach (var crawler in this.Crawlers)
+                {
+                    crawler.RefreshFromRoot(context, indexableStartingPoint, indexingOptions);
+                }
+                context.Optimize();
+                context.Commit();
+            }
         }
 
         public Task RefreshAsync(IIndexable indexableStartingPoint, IndexingOptions indexingOptions,
             CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.Run(() => Console.WriteLine(""));
         }
 
         public void Update(IIndexableUniqueId indexableUniqueId)
         {
-            throw new NotImplementedException();
+        
         }
 
         public void Update(IIndexableUniqueId indexableUniqueId, IndexingOptions indexingOptions)
         {
-            throw new NotImplementedException();
+          
         }
 
         public void Update(IEnumerable<IIndexableUniqueId> indexableUniqueIds)
         {
-            throw new NotImplementedException();
+        
         }
 
         public void Update(IEnumerable<IIndexableUniqueId> indexableUniqueIds, IndexingOptions indexingOptions)
         {
-            throw new NotImplementedException();
+         
         }
 
         public void Update(IEnumerable<IndexableInfo> indexableInfo)
         {
-            throw new NotImplementedException();
+           
         }
 
         public void Delete(IIndexableId indexableId)
         {
-            throw new NotImplementedException();
+          
         }
 
         public void Delete(IIndexableId indexableId, IndexingOptions indexingOptions)
         {
-            throw new NotImplementedException();
+         
         }
 
         public void Delete(IIndexableUniqueId indexableUniqueId)
         {
-            throw new NotImplementedException();
+      
         }
 
         public void Delete(IIndexableUniqueId indexableUniqueId, IndexingOptions indexingOptions)
         {
-            throw new NotImplementedException();
+           
         }
 
         public void Reset()
         {
-            throw new NotImplementedException();
+           
         }
 
         public void Initialize()
         {
-            throw new NotImplementedException();
+          
         }
 
         public IProviderUpdateContext CreateUpdateContext()
         {
-            throw new NotImplementedException();
+            var repository = new AlgoliaRepository(_config);
+            return new ProviderUpdateContext(this, repository);
         }
 
         public IProviderDeleteContext CreateDeleteContext()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public IProviderSearchContext CreateSearchContext(SearchSecurityOptions options = SearchSecurityOptions.EnableSecurityCheck)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public void StopIndexing()
         {
-            throw new NotImplementedException();
+       
         }
 
         public void PauseIndexing()
         {
-            throw new NotImplementedException();
+      
         }
 
         public void ResumeIndexing()
         {
-            throw new NotImplementedException();
+  
         }
 
         public string Name { get; private set; }
