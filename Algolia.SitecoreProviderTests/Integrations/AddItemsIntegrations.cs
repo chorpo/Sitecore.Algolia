@@ -14,6 +14,7 @@ using Sitecore.FakeDb;
 namespace Algolia.SitecoreProviderTests.Integrations
 {
     [TestFixture]
+    [Category("Integrated")]
     public class AddItemsIntegrations
     {
         private DbItem _source;
@@ -26,7 +27,7 @@ namespace Algolia.SitecoreProviderTests.Integrations
             _source = new DbItem("source", new ID(testItemId)) { new DbItem("child") };
         }
 
-        [Test]
+        [Test, Ignore]
         public void AddItemsIntegration()  
         {
             // arrange

@@ -29,7 +29,7 @@ namespace Algolia.SitecoreProvider
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            
         }
 
         public void Commit()
@@ -97,9 +97,11 @@ namespace Algolia.SitecoreProvider
         #endregion
 
 
+        #region Helpers
+
         private static string GetItemId(JObject item)
         {
-            var id = (string)item["id"];
+            var id = (string) item["id"];
 
             if (string.IsNullOrEmpty(id))
                 throw new Exception("Cannot load id field");
@@ -116,6 +118,8 @@ namespace Algolia.SitecoreProvider
                 _updateDocs.Add(id, item);
             }
         }
+
+        #endregion
 
 
     }

@@ -73,6 +73,9 @@
     <Compile Include="Abstract\IAlgoliaConfig.cs" />
     <Compile Include="AlgoliaConfig.cs" />
     <Compile Include="AlgoliaCrowler.cs" />
+    <Compile Include="AlgoliaItemLoader.cs" />
+    <Compile Include="AlgoliaItemSerializer.cs" />
+    <Compile Include="AlgoliaItemTranslator.cs" />
     <Compile Include="AlgoliaRepository.cs" />
     <Compile Include="Abstract\IAlgoliaRepository.cs" />
     <Compile Include="AlgoliaIndexOperations.cs" />
