@@ -13,12 +13,22 @@ using Sitecore.ContentSearch.Security;
 
 namespace Algolia.SitecoreProvider
 {
-    public class SearchIndex : ISearchIndex
+    public class AlgoliaSearchIndex : ISearchIndex
     {
-        private readonly IAlgoliaConfig _config;
+        private readonly AlgoliaConfig _config;
 
-        public SearchIndex(IAlgoliaConfig config)
+        public AlgoliaSearchIndex(string applicationId, string fullApiKey, string indexName)
         {
+            if (string.IsNullOrWhiteSpace(applicationId)) throw new ArgumentOutOfRangeException("applicationId");
+            if (string.IsNullOrWhiteSpace(fullApiKey)) throw new ArgumentOutOfRangeException("fullApiKey");
+            if (string.IsNullOrWhiteSpace(indexName)) throw new ArgumentOutOfRangeException("indexName");
+            
+            var config = new AlgoliaConfig
+            {
+                ApplicationId = applicationId,
+                FullApiKey = fullApiKey,
+                IndexName = indexName
+            };
             _config = config;
             this.Crawlers = new List<IProviderCrawler>();
         }
@@ -131,7 +141,7 @@ namespace Algolia.SitecoreProvider
         public IProviderUpdateContext CreateUpdateContext()
         {
             var repository = new AlgoliaRepository(_config);
-            return new ProviderUpdateContext(this, repository);
+            return new AlgoliaUpdateContext(this, repository);
         }
 
         public IProviderDeleteContext CreateDeleteContext()

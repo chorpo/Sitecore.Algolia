@@ -10,13 +10,13 @@ using Sitecore.ContentSearch.Linq.Common;
 
 namespace Algolia.SitecoreProvider
 {
-    public class ProviderUpdateContext: IProviderUpdateContext
+    public class AlgoliaUpdateContext: IProviderUpdateContext
     {
         private readonly ISearchIndex _index;
         private readonly IAlgoliaRepository _repository;
         private Dictionary<string, JObject> _updateDocs;
         
-        public ProviderUpdateContext(
+        public AlgoliaUpdateContext(
             ISearchIndex index,
             IAlgoliaRepository repository)
         {

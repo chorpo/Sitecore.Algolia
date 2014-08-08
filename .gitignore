@@ -8,3 +8,4 @@ Algolia.SitecoreProvider/Algolia.SitecoreProvider.v2.ncrunchproject
 Algolia.SitecoreProvider/obj/
 Algolia.SitecoreProviderTests/obj/
 *.suo
+Algolia.SitecoreProviderTests/license.xml

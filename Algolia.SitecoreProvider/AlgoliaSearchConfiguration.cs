@@ -16,20 +16,20 @@ namespace Algolia.SitecoreProvider
     /// </summary>
     public class AlgoliaSearchConfiguration : ContentSearchConfiguration
     {
-        public virtual void AddIndex(ISearchIndex index)
+        public override void AddIndex(ISearchIndex index)
         {
             Assert.ArgumentNotNull((object)index, "index");
             this.Indexes[index.Name] = index;
-            if (index.Configuration == null)
-            {
-                XmlNode configNode = this.factory.GetConfigNode(this.DefaultIndexConfigurationPath);
-                if (configNode == null)
-                    throw new ConfigurationException("Index must have a ProviderIndexConfiguration associated with it. Please check your config.");
-                ProviderIndexConfiguration @object = this.factory.CreateObject<ProviderIndexConfiguration>(configNode);
-                if (@object == null)
-                    throw new ConfigurationException("Unable to create configuration object from path specified in setting 'ContentSearch.DefaultIndexConfigurationPath'. Please check your config.");
-                index.Configuration = @object;
-            }
+            //if (index.Configuration == null)
+            //{
+            //    XmlNode configNode = this.factory.GetConfigNode(this.DefaultIndexConfigurationPath);
+            //    if (configNode == null)
+            //        throw new ConfigurationException("Index must have a ProviderIndexConfiguration associated with it. Please check your config.");
+            //    ProviderIndexConfiguration @object = this.factory.CreateObject<ProviderIndexConfiguration>(configNode);
+            //    if (@object == null)
+            //        throw new ConfigurationException("Unable to create configuration object from path specified in setting 'ContentSearch.DefaultIndexConfigurationPath'. Please check your config.");
+            //    index.Configuration = @object;
+            //}
             if (!index.Configuration.InitializeOnAdd)
                 return;
             index.Initialize();

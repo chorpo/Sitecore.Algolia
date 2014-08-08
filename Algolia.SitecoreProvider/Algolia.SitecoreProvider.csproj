@@ -71,18 +71,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\IAlgoliaConfig.cs" />
+    <Compile Include="AlgoliaConfig.cs" />
     <Compile Include="AlgoliaCrowler.cs" />
     <Compile Include="AlgoliaRepository.cs" />
     <Compile Include="Abstract\IAlgoliaRepository.cs" />
     <Compile Include="AlgoliaSearchConfiguration.cs" />
-    <Compile Include="IndexOperations.cs" />
-    <Compile Include="ProviderUpdateContext.cs" />
-    <Compile Include="SearchIndex.cs" />
+    <Compile Include="AlgoliaIndexOperations.cs" />
+    <Compile Include="AlgoliaUpdateContext.cs" />
+    <Compile Include="AlgoliaSearchIndex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchIndexConfig.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="Algolia.Search.config" />
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>

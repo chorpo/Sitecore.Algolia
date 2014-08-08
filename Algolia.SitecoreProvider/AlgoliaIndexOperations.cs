@@ -12,7 +12,7 @@ using Sitecore.Data.Items;
 
 namespace Algolia.SitecoreProvider
 {
-    public class IndexOperations : IIndexOperations
+    public class AlgoliaIndexOperations : IIndexOperations
     {
         public void Update(IIndexable indexable, IProviderUpdateContext context,
             ProviderIndexConfiguration indexConfiguration)
@@ -63,11 +63,12 @@ namespace Algolia.SitecoreProvider
 
             w.name = item.Name;
             w.path = item.Paths.Path;
+            w.id = item.ID.ToGuid().ToString();
 
             return SerializeExpandoObject(w);
         }
 
-        private static JObject SerializeExpandoObject(dynamic data)
+        private JObject SerializeExpandoObject(dynamic data)
         {
             var dict = (IDictionary<string, object>) data;
             for (int i = dict.Keys.Count - 1; i >= 0; i--)
