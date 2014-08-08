@@ -16,7 +16,6 @@ using Sitecore.FakeDb;
 namespace Algolia.SitecoreProviderTests
 {
     [TestFixture]
-    [Category("Integrated")]
     public class AlgoliaIndexOperationsTests
     {
         private DbItem _source;
