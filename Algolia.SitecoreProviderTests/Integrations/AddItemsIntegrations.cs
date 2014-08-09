@@ -35,7 +35,7 @@ namespace Algolia.SitecoreProviderTests.Integrations
             {
                 var item = db.GetItem("/sitecore/content/source");
                 var indexable = new SitecoreIndexableItem(item);
-                var index = new AlgoliaSearchIndex("algolia_master_index", "3Q92VD0BCR", "ae8283da0a1342b03749ed1355d9d4a7", "sitecore", new NullPropertyStore());
+                var index = new AlgoliaSearchIndex("algolia_master_index", "3Q92VD0BCR", "8ae3d3950e531a4be7d32a3e58bb2eea", new NullPropertyStore());
                 var context = index.CreateUpdateContext();
                 
                 var operations = new AlgoliaIndexOperations();

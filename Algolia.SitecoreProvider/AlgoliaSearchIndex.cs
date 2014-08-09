@@ -18,13 +18,12 @@ namespace Algolia.SitecoreProvider
         private readonly AlgoliaConfig _config;
 
 
-        public AlgoliaSearchIndex(string name, string applicationId, string fullApiKey, string indexName, IIndexPropertyStore propertyStore)
+        public AlgoliaSearchIndex(string name, string applicationId, string fullApiKey, IIndexPropertyStore propertyStore)
         {
             if (propertyStore == null) throw new ArgumentNullException("propertyStore");
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentOutOfRangeException("name");
             if (string.IsNullOrWhiteSpace(applicationId)) throw new ArgumentOutOfRangeException("applicationId");
             if (string.IsNullOrWhiteSpace(fullApiKey)) throw new ArgumentOutOfRangeException("fullApiKey");
-            if (string.IsNullOrWhiteSpace(indexName)) throw new ArgumentOutOfRangeException("indexName");
 
             Name = name;
             PropertyStore = propertyStore;
@@ -33,7 +32,7 @@ namespace Algolia.SitecoreProvider
             {
                 ApplicationId = applicationId,
                 FullApiKey = fullApiKey,
-                IndexName = indexName
+                IndexName = name
             };
             _config = config;
             this.Crawlers = new List<IProviderCrawler>();
