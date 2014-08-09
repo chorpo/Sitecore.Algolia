@@ -32,7 +32,7 @@ namespace Algolia.SitecoreProvider
 
             w.name = item.Name;
             w.path = item.Paths.Path;
-            w.id = item.ID.ToGuid().ToString();
+            w.objectID = item.ID.ToGuid().ToString();
 
             return w;
         }

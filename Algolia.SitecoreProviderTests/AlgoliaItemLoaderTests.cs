@@ -40,7 +40,7 @@ namespace Algolia.SitecoreProviderTests
                 var actual = sut.Load(indexable);
 
                 //Assert
-                Assert.AreEqual(TestData.TestItemKey.ToLower(), actual.id);
+                Assert.AreEqual(TestData.TestItemKey.ToLower(), actual.objectID);
                 Assert.AreEqual("/sitecore/content/source", actual.path);
                 Assert.AreEqual("source", actual.name);
             }

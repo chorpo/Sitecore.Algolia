@@ -27,7 +27,7 @@ namespace Algolia.SitecoreProviderTests.Integrations
             _source = new DbItem("source", new ID(testItemId)) { new DbItem("child") };
         }
 
-        [Test, Ignore]
+        [Test]
         public void AddItemsIntegration()  
         {
             // arrange

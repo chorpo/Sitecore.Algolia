@@ -52,7 +52,7 @@ namespace Algolia.SitecoreProviderTests
 
                 //Assert
                 context.Verify(t => t.UpdateDocument(It.IsAny<object>(), It.IsAny<object>(), It.IsAny<IExecutionContext>()), Times.Once);
-                Assert.AreEqual(TestData.TestItemKey.ToLower(), (string)doc["id"]);
+                Assert.AreEqual(TestData.TestItemKey.ToLower(), (string)doc["objectID"]);
             }
         }
     }

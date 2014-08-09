@@ -17,6 +17,7 @@ namespace Algolia.SitecoreProvider
     {
         private readonly AlgoliaConfig _config;
 
+
         public AlgoliaSearchIndex(string name, string applicationId, string fullApiKey, string indexName, IIndexPropertyStore propertyStore)
         {
             if (propertyStore == null) throw new ArgumentNullException("propertyStore");
@@ -36,7 +37,12 @@ namespace Algolia.SitecoreProvider
             };
             _config = config;
             this.Crawlers = new List<IProviderCrawler>();
+            this.Strategies = new List<IIndexUpdateStrategy>();
         }
+
+        public List<IIndexUpdateStrategy> Strategies { get; private set; }
+
+        #region ISearchIndex
 
         public void AddCrawler(IProviderCrawler crawler)
         {
@@ -46,17 +52,18 @@ namespace Algolia.SitecoreProvider
 
         public void AddStrategy(IIndexUpdateStrategy strategy)
         {
-            
+            strategy.Initialize(this);
+            this.Strategies.Add(strategy);
         }
 
         public void Rebuild()
         {
-            
+
         }
 
         public void Rebuild(IndexingOptions indexingOptions)
         {
-            
+
         }
 
         public Task RebuildAsync(IndexingOptions indexingOptions, CancellationToken cancellationToken)
@@ -66,7 +73,7 @@ namespace Algolia.SitecoreProvider
 
         public void Refresh(IIndexable indexableStartingPoint)
         {
-           Refresh(indexableStartingPoint, IndexingOptions.Default);
+            Refresh(indexableStartingPoint, IndexingOptions.Default);
         }
 
         public void Refresh(IIndexable indexableStartingPoint, IndexingOptions indexingOptions)
@@ -90,57 +97,81 @@ namespace Algolia.SitecoreProvider
 
         public void Update(IIndexableUniqueId indexableUniqueId)
         {
-        
+           Update(indexableUniqueId, IndexingOptions.Default);
         }
 
         public void Update(IIndexableUniqueId indexableUniqueId, IndexingOptions indexingOptions)
         {
-          
+            Update(new List<IIndexableUniqueId> {indexableUniqueId}, IndexingOptions.Default);
         }
 
         public void Update(IEnumerable<IIndexableUniqueId> indexableUniqueIds)
         {
-        
+            Update(indexableUniqueIds, IndexingOptions.Default);
         }
 
         public void Update(IEnumerable<IIndexableUniqueId> indexableUniqueIds, IndexingOptions indexingOptions)
         {
-         
+            using (var context = this.CreateUpdateContext())
+            {
+                foreach (var crawler in this.Crawlers)
+                {
+                    foreach (var indexableUniqueId in indexableUniqueIds)
+                    {
+                        crawler.Update(context, indexableUniqueId, indexingOptions);
+                    }
+                }
+                context.Commit();
+            }
         }
 
         public void Update(IEnumerable<IndexableInfo> indexableInfo)
         {
-           
+            Update(indexableInfo.Select(t => t.IndexableUniqueId));
         }
 
         public void Delete(IIndexableId indexableId)
         {
-          
+            Delete(indexableId, IndexingOptions.Default);
         }
 
         public void Delete(IIndexableId indexableId, IndexingOptions indexingOptions)
         {
-         
+            using (var context = this.CreateUpdateContext())
+            {
+                foreach (var crawler in this.Crawlers)
+                {
+                    crawler.Delete(context, indexableId, indexingOptions);
+                }
+                context.Commit();
+            }
         }
 
         public void Delete(IIndexableUniqueId indexableUniqueId)
         {
-      
+            Delete(indexableUniqueId, IndexingOptions.Default);
         }
 
         public void Delete(IIndexableUniqueId indexableUniqueId, IndexingOptions indexingOptions)
         {
-           
+            using (var context = this.CreateUpdateContext())
+            {
+                foreach (var crawler in this.Crawlers)
+                {
+                    crawler.Delete(context, indexableUniqueId, indexingOptions);
+                }
+                context.Commit();
+            }
         }
 
         public void Reset()
         {
-           
+
         }
 
         public void Initialize()
         {
-          
+
         }
 
         public IProviderUpdateContext CreateUpdateContext()
@@ -154,24 +185,25 @@ namespace Algolia.SitecoreProvider
             return null;
         }
 
-        public IProviderSearchContext CreateSearchContext(SearchSecurityOptions options = SearchSecurityOptions.EnableSecurityCheck)
+        public IProviderSearchContext CreateSearchContext(
+            SearchSecurityOptions options = SearchSecurityOptions.EnableSecurityCheck)
         {
             return null;
         }
 
         public void StopIndexing()
         {
-       
+
         }
 
         public void PauseIndexing()
         {
-      
+
         }
 
         public void ResumeIndexing()
         {
-  
+
         }
 
         public string Name { get; private set; }
@@ -184,5 +216,8 @@ namespace Algolia.SitecoreProvider
         public IndexingState IndexingState { get; private set; }
         public IList<IProviderCrawler> Crawlers { get; private set; }
         public IObjectLocator Locator { get; private set; }
+
+        #endregion
+
     }
 }

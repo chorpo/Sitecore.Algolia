@@ -82,7 +82,6 @@
     <Compile Include="AlgoliaUpdateContext.cs" />
     <Compile Include="AlgoliaSearchIndex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SearchIndexConfig.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

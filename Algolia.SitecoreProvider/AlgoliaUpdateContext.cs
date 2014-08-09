@@ -7,6 +7,7 @@ using Algolia.SitecoreProvider.Abstract;
 using Newtonsoft.Json.Linq;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Linq.Common;
+using Sitecore.Data;
 
 namespace Algolia.SitecoreProvider
 {
@@ -14,15 +15,29 @@ namespace Algolia.SitecoreProvider
     {
         private readonly ISearchIndex _index;
         private readonly IAlgoliaRepository _repository;
-        private Dictionary<string, JObject> _updateDocs;
-        
+
+        /// <summary>
+        /// Items that needs to be Updated in Index
+        /// </summary>
+        private readonly Dictionary<string, JObject> _updateDocs;
+
+        /// <summary>
+        /// Items that needs to be deleted in Index
+        /// </summary>
+        private readonly List<ID> _deleteIds;
+
         public AlgoliaUpdateContext(
             ISearchIndex index,
             IAlgoliaRepository repository)
         {
+            if (index == null) throw new ArgumentNullException("index");
+            if (repository == null) throw new ArgumentNullException("repository");
+
             _index = index;
             _repository = repository;
+
             _updateDocs = new Dictionary<string, JObject>();
+            _deleteIds = new List<ID>();
         }
 
         #region IProviderUpdateContext
@@ -34,11 +49,11 @@ namespace Algolia.SitecoreProvider
 
         public void Commit()
         {
-            foreach (var item in _updateDocs)
-            {
-                _repository.AddObjectAsync(item.Value, item.Key).Wait();
-            }
+            _repository.SaveObjectsAsyn(_updateDocs.Select(t => t.Value)).Wait();
             _updateDocs.Clear();
+
+            _repository.DeleteObjectsAsync(_deleteIds.Select(t => t.ToGuid().ToString())).Wait();
+            _deleteIds.Clear();
         }
 
         public void Optimize()
@@ -76,12 +91,12 @@ namespace Algolia.SitecoreProvider
 
         public void Delete(IIndexableUniqueId id)
         {
-            throw new NotImplementedException();
+            _deleteIds.Add(id.Value as ID);
         }
 
         public void Delete(IIndexableId id)
         {
-            throw new NotImplementedException();
+            _deleteIds.Add(id.Value as ID);
         }
 
         public bool IsParallel { get; private set; }
@@ -101,7 +116,7 @@ namespace Algolia.SitecoreProvider
 
         private static string GetItemId(JObject item)
         {
-            var id = (string) item["id"];
+            var id = (string) item["objectID"];
 
             if (string.IsNullOrEmpty(id))
                 throw new Exception("Cannot load id field");

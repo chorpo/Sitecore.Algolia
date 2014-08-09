@@ -31,12 +31,12 @@ namespace Algolia.SitecoreProvider
 
         public void Delete(IIndexableId id, IProviderUpdateContext context)
         {
-            throw new NotImplementedException();
+            context.Delete(id);
         }
 
         public void Delete(IIndexableUniqueId indexableUniqueId, IProviderUpdateContext context)
         {
-            throw new NotImplementedException();
+            context.Delete(indexableUniqueId);
         }
 
         public void Add(IIndexable indexable, IProviderUpdateContext context,
