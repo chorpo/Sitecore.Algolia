@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Linq.Common;
+using Sitecore.ContentSearch.Pipelines.IndexingFilters;
 using Sitecore.Data.Items;
 
 namespace Algolia.SitecoreProvider
@@ -42,12 +43,17 @@ namespace Algolia.SitecoreProvider
         public void Add(IIndexable indexable, IProviderUpdateContext context,
             ProviderIndexConfiguration indexConfiguration)
         {
-            throw new NotImplementedException();
+            var doc = GetDocument(indexable, context);
+            context.AddDocument(doc, (IExecutionContext)null);
         }
 
         #endregion
 
-
+        protected virtual JObject GetDocument(IIndexable indexable, IProviderUpdateContext context)
+        {
+            var translator = new AlgoliaItemTranslator();
+            return translator.Translate(indexable);
+        }
       
     }
 }

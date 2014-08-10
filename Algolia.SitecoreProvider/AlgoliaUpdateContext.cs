@@ -63,7 +63,7 @@ namespace Algolia.SitecoreProvider
 
         public void AddDocument(object itemToAdd, IExecutionContext executionContext)
         {
-            throw new NotImplementedException();
+            UpdateDocument(itemToAdd, null, executionContext);
         }
 
         public void AddDocument(object itemToAdd, params IExecutionContext[] executionContexts)

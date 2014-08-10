@@ -79,6 +79,7 @@
     <Compile Include="AlgoliaRepository.cs" />
     <Compile Include="Abstract\IAlgoliaRepository.cs" />
     <Compile Include="AlgoliaIndexOperations.cs" />
+    <Compile Include="AlgoliaSearchIndexSummary.cs" />
     <Compile Include="AlgoliaUpdateContext.cs" />
     <Compile Include="AlgoliaSearchIndex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

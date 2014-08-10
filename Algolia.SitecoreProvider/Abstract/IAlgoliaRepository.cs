@@ -13,5 +13,6 @@ namespace Algolia.SitecoreProvider.Abstract
         Task<JObject> DeleteObjectsAsync(IEnumerable<String> objects);
         Task WaitTaskAsync(string taskID);
         Task<JObject> SearchAsync(Query q);
+        Task<JObject> ClearIndexAsync();
     }
 }

@@ -7,15 +7,19 @@ using System.Threading.Tasks;
 using Algolia.SitecoreProvider.Abstract;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Abstractions;
+using Sitecore.ContentSearch.Events;
 using Sitecore.ContentSearch.Maintenance;
 using Sitecore.ContentSearch.Maintenance.Strategies;
 using Sitecore.ContentSearch.Security;
+using Sitecore.Eventing;
+using Sitecore.Events;
 
 namespace Algolia.SitecoreProvider
 {
     public class AlgoliaSearchIndex : ISearchIndex
     {
         private readonly AlgoliaConfig _config;
+        private readonly IAlgoliaRepository _repository;
 
 
         public AlgoliaSearchIndex(string name, string applicationId, string fullApiKey, IIndexPropertyStore propertyStore)
@@ -34,7 +38,10 @@ namespace Algolia.SitecoreProvider
                 FullApiKey = fullApiKey,
                 IndexName = name
             };
+
             _config = config;
+            _repository = new AlgoliaRepository(_config);
+
             this.Crawlers = new List<IProviderCrawler>();
             this.Strategies = new List<IIndexUpdateStrategy>();
         }
@@ -57,17 +64,32 @@ namespace Algolia.SitecoreProvider
 
         public void Rebuild()
         {
-
+            Rebuild(IndexingOptions.Default);
         }
 
         public void Rebuild(IndexingOptions indexingOptions)
         {
-
+            Event.RaiseEvent("indexing:start", new object[] { this.Name, true });
+            var event2 = new IndexingStartedEvent
+            {
+                IndexName = this.Name,
+                FullRebuild = true
+            };
+            EventManager.QueueEvent<IndexingStartedEvent>(event2);
+            this.Reset();
+            this.DoRebuild(indexingOptions);
+            Event.RaiseEvent("indexing:end", new object[] { this.Name, true });
+            var event3 = new IndexingFinishedEvent
+            {
+                IndexName = this.Name,
+                FullRebuild = true
+            };
+            EventManager.QueueEvent<IndexingFinishedEvent>(event3);
         }
 
         public Task RebuildAsync(IndexingOptions indexingOptions, CancellationToken cancellationToken)
         {
-            return Task.Run(() => Console.WriteLine(""));
+            return Task.Run(() => Rebuild(indexingOptions), cancellationToken);
         }
 
         public void Refresh(IIndexable indexableStartingPoint)
@@ -165,7 +187,7 @@ namespace Algolia.SitecoreProvider
 
         public void Reset()
         {
-
+            _repository.ClearIndexAsync().Wait();
         }
 
         public void Initialize()
@@ -175,8 +197,7 @@ namespace Algolia.SitecoreProvider
 
         public IProviderUpdateContext CreateUpdateContext()
         {
-            var repository = new AlgoliaRepository(_config);
-            return new AlgoliaUpdateContext(this, repository);
+            return new AlgoliaUpdateContext(this, _repository);
         }
 
         public IProviderDeleteContext CreateDeleteContext()
@@ -217,6 +238,19 @@ namespace Algolia.SitecoreProvider
         public IObjectLocator Locator { get; private set; }
 
         #endregion
+
+        protected virtual void DoRebuild(IndexingOptions indexingOptions)
+        {
+            using (var context = this.CreateUpdateContext())
+            {
+                foreach (var crawler in this.Crawlers)
+                {
+                    crawler.RebuildFromRoot(context, indexingOptions);
+                }
+                context.Optimize();
+                context.Commit();
+            }
+        }
 
     }
 }

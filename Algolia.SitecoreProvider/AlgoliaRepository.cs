@@ -45,5 +45,10 @@ namespace Algolia.SitecoreProvider
         {
             return await _index.Search(q);
         }
+
+        public async Task<JObject> ClearIndexAsync()
+        {
+            return await _index.ClearIndex();
+        }
     }
 }
