@@ -71,17 +71,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\IAlgoliaConfig.cs" />
+    <Compile Include="AlgoliaBaseIndex.cs" />
     <Compile Include="AlgoliaConfig.cs" />
     <Compile Include="AlgoliaCrowler.cs" />
-    <Compile Include="AlgoliaItemLoader.cs" />
-    <Compile Include="AlgoliaItemSerializer.cs" />
-    <Compile Include="AlgoliaItemTranslator.cs" />
+    <Compile Include="AlgoliaDocumentBuilder.cs" />
     <Compile Include="AlgoliaRepository.cs" />
     <Compile Include="Abstract\IAlgoliaRepository.cs" />
     <Compile Include="AlgoliaIndexOperations.cs" />
     <Compile Include="AlgoliaSearchIndexSummary.cs" />
     <Compile Include="AlgoliaUpdateContext.cs" />
     <Compile Include="AlgoliaSearchIndex.cs" />
+    <Compile Include="FieldsConfiguration\SimpleFieldsConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

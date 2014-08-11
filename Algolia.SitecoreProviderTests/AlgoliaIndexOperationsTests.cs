@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Algolia.SitecoreProvider;
+using Algolia.SitecoreProvider.Abstract;
+using Algolia.SitecoreProviderTests.Builders;
 using Moq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -43,6 +45,9 @@ namespace Algolia.SitecoreProviderTests
                         (object itemToUpdate, object criteriaForUpdate, IExecutionContext executionContext) =>
                             doc = itemToUpdate as JObject);
 
+                var index = new IndexBuilder().Build();
+                context.Setup(t => t.Index).Returns(index);
+                
                 var operations = new AlgoliaIndexOperations();
 
                 //Act
@@ -71,6 +76,9 @@ namespace Algolia.SitecoreProviderTests
                         (object itemToUpdate, IExecutionContext executionContext) =>
                             doc = itemToUpdate as JObject);
 
+                var index = new IndexBuilder().Build();
+                context.Setup(t => t.Index).Returns(index);
+
                 var operations = new AlgoliaIndexOperations();
 
                 //Act
@@ -81,6 +89,7 @@ namespace Algolia.SitecoreProviderTests
                 Assert.AreEqual(TestData.TestItemKey.ToLower(), (string)doc["objectID"]);
             }
         }
+
     }
 
 }

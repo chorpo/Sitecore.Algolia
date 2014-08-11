@@ -21,7 +21,7 @@ namespace Algolia.SitecoreProvider
         public void Update(IIndexable indexable, IProviderUpdateContext context,
             ProviderIndexConfiguration indexConfiguration)
         {
-            var doc = GetDocument(indexable, null);
+            var doc = GetDocument(indexable, context);
 
             if (doc == null)
             {
@@ -70,8 +70,9 @@ namespace Algolia.SitecoreProvider
                 return null;
             }
 
-            var translator = new AlgoliaItemTranslator();
-            return translator.Translate(indexable);
+            var builder = new AlgoliaDocumentBuilder(indexable, context);
+            builder.AddItemFields();
+            return builder.Document;
         }
       
     }
