@@ -10,6 +10,7 @@ using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Linq.Common;
 using Sitecore.ContentSearch.Pipelines.IndexingFilters;
 using Sitecore.Data.Items;
+using Sitecore.Events;
 
 namespace Algolia.SitecoreProvider
 {
@@ -20,8 +21,14 @@ namespace Algolia.SitecoreProvider
         public void Update(IIndexable indexable, IProviderUpdateContext context,
             ProviderIndexConfiguration indexConfiguration)
         {
-            var translator = new AlgoliaItemTranslator();
-            var doc = translator.Translate(indexable);
+            var doc = GetDocument(indexable, null);
+
+            if (doc == null)
+            {
+                Event.RaiseEvent("indexing:excludedfromindex", new object[] { context.Index.Name, indexable.Id });
+                return;
+            }
+
             context.UpdateDocument(doc, null, (IExecutionContext) null);
         }
 
@@ -44,6 +51,13 @@ namespace Algolia.SitecoreProvider
             ProviderIndexConfiguration indexConfiguration)
         {
             var doc = GetDocument(indexable, context);
+
+            if (doc == null)
+            {
+                Event.RaiseEvent("indexing:excludedfromindex", new object[] { context.Index.Name, indexable.Id });
+                return;
+            }
+
             context.AddDocument(doc, (IExecutionContext)null);
         }
 
@@ -51,6 +65,11 @@ namespace Algolia.SitecoreProvider
 
         protected virtual JObject GetDocument(IIndexable indexable, IProviderUpdateContext context)
         {
+            if (InboundIndexFilterPipeline.Run(new InboundIndexFilterArgs(indexable)))
+            {
+                return null;
+            }
+
             var translator = new AlgoliaItemTranslator();
             return translator.Translate(indexable);
         }

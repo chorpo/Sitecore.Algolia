@@ -34,8 +34,6 @@ namespace Algolia.SitecoreProviderTests
             {
                 var item = db.GetItem("/sitecore/content/source");
                 var indexable = new SitecoreIndexableItem(item);
-                //var index = new AlgoliaSearchIndex("algolia_master_index", "3Q92VD0BCR", "ae8283da0a1342b03749ed1355d9d4a7", "sitecore", new NullPropertyStore());
-
                 JObject doc = null;
 
                 var context = new Mock<IProviderUpdateContext>();
@@ -52,6 +50,34 @@ namespace Algolia.SitecoreProviderTests
 
                 //Assert
                 context.Verify(t => t.UpdateDocument(It.IsAny<object>(), It.IsAny<object>(), It.IsAny<IExecutionContext>()), Times.Once);
+                Assert.AreEqual(TestData.TestItemKey.ToLower(), (string)doc["objectID"]);
+            }
+        }
+
+        [Test]
+        public void AddTest()
+        {
+            // arrange
+            using (var db = new Db { _source })
+            {
+                var item = db.GetItem("/sitecore/content/source");
+                var indexable = new SitecoreIndexableItem(item);
+                JObject doc = null;
+
+                var context = new Mock<IProviderUpdateContext>();
+                context.Setup(
+                    t => t.AddDocument(It.IsAny<object>(), It.IsAny<IExecutionContext>()))
+                    .Callback(
+                        (object itemToUpdate, IExecutionContext executionContext) =>
+                            doc = itemToUpdate as JObject);
+
+                var operations = new AlgoliaIndexOperations();
+
+                //Act
+                operations.Add(indexable, context.Object, new ProviderIndexConfiguration());
+
+                //Assert
+                context.Verify(t => t.AddDocument(It.IsAny<object>(), It.IsAny<IExecutionContext>()), Times.Once);
                 Assert.AreEqual(TestData.TestItemKey.ToLower(), (string)doc["objectID"]);
             }
         }
