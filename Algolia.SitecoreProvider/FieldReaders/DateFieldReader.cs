@@ -17,7 +17,12 @@ namespace Algolia.SitecoreProvider.FieldReaders
             DateField dateField = FieldTypeManager.GetField(field) as DateField;
             if (dateField != null)
             {
-                return (Int32)(dateField.DateTime.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                var date = dateField.DateTime;
+
+                if (date == DateTime.MinValue)
+                    return null;
+
+                return (Int32)(date.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             }
             return null;
         }
