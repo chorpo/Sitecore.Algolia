@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Algolia.SitecoreProvider.FieldsConfiguration;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Linq.Extensions;
 using Sitecore.Data.Items;
@@ -38,7 +39,22 @@ namespace Algolia.SitecoreProvider
                 return;
             }
 
-            Document[field.Name] = new JValue(field.Value);
+            var reader = base.Index.Configuration.FieldReaders.GetFieldReader(field);
+            var value = reader.GetFieldValue(field);
+
+            if (value == null)
+                return;
+
+            var stringValue = value as string;
+
+            if (stringValue != null)
+            {
+                if (string.IsNullOrWhiteSpace(stringValue))
+                    return;
+                value = stringValue.Trim();
+            }
+            
+            Document[field.Name] = new JValue(value);
         }
 
         public override void AddBoost()

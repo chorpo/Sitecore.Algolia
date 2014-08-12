@@ -31,7 +31,8 @@ namespace Algolia.SitecoreProviderTests.AlgoliaDocumentBuilderTests
 
                 var context = new Mock<IProviderUpdateContext>();
                 var index = new IndexBuilder()
-                    .WithSimpleFieldTypeMap("text") 
+                    .WithSimpleFieldTypeMap("text")
+                    //.WithDefaultFieldReader("single-line text|multi-line text|text|memo")
                     .Build();
                 context.Setup(t => t.Index).Returns(index);
                 var sut = new AlgoliaDocumentBuilder(indexable, context.Object);
@@ -41,6 +42,34 @@ namespace Algolia.SitecoreProviderTests.AlgoliaDocumentBuilderTests
                 //Act
                 sut.AddField(field);
                 
+                //Assert
+                JObject doc = sut.Document;
+                Assert.AreEqual("test", (string)doc["displayname"]);
+            }
+        }
+
+        [Test]
+        public void StringValueShouldBeTrimmed()
+        {
+            // arrange
+            using (var db = new Db { new ItemBuilder().WithDisplayName("  test  ").Build() })
+            {
+                var item = db.GetItem("/sitecore/content/source");
+                var indexable = new SitecoreIndexableItem(item);
+
+
+                var context = new Mock<IProviderUpdateContext>();
+                var index = new IndexBuilder()
+                    .WithSimpleFieldTypeMap("text")
+                    .Build();
+                context.Setup(t => t.Index).Returns(index);
+                var sut = new AlgoliaDocumentBuilder(indexable, context.Object);
+
+                var field = new SitecoreItemDataField(item.Fields[0]);
+
+                //Act
+                sut.AddField(field);
+
                 //Assert
                 JObject doc = sut.Document;
                 Assert.AreEqual("test", (string)doc["displayname"]);
@@ -60,6 +89,7 @@ namespace Algolia.SitecoreProviderTests.AlgoliaDocumentBuilderTests
                 var context = new Mock<IProviderUpdateContext>();
                 var index = new IndexBuilder()
                     .WithSimpleFieldTypeMap("number")
+                    .WithNumericFieldReader("number")
                     .Build();
                 context.Setup(t => t.Index).Returns(index);
                 var sut = new AlgoliaDocumentBuilder(indexable, context.Object);
@@ -72,6 +102,36 @@ namespace Algolia.SitecoreProviderTests.AlgoliaDocumentBuilderTests
                 //Assert
                 JObject doc = sut.Document;
                 Assert.AreEqual(10, (int)doc["count"]);
+                Assert.AreEqual(JTokenType.Integer, doc["count"].Type);
+            }
+        }
+
+        [Test]
+        public void AddSimpleDoubleFieldTest()
+        {
+            // arrange
+            using (var db = new Db { new ItemBuilder().WithPrice(123.456).Build() })
+            {
+                var item = db.GetItem("/sitecore/content/source");
+                var indexable = new SitecoreIndexableItem(item);
+                
+                var context = new Mock<IProviderUpdateContext>();
+                var index = new IndexBuilder()
+                    .WithSimpleFieldTypeMap("number")
+                    .WithNumericFieldReader("number")
+                    .Build();
+                context.Setup(t => t.Index).Returns(index);
+                var sut = new AlgoliaDocumentBuilder(indexable, context.Object);
+
+                var field = new SitecoreItemDataField(item.Fields[0]);
+
+                //Act
+                sut.AddField(field);
+
+                //Assert
+                JObject doc = sut.Document;
+                Assert.AreEqual(123.456, (double)doc["price"]);
+                Assert.AreEqual(JTokenType.Float, doc["price"].Type);
             }
         }
 

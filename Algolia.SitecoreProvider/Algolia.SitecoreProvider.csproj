@@ -81,6 +81,8 @@
     <Compile Include="AlgoliaSearchIndexSummary.cs" />
     <Compile Include="AlgoliaUpdateContext.cs" />
     <Compile Include="AlgoliaSearchIndex.cs" />
+    <Compile Include="FieldReaders\DateFieldReader.cs" />
+    <Compile Include="FieldReaders\NumberFieldReader.cs" />
     <Compile Include="FieldsConfiguration\SimpleFieldsConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
