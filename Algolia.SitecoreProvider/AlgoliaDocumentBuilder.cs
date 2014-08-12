@@ -38,10 +38,7 @@ namespace Algolia.SitecoreProvider
                 return;
             }
 
-            if (field.TypeKey == "number")
-                Document[field.Name] = double.Parse((string) field.Value);
-            else
-                Document[field.Name] = field.Value.ToString();
+            Document[field.Name] = new JValue(field.Value);
         }
 
         public override void AddBoost()
