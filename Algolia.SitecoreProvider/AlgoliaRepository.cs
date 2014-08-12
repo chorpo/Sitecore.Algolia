@@ -41,7 +41,7 @@ namespace Algolia.SitecoreProvider
             await _index.WaitTask(taskID);
         }
 
-        public async Task<JObject> SearchAsync(Query q)
+        public async Task<JObject> SearchAsync(Algolia.Search.Query q)
         {
             return await _index.Search(q);
         }

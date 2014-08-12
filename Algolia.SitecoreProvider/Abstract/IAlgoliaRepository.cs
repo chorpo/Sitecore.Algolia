@@ -12,7 +12,7 @@ namespace Algolia.SitecoreProvider.Abstract
         Task<JObject> AddObjectAsync(object content, string objectId = null);
         Task<JObject> DeleteObjectsAsync(IEnumerable<String> objects);
         Task WaitTaskAsync(string taskID);
-        Task<JObject> SearchAsync(Query q);
+        Task<JObject> SearchAsync(Algolia.Search.Query q);
         Task<JObject> ClearIndexAsync();
     }
 }

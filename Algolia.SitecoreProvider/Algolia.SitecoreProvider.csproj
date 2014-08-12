@@ -75,6 +75,10 @@
     <Compile Include="AlgoliaConfig.cs" />
     <Compile Include="AlgoliaCrowler.cs" />
     <Compile Include="AlgoliaDocumentBuilder.cs" />
+    <Compile Include="Queries\AlgoliaFieldNameTranslator.cs" />
+    <Compile Include="Queries\AlgoliaQuery.cs" />
+    <Compile Include="Queries\AlgoliaQueryMapper.cs" />
+    <Compile Include="Queries\AlgoliaQueryOptimizer.cs" />
     <Compile Include="AlgoliaRepository.cs" />
     <Compile Include="Abstract\IAlgoliaRepository.cs" />
     <Compile Include="AlgoliaIndexOperations.cs" />
@@ -85,6 +89,7 @@
     <Compile Include="FieldReaders\NumberFieldReader.cs" />
     <Compile Include="FieldsConfiguration\SimpleFieldsConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\AlgoliaQueryOptimizerState.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
