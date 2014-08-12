@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -31,7 +33,7 @@ namespace Algolia.SitecoreProvider
 
             _repository = repository;
             this.Strategies = new List<IIndexUpdateStrategy>();
-            _summary = new AlgoliaSearchIndexSummary();
+            _summary = new AlgoliaSearchIndexSummary(_repository, propertyStore);
         }
 
         private readonly string _name;
@@ -71,6 +73,7 @@ namespace Algolia.SitecoreProvider
             EventManager.QueueEvent<IndexingStartedEvent>(event2);
             this.Reset();
             this.DoRebuild(indexingOptions);
+            Summary.LastUpdated = DateTime.Now;
             Event.RaiseEvent("indexing:end", new object[] { this.Name, true });
             var event3 = new IndexingFinishedEvent
             {
@@ -224,6 +227,8 @@ namespace Algolia.SitecoreProvider
 
         protected virtual void DoRebuild(IndexingOptions indexingOptions)
         {
+            var timer = new Stopwatch();
+            timer.Start();
             using (var context = this.CreateUpdateContext())
             {
                 foreach (var crawler in this.Crawlers)
@@ -233,6 +238,9 @@ namespace Algolia.SitecoreProvider
                 context.Optimize();
                 context.Commit();
             }
+            timer.Stop();
+            this.PropertyStore.Set(IndexProperties.RebuildTime,
+                timer.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture));
         }
 
     }
