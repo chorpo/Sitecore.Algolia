@@ -2,7 +2,7 @@
 
 namespace Algolia.SitecoreProvider.Queries
 {
-    class AlgoliaQueryOptimizerState : QueryOptimizerState
+    public class AlgoliaQueryOptimizerState : QueryOptimizerState
     {
     }
 }

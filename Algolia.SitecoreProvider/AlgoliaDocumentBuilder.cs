@@ -27,7 +27,27 @@ namespace Algolia.SitecoreProvider
 
         public override void AddField(string fieldName, object fieldValue, bool append = false)
         {
-            throw new NotImplementedException();
+            //reader can return JObject for complex data 
+            //builder should merge that data into document
+            if (fieldValue is JObject)
+            {
+                var jvalue = fieldValue as JObject;
+                Document.Merge(jvalue);
+                return;
+            }
+            
+            //otherwise - add new field (for simple types data)
+
+            var stringValue = fieldValue as string;
+
+            if (stringValue != null)
+            {
+                if (string.IsNullOrWhiteSpace(stringValue))
+                    return;
+                fieldValue = stringValue.Trim();
+            }
+
+            Document[fieldName] = new JValue(fieldValue);
         }
 
         public override void AddField(IIndexableDataField field)
@@ -45,16 +65,7 @@ namespace Algolia.SitecoreProvider
             if (value == null)
                 return;
 
-            var stringValue = value as string;
-
-            if (stringValue != null)
-            {
-                if (string.IsNullOrWhiteSpace(stringValue))
-                    return;
-                value = stringValue.Trim();
-            }
-            
-            Document[field.Name] = new JValue(value);
+            AddField(field.Name, value);
         }
 
         public override void AddBoost()

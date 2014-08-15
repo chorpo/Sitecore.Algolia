@@ -20,7 +20,7 @@ namespace Algolia.SitecoreProviderTests.AlgoliaDocumentBuilderTests
     public class AddFieldTests
     {
         [Test]
-        public void AddSimpleTextFieldTest()
+        public void AddTextFieldTest()
         {
             // arrange
             using (var db = new Db { new ItemBuilder().WithDisplayName("test").Build() })
@@ -77,7 +77,7 @@ namespace Algolia.SitecoreProviderTests.AlgoliaDocumentBuilderTests
         }
 
         [Test]
-        public void AddSimpleIntFieldTest()
+        public void AddIntFieldTest()
         {
             // arrange
             using (var db = new Db { new ItemBuilder().WithCount(10).Build() })
@@ -103,6 +103,66 @@ namespace Algolia.SitecoreProviderTests.AlgoliaDocumentBuilderTests
                 JObject doc = sut.Document;
                 Assert.AreEqual(10, (int)doc["count"]);
                 Assert.AreEqual(JTokenType.Integer, doc["count"].Type);
+            }
+        }
+
+        [Test]
+        public void AddDateFieldTest()
+        {
+            // arrange
+            using (var db = new Db { new ItemBuilder().WithHardcodedDate().Build() })
+            {
+                var item = db.GetItem("/sitecore/content/source");
+                var indexable = new SitecoreIndexableItem(item);
+
+
+                var context = new Mock<IProviderUpdateContext>();
+                var index = new IndexBuilder()
+                    .WithSimpleFieldTypeMap("datetime")
+                    .WithDateFieldReader("datetime")
+                    .Build();
+                context.Setup(t => t.Index).Returns(index);
+                var sut = new AlgoliaDocumentBuilder(indexable, context.Object);
+                var field = new SitecoreItemDataField(item.Fields[0]);
+
+                //Act
+                sut.AddField(field);
+
+                //Assert
+                JObject doc = sut.Document;
+                Assert.AreEqual(1418787000, (int)doc["date"]);
+                Assert.AreEqual(JTokenType.Integer, doc["date"].Type);
+            }
+        }
+
+
+        [Test]
+        public void AddJobjectFieldTest()
+        {
+            // arrange
+            using (var db = new Db { new ItemBuilder().WithHardcodedDate().Build() })
+            {
+                var item = db.GetItem("/sitecore/content/source");
+                var indexable = new SitecoreIndexableItem(item);
+
+
+                var context = new Mock<IProviderUpdateContext>();
+                var index = new IndexBuilder()
+                    .Build();
+                context.Setup(t => t.Index).Returns(index);
+                var sut = new AlgoliaDocumentBuilder(indexable, context.Object);
+
+                var value = JObject.Parse(@"{'_geoloc': {
+        'lat': 33.7489954,
+        'lng': -84.3879824
+      }}");
+                //Act
+                sut.AddField("Location", value);
+
+                //Assert
+                JObject doc = sut.Document;
+                Assert.AreEqual(33.7489954, (double)doc["_geoloc"]["lat"]);
+                Assert.AreEqual(-84.3879824, (double)doc["_geoloc"]["lng"]);
             }
         }
 

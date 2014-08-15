@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using Sitecore.Data;
 using Sitecore.FakeDb;
 
@@ -32,6 +33,43 @@ namespace Algolia.SitecoreProviderTests.Builders
                 Value = value.ToString(CultureInfo.InvariantCulture),
                 Type = "number",
                 Name = "Count"
+            };
+            _item.Fields.Add(field);
+            return this;
+        }
+
+        public ItemBuilder WithGeoLocation(string value)
+        {
+            var field = new DbField(ID.NewID)
+            {
+                Value = value,
+                Type = "geolocation",
+                Name = "Location"
+            };
+            _item.Fields.Add(field);
+            return this;
+        }
+
+        public ItemBuilder WithHardcodedDate()
+        {
+            var field = new DbField(ID.NewID)
+            {
+                Value = "20141217T033000",
+                Type = "datetime",
+                Name = "Date"
+            };
+            _item.Fields.Add(field);
+            return this;
+        }
+
+        public ItemBuilder WithDate(DateTime value)
+        {
+            var field = new DbField(ID.NewID)
+            {
+                //"20141217T033000"
+                Value = Sitecore.DateUtil.ToIsoDate(value),
+                Type = "datetime",
+                Name = "Date"
             };
             _item.Fields.Add(field);
             return this;

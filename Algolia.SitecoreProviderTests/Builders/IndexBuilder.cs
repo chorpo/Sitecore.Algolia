@@ -50,12 +50,16 @@ namespace Algolia.SitecoreProviderTests.Builders
 
         public IndexBuilder WithNumericFieldReader(string fieldTypeName)
         {
-            var fieldTypes = fieldTypeName.Split('|');
-            string readerType = "Algolia.SitecoreProvider.FieldReaders.NumberFieldReader, Algolia.SitecoreProvider";
-            _index.Configuration.FieldReaders.AddFieldReaderByFieldTypeName(readerType, fieldTypes);
+            AddCustomFieldReader(fieldTypeName, "NumberFieldReader");
             return this;
         }
-        
+
+        public IndexBuilder WithDateFieldReader(string fieldTypeName)
+        {
+            AddCustomFieldReader(fieldTypeName, "DateFieldReader");
+            return this;
+        }
+
         public ISearchIndex Build()
         {
             return _index;
@@ -67,7 +71,14 @@ namespace Algolia.SitecoreProviderTests.Builders
             string readerType = string.Format("Sitecore.ContentSearch.FieldReaders.{0}, Sitecore.ContentSearch",
                 fieldReaderType);
             _index.Configuration.FieldReaders.AddFieldReaderByFieldTypeName(readerType, fieldTypes);
+        }
 
+        private void AddCustomFieldReader(string fieldTypeName, string fieldReaderType)
+        {
+            var fieldTypes = fieldTypeName.Split('|');
+            string readerType = string.Format("Algolia.SitecoreProvider.FieldReaders.{0}, Algolia.SitecoreProvider",
+                fieldReaderType);
+            _index.Configuration.FieldReaders.AddFieldReaderByFieldTypeName(readerType, fieldTypes);
         }
     }
 }
