@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Algolia.SitecoreProvider.Abstract;
+using Algolia.SitecoreProvider.Queries;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Abstractions;
 using Sitecore.ContentSearch.Events;
@@ -33,11 +35,10 @@ namespace Algolia.SitecoreProvider
 
             _repository = repository;
             this.Strategies = new List<IIndexUpdateStrategy>();
-            _summary = new AlgoliaSearchIndexSummary(_repository, propertyStore);
         }
 
         private readonly string _name;
-        private readonly ISearchIndexSummary _summary;
+        private ISearchIndexSummary _summary;
         private readonly ISearchIndexSchema schema;
         private bool initialized;
 
@@ -188,7 +189,24 @@ namespace Algolia.SitecoreProvider
 
         public override void Initialize()
         {
+            _summary = new AlgoliaSearchIndexSummary(_repository, PropertyStore);
 
+            this.FieldNameTranslator = new AlgoliaFieldNameTranslator();
+
+            var config = this.Configuration as AlgoliaIndexConfiguration;
+            if (config == null)
+            {
+                throw new ConfigurationErrorsException("Index has no configuration.");
+            }
+            if (config.IndexDocumentPropertyMapper == null)
+            {
+                throw new ConfigurationErrorsException("AlgoliaDocumentPropertyMapper has not been configured.");
+            }
+            var mapper = config.IndexDocumentPropertyMapper as ISearchIndexInitializable;
+            if (mapper != null)
+            {
+                mapper.Initialize(this);
+            }
         }
 
         public override IProviderUpdateContext CreateUpdateContext()
@@ -204,7 +222,7 @@ namespace Algolia.SitecoreProvider
         public override IProviderSearchContext CreateSearchContext(
             SearchSecurityOptions options = SearchSecurityOptions.EnableSecurityCheck)
         {
-            return null;
+            return new AlgoliaSearchContext(this, options);
         }
 
         public override string Name { get { return _name; }  }

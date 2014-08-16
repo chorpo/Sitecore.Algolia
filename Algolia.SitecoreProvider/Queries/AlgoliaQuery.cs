@@ -1,11 +1,13 @@
 ﻿using System;
+using System.IO;
 using Algolia.Search;
+using Sitecore.ContentSearch.Linq.Common;
 using Sitecore.ContentSearch.Linq.Parsing;
 using IndexQuery = Sitecore.ContentSearch.Linq.Parsing.IndexQuery;
 
 namespace Algolia.SitecoreProvider.Queries
 {
-    public class AlgoliaQuery : QueryMapper<AlgoliaQuery>
+    public class AlgoliaQuery : IDumpable
     {
         private readonly Query _query;
 
@@ -15,10 +17,24 @@ namespace Algolia.SitecoreProvider.Queries
             _query = query;
         }
 
-
-        public override AlgoliaQuery MapQuery(IndexQuery query)
+        public Query Query
         {
-            throw new NotImplementedException();
+            get { return _query; }
+        }
+
+        //public string QueryForLog
+        //{
+        //    get { return _query.ToString(); }
+        //}
+
+        //public override AlgoliaQuery MapQuery(IndexQuery query)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        public void WriteTo(TextWriter writer)
+        {
+            writer.Write(_query.ToString());
         }
     }
 }

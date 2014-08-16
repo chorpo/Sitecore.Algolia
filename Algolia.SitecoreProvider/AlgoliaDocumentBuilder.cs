@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Algolia.SitecoreProvider.FieldsConfiguration;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Schema;
 using Sitecore.ContentSearch;
-using Sitecore.ContentSearch.Linq.Extensions;
 using Sitecore.Data.Items;
 
 namespace Algolia.SitecoreProvider

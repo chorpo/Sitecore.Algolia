@@ -53,6 +53,7 @@
       <HintPath>..\libs\Sitecore\Sitecore.Kernel.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
@@ -75,6 +76,9 @@
     <Compile Include="AlgoliaConfig.cs" />
     <Compile Include="AlgoliaCrowler.cs" />
     <Compile Include="AlgoliaDocumentBuilder.cs" />
+    <Compile Include="AlgoliaIndexConfiguration.cs" />
+    <Compile Include="AlgoliaSearchContext.cs" />
+    <Compile Include="DefaultAlgoliaDocumentTypeMapper.cs" />
     <Compile Include="FieldReaders\GeoLocationFieldReader.cs" />
     <Compile Include="Queries\AlgoliaFieldNameTranslator.cs" />
     <Compile Include="Queries\AlgoliaQuery.cs" />
@@ -91,6 +95,8 @@
     <Compile Include="FieldsConfiguration\SimpleFieldsConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\AlgoliaQueryOptimizerState.cs" />
+    <Compile Include="Queries\AlgoliaSearchResultItem.cs" />
+    <Compile Include="Queries\LinqToAlgoliaIndex.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
