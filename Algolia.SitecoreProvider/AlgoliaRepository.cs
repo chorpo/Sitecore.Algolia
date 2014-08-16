@@ -22,33 +22,33 @@ namespace Algolia.SitecoreProvider
         public async Task<JObject> SaveObjectsAsyn(IEnumerable<JObject> objects)
         {
             if (objects == null) throw new ArgumentNullException("objects");
-            return await _index.SaveObjects(objects);
+            return await _index.SaveObjectsAsync(objects);
         }
 
         public async Task<JObject> AddObjectAsync(object content, string objectId = null)
         {
-            var result = await _index.AddObject(content, objectId);
+            var result = await _index.AddObjectAsync(content, objectId);
             return result;
         }
 
         public async Task<JObject> DeleteObjectsAsync(IEnumerable<String> objects)
         {
-            return await _index.DeleteObjects(objects);
+            return await _index.DeleteObjectsAsync(objects);
         }
 
         public async Task WaitTaskAsync(string taskID)
         {
-            await _index.WaitTask(taskID);
+            await _index.WaitTaskAsync(taskID);
         }
 
         public async Task<JObject> SearchAsync(Algolia.Search.Query q)
         {
-            return await _index.Search(q);
+            return await _index.SearchAsync(q);
         }
 
         public async Task<JObject> ClearIndexAsync()
         {
-            return await _index.ClearIndex();
+            return await _index.ClearIndexAsync();
         }
     }
 }

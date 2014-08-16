@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Algolia.SitecoreProvider;
+﻿using Algolia.SitecoreProvider;
 using Algolia.SitecoreProviderTests.Builders;
 using Moq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using Sitecore;
 using Sitecore.ContentSearch;
-using Sitecore.ContentSearch.Linq.Common;
-using Sitecore.Data;
 using Sitecore.FakeDb;
 
 namespace Algolia.SitecoreProviderTests.AlgoliaDocumentBuilderTests
