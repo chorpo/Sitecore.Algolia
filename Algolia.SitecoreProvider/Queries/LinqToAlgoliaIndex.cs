@@ -29,10 +29,18 @@ namespace Algolia.SitecoreProvider.Queries
         {
         }
 
-        public LinqToAlgoliaIndex(AlgoliaSearchContext context, IExecutionContext executionContext)
+        public LinqToAlgoliaIndex(AlgoliaSearchContext context,
+            IExecutionContext executionContext)
         {
             Assert.ArgumentNotNull(context, "context");
             _context = context;
+
+            var index = context.Index as AlgoliaBaseIndex;
+
+            if (index == null)
+                throw new ArgumentException("context.Index should be instance of AlgoliaBaseIndex");
+
+            _repository = index.Repository;
             _configuration = context.Index.Configuration;
             _queryOptimizer = new AlgoliaQueryOptimizer();
             _mapper = new AlgoliaQueryMapper();
@@ -66,7 +74,7 @@ namespace Algolia.SitecoreProvider.Queries
         public override IEnumerable<TElement> FindElements<TElement>(AlgoliaQuery query)
         {
             SearchLog.Log.Debug("Executing query: " + query.ToString());
-            var index = _context.Index as AlgoliaSearchIndex;
+            var index = _context.Index as AlgoliaBaseIndex;
             Assert.IsNotNull(index, "context.Index is not an instance of AlgoliaSearchIndex");
 
             var response = _repository.SearchAsync(query.Query).Result;

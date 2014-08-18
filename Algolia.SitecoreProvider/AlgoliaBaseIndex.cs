@@ -44,6 +44,11 @@ namespace Algolia.SitecoreProvider
 
         public List<IIndexUpdateStrategy> Strategies { get; private set; }
 
+        public IAlgoliaRepository Repository
+        {
+            get { return _repository; }
+        }
+
         #region ISearchIndex
 
         public override void AddCrawler(IProviderCrawler crawler)

@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Text;
-using Algolia.Search;
+using Sitecore.ContentSearch.Linq.Extensions;
 using Sitecore.ContentSearch.Linq.Helpers;
+using Sitecore.ContentSearch.Linq.Methods;
 using Sitecore.ContentSearch.Linq.Nodes;
 using Sitecore.ContentSearch.Linq.Parsing;
+using Sitecore.Data.Query;
 using IndexQuery = Sitecore.ContentSearch.Linq.Parsing.IndexQuery;
+using Query = Algolia.Search.Query;
 
 namespace Algolia.SitecoreProvider.Queries
 {
@@ -12,37 +17,96 @@ namespace Algolia.SitecoreProvider.Queries
     {
         public override AlgoliaQuery MapQuery(IndexQuery query)
         {
-            var algoliaQuery = this.HandleNode(query.RootNode);
+            var mappingState = new AlgoliaQueryMapperState();
+            this.Visit(query.RootNode, mappingState);
+            var algoliaQuery = LoadFromState(mappingState);
             return new AlgoliaQuery(algoliaQuery);
         }
-        
-        protected virtual Query HandleTake(TakeNode node)
+
+        private Query LoadFromState(AlgoliaQueryMapperState mappingState)
         {
-            var query = HandleNode(node.SourceNode);
-            query.SetNbHitsPerPage(node.Count);
+            var query = new Query();
+
+            var takeMethod = mappingState.AdditionalQueryMethods.OfType<TakeMethod>().FirstOrDefault();
+            var skipMethod = mappingState.AdditionalQueryMethods.OfType<SkipMethod>().FirstOrDefault();
+
+            if (takeMethod != null)
+            {
+                int take = takeMethod.Count;
+                query.SetNbHitsPerPage(take);
+                if (skipMethod != null)
+                {
+                    var skip = skipMethod.Count;
+
+                    var page = skip/take;
+                    query.SetPage(page);
+                }
+            }
+            
+            //foreach (var method in mappingState.AdditionalQueryMethods)
+            //{
+            //    var takeMethod = method as TakeMethod;
+            //    if (takeMethod != null)
+            //    {
+            //        query.SetNbHitsPerPage(takeMethod.Count);
+            //        continue;
+            //    }
+            //    var skipMethod = method as SkipMethod;
+            //    if (skipMethod != null)
+            //    {
+            //        query.SetPage(skipMethod.Count);
+            //        continue;
+            //    }
+            //}
             return query;
         }
 
-        protected virtual string HandleEqual(EqualNode node)
+        protected virtual QueryNode VisitConstant(ConstantNode node, AlgoliaQueryMapperState mappingState)
         {
-            var fieldNode = QueryHelper.GetFieldNode(node);
-            var valueNode = QueryHelper.GetValueNode<string>(node);
-            var result = string.Format("[field[@name='{0}'] = '{1}']", fieldNode.FieldKey, valueNode.Value);
-            return result;
+            var queryableType = typeof(System.Linq.IQueryable);
+            if (node.Type.IsAssignableTo(queryableType))
+            {
+                return new MatchAllNode();
+            }
+            return node;
         }
 
-        protected virtual Query HandleNode(QueryNode node)
+        protected virtual QueryNode VisitMatchAll(MatchAllNode node, AlgoliaQueryMapperState mappingState)
+        {
+            return new MatchAllNode();
+        }
+
+        protected virtual QueryNode Visit(QueryNode node, AlgoliaQueryMapperState mappingState)
         {
             switch (node.NodeType)
             {
                 case QueryNodeType.Take:
-                    return HandleTake((TakeNode)node);
+                    		this.StripTake((TakeNode)node, mappingState.AdditionalQueryMethods);
+                            return this.Visit(((TakeNode)node).SourceNode, mappingState);
+                case QueryNodeType.Skip:
+                            this.StripSkip((SkipNode)node, mappingState.AdditionalQueryMethods);
+                            return this.Visit(((SkipNode)node).SourceNode, mappingState);
+                case QueryNodeType.Constant:
+                            return this.VisitConstant((ConstantNode)node, mappingState);
+                case QueryNodeType.MatchAll:
+                            return this.VisitMatchAll((MatchAllNode)node, mappingState);
+                //return HandleTake((TakeNode)node);
                 //case QueryNodeType.Equal:
                 //    return HandleEqual((EqualNode)node);
                 //case QueryNodeType.MatchAll:
                 //    return string.Empty;
             }
             throw new NotSupportedException(string.Format("The query node type '{0}' is not supported in this context.", node.NodeType));
+        }
+
+        private void StripTake(TakeNode node, List<QueryMethod> methods)
+        {
+            methods.Add(new TakeMethod(node.Count));
+        }
+
+        protected virtual void StripSkip(SkipNode node, List<QueryMethod> methods)
+        {
+            methods.Add(new SkipMethod(node.Count));
         }
 
         //protected virtual string HandleTake(TakeNode node)

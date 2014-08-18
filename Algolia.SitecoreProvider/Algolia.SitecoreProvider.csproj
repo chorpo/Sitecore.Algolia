@@ -92,6 +92,7 @@
     <Compile Include="Queries\AlgoliaFieldNameTranslator.cs" />
     <Compile Include="Queries\AlgoliaQuery.cs" />
     <Compile Include="Queries\AlgoliaQueryMapper.cs" />
+    <Compile Include="Queries\AlgoliaQueryMapperState.cs" />
     <Compile Include="Queries\AlgoliaQueryOptimizer.cs" />
     <Compile Include="AlgoliaRepository.cs" />
     <Compile Include="Abstract\IAlgoliaRepository.cs" />

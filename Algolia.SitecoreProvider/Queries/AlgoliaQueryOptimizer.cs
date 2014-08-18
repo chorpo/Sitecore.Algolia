@@ -1,4 +1,5 @@
-﻿using Sitecore.ContentSearch.Linq.Extensions;
+﻿using System;
+using Sitecore.ContentSearch.Linq.Extensions;
 using Sitecore.ContentSearch.Linq.Nodes;
 using Sitecore.ContentSearch.Linq.Parsing;
 using Sitecore.Data.Query;
@@ -15,12 +16,18 @@ namespace Algolia.SitecoreProvider.Queries
 
         protected virtual QueryNode VisitConstant(ConstantNode node, AlgoliaQueryOptimizerState state)
         {
-            var queryableType = typeof(IQueryable);
-            if (node.Type.IsAssignableTo(queryableType))
+            Type typeFromHandle = typeof(System.Linq.IQueryable);
+            if (node.Type.IsAssignableTo(typeFromHandle))
             {
                 return new MatchAllNode();
             }
             return node;
+        }
+
+        protected virtual QueryNode VisitSkip(SkipNode node, AlgoliaQueryOptimizerState state)
+        {
+            QueryNode sourceNode = this.Visit(node.SourceNode, state);
+            return new SkipNode(sourceNode, node.Count);
         }
 
         protected virtual QueryNode VisitWhere(WhereNode node, AlgoliaQueryOptimizerState state)
