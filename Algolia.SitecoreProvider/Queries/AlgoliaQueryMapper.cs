@@ -38,9 +38,17 @@ namespace Algolia.SitecoreProvider.Queries
                 {
                     var skip = skipMethod.Count;
 
+                    if (skip % take > 0)
+                        throw new Exception("Skip and Take cannot be translated to number of pages");
+
                     var page = skip/take;
                     query.SetPage(page);
                 }
+            }
+            else
+            {
+                if (skipMethod != null)
+                    throw new Exception("Skip cannot be used without Take.");
             }
             
             //foreach (var method in mappingState.AdditionalQueryMethods)

@@ -107,6 +107,7 @@
     <Compile Include="Builders\IndexBuilder.cs" />
     <Compile Include="Builders\ItemBuilder.cs" />
     <Compile Include="FieldReaders\GeoLocationFieldReaderTests.cs" />
+    <Compile Include="Helpers\QueryExtentions.cs" />
     <Compile Include="Integrations\AddItemsIntegrations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\QueriesTests.cs" />
