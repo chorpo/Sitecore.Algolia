@@ -35,6 +35,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Algolia.Search.3.1.3\lib\portable-net40+win+WindowsPhoneApp81\Algolia.Search.dll</HintPath>
     </Reference>
+    <Reference Include="FluentAssertions">
+      <HintPath>..\packages\FluentAssertions.3.3.0\lib\net45\FluentAssertions.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentAssertions.Core">
+      <HintPath>..\packages\FluentAssertions.3.3.0\lib\net45\FluentAssertions.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Lucene.Net">
       <HintPath>..\libs\Sitecore\Lucene.Net.dll</HintPath>
     </Reference>
@@ -97,6 +103,7 @@
       <HintPath>..\libs\Sitecore\sitecore.nexus.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
@@ -123,6 +130,7 @@
     <Compile Include="AlgoliaIndexOperationsTests.cs" />
     <Compile Include="Builders\IndexBuilder.cs" />
     <Compile Include="Builders\ItemBuilder.cs" />
+    <Compile Include="Configuration\AlgoliaSearchIndexTests.cs" />
     <Compile Include="FieldReaders\GeoLocationFieldReaderTests.cs" />
     <Compile Include="Helpers\QueryExtentions.cs" />
     <Compile Include="Integrations\AddItemsIntegrations.cs" />
@@ -131,7 +139,9 @@
     <Compile Include="TestData.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Algolia.Search.config" />
+    <None Include="Configuration\Algolia.Search.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="App.config" />
     <None Include="App_Config\FieldTypes.config" />
     <None Include="packages.config" />
