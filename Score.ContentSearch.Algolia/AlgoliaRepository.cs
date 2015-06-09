@@ -39,7 +39,7 @@ namespace Score.ContentSearch.Algolia
             await _index.WaitTaskAsync(taskID);
         }
 
-        public async Task<JObject> SearchAsync(global::Algolia.Search.Query q)
+        public async Task<JObject> SearchAsync(Query q)
         {
             return await _index.SearchAsync(q);
         }

@@ -119,7 +119,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="Algolia.Search.config" />
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>

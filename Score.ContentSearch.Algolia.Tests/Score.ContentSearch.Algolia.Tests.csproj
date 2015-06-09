@@ -131,6 +131,7 @@
     <Compile Include="TestData.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Algolia.Search.config" />
     <None Include="App.config" />
     <None Include="App_Config\FieldTypes.config" />
     <None Include="packages.config" />
