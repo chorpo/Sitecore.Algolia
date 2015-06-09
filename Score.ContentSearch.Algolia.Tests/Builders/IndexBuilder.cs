@@ -76,7 +76,7 @@ namespace Algolia.SitecoreProviderTests.Builders
         private void AddCustomFieldReader(string fieldTypeName, string fieldReaderType)
         {
             var fieldTypes = fieldTypeName.Split('|');
-            string readerType = string.Format("Algolia.SitecoreProvider.FieldReaders.{0}, Algolia.SitecoreProvider",
+            string readerType = string.Format("Algolia.SitecoreProvider.FieldReaders.{0}, Score.ContentSearch.Algolia",
                 fieldReaderType);
             _index.Configuration.FieldReaders.AddFieldReaderByFieldTypeName(readerType, fieldTypes);
         }

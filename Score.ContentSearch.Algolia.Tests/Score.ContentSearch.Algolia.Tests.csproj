@@ -7,8 +7,8 @@
     <ProjectGuid>{FBBBFB78-831A-4D66-AB1C-4B290CA042DB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Algolia.SitecoreProviderTests</RootNamespace>
-    <AssemblyName>Algolia.SitecoreProviderTests</AssemblyName>
+    <RootNamespace>Score.ContentSearch.Algolia.Tests</RootNamespace>
+    <AssemblyName>Score.ContentSearch.Algolia.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>77763951</NuGetPackageImportStamp>
@@ -141,7 +141,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Algolia.SitecoreProvider\Algolia.SitecoreProvider.csproj">
+    <ProjectReference Include="..\Score.ContentSearch.Algolia\Score.ContentSearch.Algolia.csproj">
       <Project>{E3738FD4-B555-4810-B730-6344481DA163}</Project>
       <Name>Algolia.SitecoreProvider</Name>
     </ProjectReference>

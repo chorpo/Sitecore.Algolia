@@ -7,8 +7,8 @@
     <ProjectGuid>{E3738FD4-B555-4810-B730-6344481DA163}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Algolia.SitecoreProvider</RootNamespace>
-    <AssemblyName>Algolia.SitecoreProvider</AssemblyName>
+    <RootNamespace>Score.ContentSearch.Algolia</RootNamespace>
+    <AssemblyName>Score.ContentSearch.Algolia</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>b23e0467</NuGetPackageImportStamp>
