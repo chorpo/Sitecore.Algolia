@@ -14,13 +14,19 @@ namespace Algolia.SitecoreProviderTests.Builders
             _item = new DbItem("source", new ID(TestData.TestItemId));
         }
 
+        public const string DispalyNameFieldName = "DisplayName";
+        public const string CountFieldName = "Count";
+        public const string LocationFieldName = "Location";
+        public const string DateFieldName = "Date";
+        public const string PriceFieldName = "Price";
+
         public ItemBuilder WithDisplayName(string value)
         {
             var field = new DbField(ID.NewID)
             {
                 Value = value,
                 Type = "text",
-                Name = "DisplayName"
+                Name = DispalyNameFieldName
             };
             _item.Fields.Add(field);
             return this;
@@ -32,7 +38,7 @@ namespace Algolia.SitecoreProviderTests.Builders
             {
                 Value = value.ToString(CultureInfo.InvariantCulture),
                 Type = "number",
-                Name = "Count"
+                Name = CountFieldName
             };
             _item.Fields.Add(field);
             return this;
@@ -44,7 +50,7 @@ namespace Algolia.SitecoreProviderTests.Builders
             {
                 Value = value,
                 Type = "geolocation",
-                Name = "Location"
+                Name = LocationFieldName
             };
             _item.Fields.Add(field);
             return this;
@@ -56,7 +62,7 @@ namespace Algolia.SitecoreProviderTests.Builders
             {
                 Value = "20141217T033000",
                 Type = "datetime",
-                Name = "Date"
+                Name = DateFieldName
             };
             _item.Fields.Add(field);
             return this;
@@ -69,7 +75,7 @@ namespace Algolia.SitecoreProviderTests.Builders
                 //"20141217T033000"
                 Value = Sitecore.DateUtil.ToIsoDate(value),
                 Type = "datetime",
-                Name = "Date"
+                Name = DateFieldName
             };
             _item.Fields.Add(field);
             return this;
@@ -81,7 +87,7 @@ namespace Algolia.SitecoreProviderTests.Builders
             {
                 Value = value.ToString(CultureInfo.InvariantCulture),
                 Type = "number",
-                Name = "Price"
+                Name = PriceFieldName
             };
             _item.Fields.Add(field);
             return this;

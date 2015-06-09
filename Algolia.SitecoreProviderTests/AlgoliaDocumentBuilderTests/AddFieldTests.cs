@@ -19,8 +19,7 @@ namespace Algolia.SitecoreProviderTests.AlgoliaDocumentBuilderTests
             {
                 var item = db.GetItem("/sitecore/content/source");
                 var indexable = new SitecoreIndexableItem(item);
-
-
+                
                 var context = new Mock<IProviderUpdateContext>();
                 var index = new IndexBuilder()
                     .WithSimpleFieldTypeMap("text")
@@ -29,7 +28,7 @@ namespace Algolia.SitecoreProviderTests.AlgoliaDocumentBuilderTests
                 context.Setup(t => t.Index).Returns(index);
                 var sut = new AlgoliaDocumentBuilder(indexable, context.Object);
 
-                var field = new SitecoreItemDataField(item.Fields[0]);
+                var field = new SitecoreItemDataField(item.Fields[ItemBuilder.DispalyNameFieldName]);
 
                 //Act
                 sut.AddField(field);
@@ -57,7 +56,7 @@ namespace Algolia.SitecoreProviderTests.AlgoliaDocumentBuilderTests
                 context.Setup(t => t.Index).Returns(index);
                 var sut = new AlgoliaDocumentBuilder(indexable, context.Object);
 
-                var field = new SitecoreItemDataField(item.Fields[0]);
+                var field = new SitecoreItemDataField(item.Fields[ItemBuilder.DispalyNameFieldName]);
 
                 //Act
                 sut.AddField(field);
@@ -86,7 +85,7 @@ namespace Algolia.SitecoreProviderTests.AlgoliaDocumentBuilderTests
                 context.Setup(t => t.Index).Returns(index);
                 var sut = new AlgoliaDocumentBuilder(indexable, context.Object);
 
-                var field = new SitecoreItemDataField(item.Fields[0]);
+                var field = new SitecoreItemDataField(item.Fields[ItemBuilder.CountFieldName]);
 
                 //Act
                 sut.AddField(field);
@@ -115,7 +114,7 @@ namespace Algolia.SitecoreProviderTests.AlgoliaDocumentBuilderTests
                     .Build();
                 context.Setup(t => t.Index).Returns(index);
                 var sut = new AlgoliaDocumentBuilder(indexable, context.Object);
-                var field = new SitecoreItemDataField(item.Fields[0]);
+                var field = new SitecoreItemDataField(item.Fields[ItemBuilder.DateFieldName]);
 
                 //Act
                 sut.AddField(field);
@@ -149,7 +148,7 @@ namespace Algolia.SitecoreProviderTests.AlgoliaDocumentBuilderTests
         'lng': -84.3879824
       }}");
                 //Act
-                sut.AddField("Location", value);
+                sut.AddField(ItemBuilder.LocationFieldName, value);
 
                 //Assert
                 JObject doc = sut.Document;
@@ -175,7 +174,7 @@ namespace Algolia.SitecoreProviderTests.AlgoliaDocumentBuilderTests
                 context.Setup(t => t.Index).Returns(index);
                 var sut = new AlgoliaDocumentBuilder(indexable, context.Object);
 
-                var field = new SitecoreItemDataField(item.Fields[0]);
+                var field = new SitecoreItemDataField(item.Fields[ItemBuilder.PriceFieldName]);
 
                 //Act
                 sut.AddField(field);

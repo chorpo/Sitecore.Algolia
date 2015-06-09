@@ -23,7 +23,7 @@ namespace Algolia.SitecoreProviderTests.FieldReaders
             using (var db = new Db {new ItemBuilder().WithGeoLocation("34.0385737,-84.56821339999999,").Build()})
             {
                 var item = db.GetItem("/sitecore/content/source");
-                var field = item.Fields[0];
+                var field = item.Fields[ItemBuilder.LocationFieldName];
                 var args = new SitecoreItemDataField(field);
                 var sut = new GeoLocationFieldReader();
 
