@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Xml;
-using Algolia.SitecoreProvider;
-using Algolia.SitecoreProvider.Abstract;
-using Algolia.SitecoreProvider.FieldsConfiguration;
 using Moq;
+using Score.ContentSearch.Algolia.Abstract;
+using Score.ContentSearch.Algolia.FieldsConfiguration;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.FieldReaders;
 using Sitecore.ContentSearch.Maintenance;
-using Sitecore.Shell.Framework.Commands.TemplateBuilder;
 
-namespace Algolia.SitecoreProviderTests.Builders
+namespace Score.ContentSearch.Algolia.Tests.Builders
 {
     internal class IndexBuilder
     {
@@ -76,7 +70,7 @@ namespace Algolia.SitecoreProviderTests.Builders
         private void AddCustomFieldReader(string fieldTypeName, string fieldReaderType)
         {
             var fieldTypes = fieldTypeName.Split('|');
-            string readerType = string.Format("Algolia.SitecoreProvider.FieldReaders.{0}, Score.ContentSearch.Algolia",
+            string readerType = string.Format("Score.ContentSearch.Algolia.FieldReaders.{0}, Score.ContentSearch.Algolia",
                 fieldReaderType);
             _index.Configuration.FieldReaders.AddFieldReaderByFieldTypeName(readerType, fieldTypes);
         }

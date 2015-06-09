@@ -1,12 +1,11 @@
-﻿using Algolia.SitecoreProvider;
-using Algolia.SitecoreProviderTests.Builders;
-using Moq;
+﻿using Moq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using Score.ContentSearch.Algolia.Tests.Builders;
 using Sitecore.ContentSearch;
 using Sitecore.FakeDb;
 
-namespace Algolia.SitecoreProviderTests.AlgoliaDocumentBuilderTests
+namespace Score.ContentSearch.Algolia.Tests.AlgoliaDocumentBuilderTests
 {
     [TestFixture]
     public class AddFieldTests

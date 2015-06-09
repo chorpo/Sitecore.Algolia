@@ -1,23 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Algolia.Search;
-using Algolia.SitecoreProvider;
-using Algolia.SitecoreProvider.Abstract;
-using Algolia.SitecoreProviderTests.Builders;
-using Algolia.SitecoreProviderTests.Helpers;
 using Moq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using Sitecore.ContentSearch;
+using Score.ContentSearch.Algolia.Abstract;
+using Score.ContentSearch.Algolia.Tests.Builders;
+using Score.ContentSearch.Algolia.Tests.Helpers;
 using Sitecore.ContentSearch.Maintenance;
 using Sitecore.ContentSearch.SearchTypes;
-using Sitecore.Data.Items;
 using Sitecore.FakeDb;
 
-namespace Algolia.SitecoreProviderTests.Queries
+namespace Score.ContentSearch.Algolia.Tests.Queries
 {
     [TestFixture]
     public class QueriesTests

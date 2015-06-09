@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Algolia.SitecoreProvider.Abstract;
+﻿using Score.ContentSearch.Algolia.Abstract;
 
-namespace Algolia.SitecoreProvider
+namespace Score.ContentSearch.Algolia
 {
     public class AlgoliaConfig: IAlgoliaConfig
     {

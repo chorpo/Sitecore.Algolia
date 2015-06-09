@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Algolia.SitecoreProvider;
 using NUnit.Framework;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Maintenance;
 using Sitecore.Data;
-using Sitecore.Data.Items;
 using Sitecore.FakeDb;
 
-namespace Algolia.SitecoreProviderTests.Integrations
+namespace Score.ContentSearch.Algolia.Tests.Integrations
 {
     [TestFixture]
     [Category("Integrated")]

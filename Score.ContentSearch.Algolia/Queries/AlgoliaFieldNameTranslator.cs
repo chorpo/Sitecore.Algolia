@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Sitecore.ContentSearch;
 
-namespace Algolia.SitecoreProvider.Queries
+namespace Score.ContentSearch.Algolia.Queries
 {
     class AlgoliaFieldNameTranslator : AbstractFieldNameTranslator
     {

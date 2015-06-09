@@ -3,7 +3,7 @@ using System.Globalization;
 using Sitecore.Data;
 using Sitecore.FakeDb;
 
-namespace Algolia.SitecoreProviderTests.Builders
+namespace Score.ContentSearch.Algolia.Tests.Builders
 {
     internal class ItemBuilder
     {

@@ -3,7 +3,7 @@ using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.FieldReaders;
 using Sitecore.Data.Fields;
 
-namespace Algolia.SitecoreProvider.FieldReaders
+namespace Score.ContentSearch.Algolia.FieldReaders
 {
     public class DateFieldReader : FieldReader
     {

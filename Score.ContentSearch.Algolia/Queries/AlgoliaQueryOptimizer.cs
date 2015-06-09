@@ -2,9 +2,8 @@
 using Sitecore.ContentSearch.Linq.Extensions;
 using Sitecore.ContentSearch.Linq.Nodes;
 using Sitecore.ContentSearch.Linq.Parsing;
-using Sitecore.Data.Query;
 
-namespace Algolia.SitecoreProvider.Queries
+namespace Score.ContentSearch.Algolia.Queries
 {
     public class AlgoliaQueryOptimizer : QueryOptimizer<AlgoliaQueryOptimizerState>
     {

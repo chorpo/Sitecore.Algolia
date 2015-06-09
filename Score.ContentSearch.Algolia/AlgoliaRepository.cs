@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Algolia.Search;
-using Algolia.SitecoreProvider.Abstract;
 using Newtonsoft.Json.Linq;
+using Score.ContentSearch.Algolia.Abstract;
 
-namespace Algolia.SitecoreProvider
+namespace Score.ContentSearch.Algolia
 {
     public class AlgoliaRepository : IAlgoliaRepository
     {
@@ -41,7 +39,7 @@ namespace Algolia.SitecoreProvider
             await _index.WaitTaskAsync(taskID);
         }
 
-        public async Task<JObject> SearchAsync(Algolia.Search.Query q)
+        public async Task<JObject> SearchAsync(global::Algolia.Search.Query q)
         {
             return await _index.SearchAsync(q);
         }

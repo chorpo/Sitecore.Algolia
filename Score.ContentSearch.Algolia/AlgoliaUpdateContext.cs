@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Algolia.SitecoreProvider.Abstract;
 using Newtonsoft.Json.Linq;
+using Score.ContentSearch.Algolia.Abstract;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Linq.Common;
 using Sitecore.Data;
 
-namespace Algolia.SitecoreProvider
+namespace Score.ContentSearch.Algolia
 {
     public class AlgoliaUpdateContext: IProviderUpdateContext
     {

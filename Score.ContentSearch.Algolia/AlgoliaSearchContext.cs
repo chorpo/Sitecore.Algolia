@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Algolia.SitecoreProvider.Queries;
+using Score.ContentSearch.Algolia.Queries;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Linq.Common;
 using Sitecore.ContentSearch.Security;
 using Sitecore.Diagnostics;
 
-namespace Algolia.SitecoreProvider
+namespace Score.ContentSearch.Algolia
 {
     public class AlgoliaSearchContext: IProviderSearchContext
     {

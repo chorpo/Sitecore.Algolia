@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Algolia.Search;
-using Algolia.SitecoreProvider.Abstract;
+using Score.ContentSearch.Algolia.Abstract;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Maintenance;
 
-namespace Algolia.SitecoreProvider
+namespace Score.ContentSearch.Algolia
 {
     public class AlgoliaSearchIndexSummary : ISearchIndexSummary
     {

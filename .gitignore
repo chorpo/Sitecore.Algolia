@@ -14,3 +14,4 @@ Score.ContentSearch.Algolia.Tests/bin/
 *.ncrunchproject
 *.ncrunchsolution
 Score.ContentSearch.Algolia.Tests/license.xml
+*.cache

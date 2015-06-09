@@ -2,10 +2,8 @@
 using System.IO;
 using Algolia.Search;
 using Sitecore.ContentSearch.Linq.Common;
-using Sitecore.ContentSearch.Linq.Parsing;
-using IndexQuery = Sitecore.ContentSearch.Linq.Parsing.IndexQuery;
 
-namespace Algolia.SitecoreProvider.Queries
+namespace Score.ContentSearch.Algolia.Queries
 {
     public class AlgoliaQuery : IDumpable
     {

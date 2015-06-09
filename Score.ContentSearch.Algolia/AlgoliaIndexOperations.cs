@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Linq.Common;
 using Sitecore.ContentSearch.Pipelines.IndexingFilters;
-using Sitecore.Data.Items;
 using Sitecore.Events;
 
-namespace Algolia.SitecoreProvider
+namespace Score.ContentSearch.Algolia
 {
     public class AlgoliaIndexOperations : IIndexOperations
     {

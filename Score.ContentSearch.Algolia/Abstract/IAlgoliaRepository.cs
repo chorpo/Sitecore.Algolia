@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Algolia.Search;
 using Newtonsoft.Json.Linq;
 
-namespace Algolia.SitecoreProvider.Abstract
+namespace Score.ContentSearch.Algolia.Abstract
 {
     public interface IAlgoliaRepository
     {
@@ -12,7 +11,7 @@ namespace Algolia.SitecoreProvider.Abstract
         Task<JObject> AddObjectAsync(object content, string objectId = null);
         Task<JObject> DeleteObjectsAsync(IEnumerable<String> objects);
         Task WaitTaskAsync(string taskID);
-        Task<JObject> SearchAsync(Algolia.Search.Query q);
+        Task<JObject> SearchAsync(global::Algolia.Search.Query q);
         Task<JObject> ClearIndexAsync();
     }
 }

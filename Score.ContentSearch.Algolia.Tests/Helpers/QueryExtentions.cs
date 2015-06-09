@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Algolia.Search;
+﻿using Algolia.Search;
 using NUnit.Framework;
 
-namespace Algolia.SitecoreProviderTests.Helpers
+namespace Score.ContentSearch.Algolia.Tests.Helpers
 {
     public static class QueryExtentions
     {

@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Algolia.SitecoreProvider.Abstract;
 using Newtonsoft.Json.Linq;
+using Score.ContentSearch.Algolia.Abstract;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Diagnostics;
 using Sitecore.ContentSearch.Linq.Common;
@@ -14,7 +10,7 @@ using Sitecore.ContentSearch.Linq.Parsing;
 using Sitecore.ContentSearch.Security;
 using Sitecore.Diagnostics;
 
-namespace Algolia.SitecoreProvider.Queries
+namespace Score.ContentSearch.Algolia.Queries
 {
     public class LinqToAlgoliaIndex<TItem> : Index<TItem, AlgoliaQuery>
     {

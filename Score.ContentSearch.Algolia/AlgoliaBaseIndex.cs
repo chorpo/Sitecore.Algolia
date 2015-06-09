@@ -4,13 +4,11 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Algolia.SitecoreProvider.Abstract;
-using Algolia.SitecoreProvider.Queries;
+using Score.ContentSearch.Algolia.Abstract;
+using Score.ContentSearch.Algolia.Queries;
 using Sitecore.ContentSearch;
-using Sitecore.ContentSearch.Abstractions;
 using Sitecore.ContentSearch.Events;
 using Sitecore.ContentSearch.Maintenance;
 using Sitecore.ContentSearch.Maintenance.Strategies;
@@ -18,7 +16,7 @@ using Sitecore.ContentSearch.Security;
 using Sitecore.Eventing;
 using Sitecore.Events;
 
-namespace Algolia.SitecoreProvider
+namespace Score.ContentSearch.Algolia
 {
     public class AlgoliaBaseIndex : AbstractSearchIndex
     {

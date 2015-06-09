@@ -1,10 +1,10 @@
 ﻿using System;
-using Algolia.SitecoreProvider.FieldsConfiguration;
 using Newtonsoft.Json.Linq;
+using Score.ContentSearch.Algolia.FieldsConfiguration;
 using Sitecore.ContentSearch;
 using Sitecore.Data.Items;
 
-namespace Algolia.SitecoreProvider
+namespace Score.ContentSearch.Algolia
 {
     public class AlgoliaDocumentBuilder : AbstractDocumentBuilder<JObject>
     {

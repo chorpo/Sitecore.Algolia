@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Sitecore.ContentSearch.Linq.Methods;
 
-namespace Algolia.SitecoreProvider.Queries
+namespace Score.ContentSearch.Algolia.Queries
 {
     public class AlgoliaQueryMapperState
     {

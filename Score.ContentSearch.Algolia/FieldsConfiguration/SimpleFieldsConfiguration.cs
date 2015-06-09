@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using Sitecore.ContentSearch;
 
-namespace Algolia.SitecoreProvider.FieldsConfiguration
+namespace Score.ContentSearch.Algolia.FieldsConfiguration
 {
     /// <summary>
     /// Configuration for text and numeric fields that does not require any extra processing

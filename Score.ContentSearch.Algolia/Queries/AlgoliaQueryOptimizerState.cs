@@ -1,6 +1,6 @@
 ﻿using Sitecore.ContentSearch.Linq.Parsing;
 
-namespace Algolia.SitecoreProvider.Queries
+namespace Score.ContentSearch.Algolia.Queries
 {
     public class AlgoliaQueryOptimizerState : QueryOptimizerState
     {

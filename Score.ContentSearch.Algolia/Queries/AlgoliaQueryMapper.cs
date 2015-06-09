@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using Sitecore.ContentSearch.Linq.Extensions;
-using Sitecore.ContentSearch.Linq.Helpers;
 using Sitecore.ContentSearch.Linq.Methods;
 using Sitecore.ContentSearch.Linq.Nodes;
 using Sitecore.ContentSearch.Linq.Parsing;
-using Sitecore.Data.Query;
-using IndexQuery = Sitecore.ContentSearch.Linq.Parsing.IndexQuery;
 using Query = Algolia.Search.Query;
 
-namespace Algolia.SitecoreProvider.Queries
+namespace Score.ContentSearch.Algolia.Queries
 {
     public class AlgoliaQueryMapper : QueryMapper<AlgoliaQuery>
     {

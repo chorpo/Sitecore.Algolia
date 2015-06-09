@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Algolia.SitecoreProvider.FieldReaders;
-using Algolia.SitecoreProviderTests.Builders;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
+using Score.ContentSearch.Algolia.FieldReaders;
+using Score.ContentSearch.Algolia.Tests.Builders;
 using Sitecore.ContentSearch;
 using Sitecore.FakeDb;
 
-namespace Algolia.SitecoreProviderTests.FieldReaders
+namespace Score.ContentSearch.Algolia.Tests.FieldReaders
 {
     [TestFixture]
     public class GeoLocationFieldReaderTests
