@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Algolia.SitecoreProvider", "Algolia.SitecoreProvider\Algolia.SitecoreProvider.csproj", "{E3738FD4-B555-4810-B730-6344481DA163}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Score.ContentSearch.Algolia", "Score.ContentSearch.Algolia\Score.ContentSearch.Algolia.csproj", "{E3738FD4-B555-4810-B730-6344481DA163}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Algolia.SitecoreProviderTests", "Algolia.SitecoreProviderTests\Algolia.SitecoreProviderTests.csproj", "{FBBBFB78-831A-4D66-AB1C-4B290CA042DB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Score.ContentSearch.Algolia.Tests", "Score.ContentSearch.Algolia.Tests\Score.ContentSearch.Algolia.Tests.csproj", "{FBBBFB78-831A-4D66-AB1C-4B290CA042DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

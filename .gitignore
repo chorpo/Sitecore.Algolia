@@ -9,3 +9,8 @@ Algolia.SitecoreProvider/obj/
 Algolia.SitecoreProviderTests/obj/
 *.suo
 Algolia.SitecoreProviderTests/license.xml
+Score.ContentSearch.Algolia/bin/
+Score.ContentSearch.Algolia.Tests/bin/
+*.ncrunchproject
+*.ncrunchsolution
+Score.ContentSearch.Algolia.Tests/license.xml
