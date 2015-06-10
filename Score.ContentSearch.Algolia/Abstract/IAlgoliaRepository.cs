@@ -7,7 +7,7 @@ namespace Score.ContentSearch.Algolia.Abstract
 {
     public interface IAlgoliaRepository
     {
-        Task<JObject> SaveObjectsAsyn(IEnumerable<JObject> objects);
+        Task<JObject> SaveObjectsAsync(IEnumerable<JObject> objects);
         Task<JObject> AddObjectAsync(object content, string objectId = null);
         Task<JObject> DeleteObjectsAsync(IEnumerable<String> objects);
         Task WaitTaskAsync(string taskID);

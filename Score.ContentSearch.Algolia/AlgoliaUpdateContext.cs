@@ -48,7 +48,8 @@ namespace Score.ContentSearch.Algolia
 
         public void Commit()
         {
-            _repository.SaveObjectsAsyn(_updateDocs.Select(t => t.Value)).Wait();
+            var data = _updateDocs.Select(t => t.Value).ToList();
+            _repository.SaveObjectsAsync(data).Wait();
             _updateDocs.Clear();
 
             _repository.DeleteObjectsAsync(_deleteIds.Select(t => t.ToGuid().ToString())).Wait();

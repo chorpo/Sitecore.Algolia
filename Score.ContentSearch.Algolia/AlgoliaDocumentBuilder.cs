@@ -16,6 +16,7 @@ namespace Score.ContentSearch.Algolia
             Document["name"] = item.Name;
             Document["path"] = item.Paths.Path;
             Document["objectID"] = item.ID.ToGuid().ToString();
+            Document["language"] = item.Language.Name;
         }
 
         #region AbstractDocumentBuilder
@@ -39,9 +40,6 @@ namespace Score.ContentSearch.Algolia
                 {
                     Document.Add(jvalue);
                 }
-
-                
-
                 return;
             }
             

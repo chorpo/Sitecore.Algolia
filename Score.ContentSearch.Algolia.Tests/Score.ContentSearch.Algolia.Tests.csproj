@@ -123,6 +123,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlgoliaBaseIndexTests.cs" />
+    <Compile Include="Fakes\AlgoliaDataCrowler.cs" />
     <Compile Include="AlgoliaDocumentBuilderTests\AddFieldTests.cs" />
     <Compile Include="AlgoliaIndexOperationsTests.cs" />
     <Compile Include="Builders\IndexBuilder.cs" />
@@ -143,6 +145,7 @@
     <None Include="App.config" />
     <None Include="App_Config\FieldTypes.config" />
     <None Include="packages.config" />
+    <None Include="SampleIndex.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="license.xml">

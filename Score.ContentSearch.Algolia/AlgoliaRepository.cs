@@ -17,7 +17,7 @@ namespace Score.ContentSearch.Algolia
             _index = algoliaClient.InitIndex(algoliaConfig.IndexName);
         }
 
-        public async Task<JObject> SaveObjectsAsyn(IEnumerable<JObject> objects)
+        public async Task<JObject> SaveObjectsAsync(IEnumerable<JObject> objects)
         {
             if (objects == null) throw new ArgumentNullException("objects");
             return await _index.SaveObjectsAsync(objects);
