@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using Score.ContentSearch.Algolia.FieldsConfiguration;
 using Sitecore.ContentSearch;
@@ -25,7 +27,21 @@ namespace Score.ContentSearch.Algolia
             if (fieldValue is JObject)
             {
                 var jvalue = fieldValue as JObject;
-                Document.Merge(jvalue);
+                
+                //Available in 6.0
+                //Document.Merge(jvalue);
+
+                if (jvalue.Count == 1)
+                {
+                    Document.Add(jvalue.First);
+                }
+                else
+                {
+                    Document.Add(jvalue);
+                }
+
+                
+
                 return;
             }
             

@@ -130,7 +130,7 @@ namespace Score.ContentSearch.Algolia.Tests.AlgoliaDocumentBuilderTests
         public void AddJobjectFieldTest()
         {
             // arrange
-            using (var db = new Db { new ItemBuilder().WithHardcodedDate().Build() })
+            using (var db = new Db {new ItemBuilder().WithHardcodedDate().Build()})
             {
                 var item = db.GetItem("/sitecore/content/source");
                 var indexable = new SitecoreIndexableItem(item);
@@ -151,8 +151,8 @@ namespace Score.ContentSearch.Algolia.Tests.AlgoliaDocumentBuilderTests
 
                 //Assert
                 JObject doc = sut.Document;
-                Assert.AreEqual(33.7489954, (double)doc["_geoloc"]["lat"]);
-                Assert.AreEqual(-84.3879824, (double)doc["_geoloc"]["lng"]);
+                Assert.AreEqual(33.7489954, (double) doc["_geoloc"]["lat"]);
+                Assert.AreEqual(-84.3879824, (double) doc["_geoloc"]["lng"]);
             }
         }
 
