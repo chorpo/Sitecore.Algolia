@@ -22,14 +22,12 @@ namespace Score.ContentSearch.Algolia
     {
         private readonly IAlgoliaRepository _repository;
 
-        public AlgoliaBaseIndex(string name, IAlgoliaRepository repository, IIndexPropertyStore propertyStore)
+        public AlgoliaBaseIndex(string name, IAlgoliaRepository repository)
         {
             if (repository == null) throw new ArgumentNullException("repository");
-            if (propertyStore == null) throw new ArgumentNullException("propertyStore");
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentOutOfRangeException("name");
 
             _name = name;
-            PropertyStore = propertyStore;
 
             _repository = repository;
             this.Strategies = new List<IIndexUpdateStrategy>();
@@ -242,7 +240,7 @@ namespace Score.ContentSearch.Algolia
         public override IIndexPropertyStore PropertyStore { get; set; }
         public override AbstractFieldNameTranslator FieldNameTranslator { get; set; }
         public override ProviderIndexConfiguration Configuration { get; set; }
-        public override IIndexOperations Operations { get { return new AlgoliaIndexOperations(); } }
+        public override IIndexOperations Operations { get { return new AlgoliaIndexOperations(this); } }
 
         #endregion
 

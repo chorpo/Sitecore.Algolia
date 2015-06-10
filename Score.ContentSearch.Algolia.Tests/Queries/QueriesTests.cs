@@ -77,7 +77,7 @@ namespace Score.ContentSearch.Algolia.Tests.Queries
                     .ReturnsAsync(new JObject())
                     .Callback((Query q) => query = q);
 
-                var index = new AlgoliaBaseIndex("algolia_master_index", repository.Object, new NullPropertyStore());
+                var index = new AlgoliaBaseIndex("algolia_master_index", repository.Object);
 
                 using (var context = index.CreateSearchContext())
                 {

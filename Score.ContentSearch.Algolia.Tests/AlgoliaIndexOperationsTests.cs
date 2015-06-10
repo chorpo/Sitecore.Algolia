@@ -40,7 +40,7 @@ namespace Score.ContentSearch.Algolia.Tests
                 var index = new IndexBuilder().Build();
                 context.Setup(t => t.Index).Returns(index);
                 
-                var operations = new AlgoliaIndexOperations();
+                var operations = new AlgoliaIndexOperations(index);
 
                 //Act
                 operations.Update(indexable, context.Object, new ProviderIndexConfiguration());
@@ -71,7 +71,7 @@ namespace Score.ContentSearch.Algolia.Tests
                 var index = new IndexBuilder().Build();
                 context.Setup(t => t.Index).Returns(index);
 
-                var operations = new AlgoliaIndexOperations();
+                var operations = new AlgoliaIndexOperations(index);
 
                 //Act
                 operations.Add(indexable, context.Object, new ProviderIndexConfiguration());

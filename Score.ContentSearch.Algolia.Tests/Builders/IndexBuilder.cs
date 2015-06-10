@@ -16,7 +16,7 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
         public IndexBuilder()
         {
             var algoliaRepository = new Mock<IAlgoliaRepository>();
-            _index = new AlgoliaBaseIndex("index_name", algoliaRepository.Object, new NullPropertyStore());
+            _index = new AlgoliaBaseIndex("index_name", algoliaRepository.Object);
             var configuration = new ProviderIndexConfiguration
             {
                 DocumentOptions = new DocumentBuilderOptions(),

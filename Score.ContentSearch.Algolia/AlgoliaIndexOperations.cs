@@ -9,6 +9,14 @@ namespace Score.ContentSearch.Algolia
 {
     public class AlgoliaIndexOperations : IIndexOperations
     {
+        private readonly ISearchIndex _index;
+
+        public AlgoliaIndexOperations(ISearchIndex index)
+        {
+            if (index == null) throw new ArgumentNullException("index");
+            _index = index;
+        }
+
         #region IIndexOperations
 
         public void Update(IIndexable indexable, IProviderUpdateContext context,

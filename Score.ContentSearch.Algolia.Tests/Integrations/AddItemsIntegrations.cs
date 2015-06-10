@@ -29,10 +29,10 @@ namespace Score.ContentSearch.Algolia.Tests.Integrations
             {
                 var item = db.GetItem("/sitecore/content/source");
                 var indexable = new SitecoreIndexableItem(item);
-                var index = new AlgoliaSearchIndex("algolia_master_index", "3Q92VD0BCR", "8ae3d3950e531a4be7d32a3e58bb2eea", new NullPropertyStore());
+                var index = new AlgoliaSearchIndex("algolia_master_index", "3Q92VD0BCR", "8ae3d3950e531a4be7d32a3e58bb2eea", "test");
                 var context = index.CreateUpdateContext();
                 
-                var operations = new AlgoliaIndexOperations();
+                var operations = new AlgoliaIndexOperations(index);
 
                 //Act
                 operations.Update(indexable, context, new ProviderIndexConfiguration());
