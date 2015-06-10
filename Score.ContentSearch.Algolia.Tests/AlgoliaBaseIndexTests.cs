@@ -24,7 +24,7 @@ namespace Score.ContentSearch.Algolia.Tests
         [SetUp]
         public void SetUp()
         {
-            _source = new DbItem("source", new ID(TestData.TestItemId));
+            _source = new DbItem("source", new ID(TestData.TestItemGuid), TestData.TestTemplateId);
         }
 
         [Test]
@@ -54,6 +54,39 @@ namespace Score.ContentSearch.Algolia.Tests
 
                 //Assert
                 repository.Verify(t => t.SaveObjectsAsync(It.Is<IEnumerable<JObject>>(o => o.Count() == 1)), Times.Once);
+            }
+        }
+
+        [Test]
+        public void CrowlerShouldExcludeTemplates()
+        {
+            // arrange
+            using (var db = new Db { _source })
+            {
+                var item = db.GetItem("/sitecore/content/source");
+                item.Should().NotBeNull();
+
+                var repository = new Mock<IAlgoliaRepository>();
+
+                var sut = new AlgoliaBaseIndex("test", repository.Object);
+                sut.PropertyStore = new NullPropertyStore();
+                var configuration = new AlgoliaIndexConfiguration();
+                configuration.DocumentOptions = new DocumentBuilderOptions();
+
+                configuration.ExcludeTemplate(TestData.TestTemplateId.ToString());
+                
+                sut.Configuration = configuration;
+                var crowler = new SitecoreItemCrawler();
+                crowler.Database = "master";
+                crowler.Root = "/sitecore/content";
+                sut.Crawlers.Add(crowler);
+                crowler.Initialize(sut);
+
+                //Act
+                sut.Rebuild();
+
+                //Assert
+                repository.Verify(t => t.SaveObjectsAsync(It.Is<IEnumerable<JObject>>(o => o.Count() == 0)), Times.Once);
             }
         }
     }

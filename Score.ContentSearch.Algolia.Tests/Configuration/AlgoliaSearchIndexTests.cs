@@ -16,7 +16,7 @@ namespace Score.ContentSearch.Algolia.Tests.Configuration
         public void ShouldCreateFromConfig()
         {
             //Act
-            var index = LoadIndexConfiguration();
+            var index = LoadIndexConfiguration("Algolia.Search.config");
             
             //Assert
             index.Should().NotBeNull();
@@ -27,7 +27,7 @@ namespace Score.ContentSearch.Algolia.Tests.Configuration
         public void ShouldLoadPropertyStoreFromConfig()
         {
             //Act
-            var index = LoadIndexConfiguration();
+            var index = LoadIndexConfiguration("Algolia.Search.config");
 
             //Assert
             index.PropertyStore.Should().NotBeNull();
@@ -41,7 +41,7 @@ namespace Score.ContentSearch.Algolia.Tests.Configuration
         public void ShouldLoadStrategy()
         {
             //Act
-            var index = LoadIndexConfiguration();
+            var index = LoadIndexConfiguration("Algolia.Search.config");
 
             //Assert
             index.Strategies.Count.Should().Be(1);
@@ -52,7 +52,7 @@ namespace Score.ContentSearch.Algolia.Tests.Configuration
         public void ShouldLoadCrawler()
         {
             //Act
-            var index = LoadIndexConfiguration();
+            var index = LoadIndexConfiguration("Algolia.Search.config");
 
             //Assert
             index.Crawlers.Count.Should().Be(1);
@@ -62,10 +62,23 @@ namespace Score.ContentSearch.Algolia.Tests.Configuration
             crowler.Root.Should().Be("/sitecore/content/Unstopables/North America/United States/home/all-products");
         }
 
-        private AlgoliaSearchIndex LoadIndexConfiguration()
+        [Test]
+        public void ShouldIncludeTemplate()
+        {
+            //Act
+            var index = LoadIndexConfiguration("IncludeTemplate.config");
+
+            //Assert
+            index.Configuration.DocumentOptions.IncludedTemplates.Count.Should().Be(1);
+            index.Configuration.DocumentOptions.IncludedTemplates.First()
+                .Should()
+                .Be("{9CAAECFD-3BEB-44B1-9BE5-F7E30811EF2D}");
+        }
+
+        private AlgoliaSearchIndex LoadIndexConfiguration(string fileName)
         {
             //Arrange
-            string xmlPath = @"Configuration\Algolia.Search.config";
+            string xmlPath = @"Configuration\" + fileName;
             var xmlDoc = new XmlDocument();
             xmlDoc.Load(xmlPath);
 

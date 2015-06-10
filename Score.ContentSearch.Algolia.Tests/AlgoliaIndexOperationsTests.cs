@@ -17,7 +17,7 @@ namespace Score.ContentSearch.Algolia.Tests
         [SetUp]
         public void SetUp()
         {
-            _source = new DbItem("source", new ID(TestData.TestItemId));
+            _source = new DbItem("source", new ID(TestData.TestItemGuid));
         }
 
         [Test]

@@ -139,6 +139,9 @@
     <Compile Include="TestData.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Configuration\IncludeTemplate.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Configuration\Algolia.Search.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
