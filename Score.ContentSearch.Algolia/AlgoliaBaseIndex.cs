@@ -66,23 +66,35 @@ namespace Score.ContentSearch.Algolia
 
         public override void Rebuild(IndexingOptions indexingOptions)
         {
-            Event.RaiseEvent("indexing:start", new object[] { this.Name, true });
-            var event2 = new IndexingStartedEvent
+            this.DoRebuild(indexingOptions, CancellationToken.None);
+        }
+
+        protected virtual IProviderUpdateContext CreateFullRebuildContext()
+        {
+            return this.CreateUpdateContext();
+        }
+
+        protected virtual void DoRebuild(IndexingOptions indexingOptions, CancellationToken cancellationToken)
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            using (IProviderUpdateContext providerUpdateContext = this.CreateFullRebuildContext())
             {
-                IndexName = this.Name,
-                FullRebuild = true
-            };
-            EventManager.QueueEvent<IndexingStartedEvent>(event2);
-            this.Reset();
-            this.DoRebuild(indexingOptions);
-            Summary.LastUpdated = DateTime.Now;
-            Event.RaiseEvent("indexing:end", new object[] { this.Name, true });
-            var event3 = new IndexingFinishedEvent
+                foreach (IProviderCrawler current in base.Crawlers)
+                {
+                    current.RebuildFromRoot(providerUpdateContext, indexingOptions, cancellationToken);
+                }
+                if ((base.IndexingState & IndexingState.Stopped) != IndexingState.Stopped)
+                {
+                    providerUpdateContext.Optimize();
+                }
+                providerUpdateContext.Commit();
+            }
+            stopwatch.Stop();
+            if ((base.IndexingState & IndexingState.Stopped) != IndexingState.Stopped)
             {
-                IndexName = this.Name,
-                FullRebuild = true
-            };
-            EventManager.QueueEvent<IndexingFinishedEvent>(event3);
+                this.PropertyStore.Set(IndexProperties.RebuildTime, stopwatch.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture));
+            }
         }
 
         public override Task RebuildAsync(IndexingOptions indexingOptions, CancellationToken cancellationToken)
