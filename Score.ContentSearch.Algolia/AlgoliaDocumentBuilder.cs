@@ -3,6 +3,8 @@ using System.Collections;
 using Newtonsoft.Json.Linq;
 using Score.ContentSearch.Algolia.FieldsConfiguration;
 using Sitecore.ContentSearch;
+using Sitecore.ContentSearch.ComputedFields;
+using Sitecore.ContentSearch.Diagnostics;
 using Sitecore.Data.Items;
 
 namespace Score.ContentSearch.Algolia
@@ -14,7 +16,8 @@ namespace Score.ContentSearch.Algolia
             var item = (Item)(indexable as SitecoreIndexableItem);
             Document["name"] = item.Name;
             Document["path"] = item.Paths.Path;
-            Document["objectID"] = item.ID.ToGuid().ToString();
+            Document["objectID"] = item.Language.Name + "_" + item.ID.ToGuid().ToString();
+            Document["ID"] = item.ID.ToGuid().ToString();
             Document["language"] = item.Language.Name;
         }
 
@@ -126,7 +129,51 @@ namespace Score.ContentSearch.Algolia
 
         public override void AddComputedIndexFields()
         {
-            throw new NotImplementedException();
+            foreach (IComputedIndexField current in base.Options.ComputedIndexFields)
+            {
+                object obj;
+                try
+                {
+                    obj = current.ComputeFieldValue(base.Indexable);
+                }
+                catch (Exception exception)
+                {
+                    CrawlingLog.Log.Warn(
+                        string.Format("Could not compute value for ComputedIndexField: {0} for indexable: {1}",
+                            current.FieldName, base.Indexable.UniqueId), exception);
+                    if (base.Settings.StopOnCrawlFieldError())
+                    {
+                        throw;
+                    }
+                    continue;
+                }
+                
+                if (obj is IEnumerable && !(obj is string))
+                {
+                    IEnumerator enumerator2 = (obj as IEnumerable).GetEnumerator();
+                    try
+                    {
+                        while (enumerator2.MoveNext())
+                        {
+                            object current2 = enumerator2.Current;
+
+                            this.AddField(current.FieldName, current2, false);
+
+                        }
+                        continue;
+                    }
+                    finally
+                    {
+                        IDisposable disposable = enumerator2 as IDisposable;
+                        if (disposable != null)
+                        {
+                            disposable.Dispose();
+                        }
+                    }
+                }
+
+                this.AddField(current.FieldName, obj, false);
+            }
         }
 
         public override void AddProviderCustomFields()

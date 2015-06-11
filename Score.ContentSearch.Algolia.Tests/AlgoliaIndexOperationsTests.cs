@@ -47,7 +47,7 @@ namespace Score.ContentSearch.Algolia.Tests
 
                 //Assert
                 context.Verify(t => t.UpdateDocument(It.IsAny<object>(), It.IsAny<object>(), It.IsAny<IExecutionContext>()), Times.Once);
-                Assert.AreEqual(TestData.TestItemKey.ToLower(), (string)doc["objectID"]);
+                Assert.AreEqual("en_" + TestData.TestItemKey.ToLower(), (string)doc["objectID"]);
             }
         }
 
@@ -78,7 +78,7 @@ namespace Score.ContentSearch.Algolia.Tests
 
                 //Assert
                 context.Verify(t => t.AddDocument(It.IsAny<object>(), It.IsAny<IExecutionContext>()), Times.Once);
-                Assert.AreEqual(TestData.TestItemKey.ToLower(), (string)doc["objectID"]);
+                Assert.AreEqual("en_" + TestData.TestItemKey.ToLower(), (string)doc["objectID"]);
             }
         }
 

@@ -3,6 +3,7 @@ using System.Xml;
 using FluentAssertions;
 using NUnit.Framework;
 using Sitecore.ContentSearch;
+using Sitecore.ContentSearch.ComputedFields;
 using Sitecore.ContentSearch.Maintenance;
 using Sitecore.ContentSearch.Maintenance.Strategies;
 
@@ -73,6 +74,18 @@ namespace Score.ContentSearch.Algolia.Tests.Configuration
             index.Configuration.DocumentOptions.IncludedTemplates.First()
                 .Should()
                 .Be("{9CAAECFD-3BEB-44B1-9BE5-F7E30811EF2D}");
+        }
+
+        [Test]
+        public void ShouldIncludeComputedField()
+        {
+            //Act
+            var index = LoadIndexConfiguration("ComputedField.config");
+
+            //Assert
+            index.Configuration.DocumentOptions.ComputedIndexFields.Count.Should().Be(1);
+            index.Configuration.DocumentOptions.ComputedIndexFields.First()
+                .Should().BeOfType<SmallCreatedDate>();
         }
 
         private AlgoliaSearchIndex LoadIndexConfiguration(string fileName)

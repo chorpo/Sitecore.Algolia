@@ -207,7 +207,7 @@ namespace Score.ContentSearch.Algolia.Tests.AlgoliaDocumentBuilderTests
                 var actual = sut.Document;
 
                 //Assert
-                Assert.AreEqual(TestData.TestItemKey.ToLower(), (string)actual["objectID"]);
+                Assert.AreEqual("en_" + TestData.TestItemKey.ToLower(), (string)actual["objectID"]);
                 Assert.AreEqual("/sitecore/content/source", (string)actual["path"]);
                 Assert.AreEqual("source", (string)actual["name"]);
                 Assert.AreEqual("en", (string)actual["language"]);

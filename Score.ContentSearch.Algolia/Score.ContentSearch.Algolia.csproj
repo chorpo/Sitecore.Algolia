@@ -94,6 +94,7 @@
     <Compile Include="AlgoliaDocumentBuilder.cs" />
     <Compile Include="AlgoliaIndexConfiguration.cs" />
     <Compile Include="AlgoliaSearchContext.cs" />
+    <Compile Include="ComputedFields\ParentsField.cs" />
     <Compile Include="DefaultAlgoliaDocumentTypeMapper.cs" />
     <Compile Include="FieldReaders\GeoLocationFieldReader.cs" />
     <Compile Include="Queries\AlgoliaFieldNameTranslator.cs" />
@@ -129,9 +130,7 @@
       <Name>Algolia.Search</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ComputedFields\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
