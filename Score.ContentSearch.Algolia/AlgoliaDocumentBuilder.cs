@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections;
 using Newtonsoft.Json.Linq;
 using Score.ContentSearch.Algolia.FieldsConfiguration;
 using Sitecore.ContentSearch;
@@ -25,10 +24,66 @@ namespace Score.ContentSearch.Algolia
         {
             //reader can return JObject for complex data 
             //builder should merge that data into document
+            if (AddAsJObject(fieldName, fieldValue, append))
+                return;
+
+            //collections to be added as Array
+            if (AddAsEnumarable(fieldName, fieldValue, append))
+                return;
+
+            //otherwise - add new field (for simple types data)
+            AddAsPlainField(fieldName, fieldValue, append);
+        }
+
+        private bool AddAsPlainField(string fieldName, object fieldValue, bool append = false)
+        {
+            var stringValue = fieldValue as string;
+
+            if (stringValue != null)
+            {
+                if (string.IsNullOrWhiteSpace(stringValue))
+                    //not added but next processor should be skipped
+                    return true;
+                fieldValue = stringValue.Trim();
+            }
+
+            Document[fieldName] = new JValue(fieldValue);
+            return true;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fieldName"></param>
+        /// <param name="fieldValue"></param>
+        /// <param name="append"></param>
+        /// <returns>true if added</returns>
+        private bool AddAsEnumarable(string fieldName, object fieldValue, bool append = false)
+        {
+            if (fieldValue is string)
+                return false;
+
+            var enumerable = fieldValue as IEnumerable;
+
+            if (enumerable != null)
+            {
+                var array = new JArray(enumerable);
+                Document.Add(fieldName, array);
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool AddAsJObject(string fieldName, object fieldValue, bool append = false)
+        {
+            //reader can return JObject for complex data 
+            //builder should merge that data into document
             if (fieldValue is JObject)
             {
                 var jvalue = fieldValue as JObject;
-                
+
                 //Available in 6.0
                 //Document.Merge(jvalue);
 
@@ -40,22 +95,11 @@ namespace Score.ContentSearch.Algolia
                 {
                     Document.Add(jvalue);
                 }
-                return;
+                return true;
             }
-            
-            //otherwise - add new field (for simple types data)
-
-            var stringValue = fieldValue as string;
-
-            if (stringValue != null)
-            {
-                if (string.IsNullOrWhiteSpace(stringValue))
-                    return;
-                fieldValue = stringValue.Trim();
-            }
-
-            Document[fieldName] = new JValue(fieldValue);
+            return false;
         }
+
 
         public override void AddField(IIndexableDataField field)
         {

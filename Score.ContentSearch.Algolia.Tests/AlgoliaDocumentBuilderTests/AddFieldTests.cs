@@ -1,7 +1,9 @@
-﻿using Moq;
+﻿using System.Collections.Generic;
+using Moq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Score.ContentSearch.Algolia.Tests.Builders;
+using Sitecore.Collections;
 using Sitecore.ContentSearch;
 using Sitecore.FakeDb;
 
@@ -209,6 +211,37 @@ namespace Score.ContentSearch.Algolia.Tests.AlgoliaDocumentBuilderTests
                 Assert.AreEqual("/sitecore/content/source", (string)actual["path"]);
                 Assert.AreEqual("source", (string)actual["name"]);
                 Assert.AreEqual("en", (string)actual["language"]);
+            }
+        }
+
+        [Test]
+        public void StringListShuldBeAddedAsArray()
+        {
+            // arrange
+            using (var db = new Db { new ItemBuilder().Build() })
+            {
+                var item = db.GetItem("/sitecore/content/source");
+                var indexable = new SitecoreIndexableItem(item);
+
+                var context = new Mock<IProviderUpdateContext>();
+                var index = new IndexBuilder()
+                    .Build();
+                context.Setup(t => t.Index).Returns(index);
+                var sut = new AlgoliaDocumentBuilder(indexable, context.Object);
+                var value = new List<string>
+                {
+                    "one",
+                    "two"
+                };
+
+                //Act
+                sut.AddField("keywords", value);
+
+                var actual = sut.Document;
+
+                //Assert
+                Assert.AreEqual("one", (string)actual["keywords"][0]);
+                Assert.AreEqual("two", (string)actual["keywords"][1]);
             }
         }
 
