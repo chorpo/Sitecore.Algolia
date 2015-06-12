@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FluentAssertions;
 using Moq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -242,6 +243,63 @@ namespace Score.ContentSearch.Algolia.Tests.AlgoliaDocumentBuilderTests
                 //Assert
                 Assert.AreEqual("one", (string)actual["keywords"][0]);
                 Assert.AreEqual("two", (string)actual["keywords"][1]);
+            }
+        }
+
+        [Test]
+        public void EmptyArrayShuldNotBeAdded()
+        {
+            // arrange
+            using (var db = new Db { new ItemBuilder().Build() })
+            {
+                var item = db.GetItem("/sitecore/content/source");
+                var indexable = new SitecoreIndexableItem(item);
+
+                var context = new Mock<IProviderUpdateContext>();
+                var index = new IndexBuilder()
+                    .Build();
+                context.Setup(t => t.Index).Returns(index);
+                var sut = new AlgoliaDocumentBuilder(indexable, context.Object);
+                var value = new List<string>
+                {
+                };
+
+                //Act
+                sut.AddField("keywords", value);
+
+                var actual = sut.Document;
+
+                //Assert
+                actual["keywords"].Should().BeNull();
+            }
+        }
+
+        [Test]
+        public void ArrayWithOneValueShuldBeAddedAsArray()
+        {
+            // arrange
+            using (var db = new Db { new ItemBuilder().Build() })
+            {
+                var item = db.GetItem("/sitecore/content/source");
+                var indexable = new SitecoreIndexableItem(item);
+
+                var context = new Mock<IProviderUpdateContext>();
+                var index = new IndexBuilder()
+                    .Build();
+                context.Setup(t => t.Index).Returns(index);
+                var sut = new AlgoliaDocumentBuilder(indexable, context.Object);
+                var value = new List<string>
+                {
+                    "one"
+                };
+
+                //Act
+                sut.AddField("keywords", value);
+
+                var actual = sut.Document;
+
+                //Assert
+                Assert.AreEqual("one", (string)actual["keywords"][0]);
             }
         }
 

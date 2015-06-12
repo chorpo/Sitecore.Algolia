@@ -2,6 +2,7 @@
 using System.Xml;
 using Moq;
 using Score.ContentSearch.Algolia.Abstract;
+using Score.ContentSearch.Algolia.ComputedFields;
 using Score.ContentSearch.Algolia.FieldsConfiguration;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.FieldReaders;
@@ -33,6 +34,13 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
             var fieldMap = _index.Configuration.FieldMap as FieldMap;
 
             fieldMap.Add(fieldConfig);
+            return this;
+        }
+
+        public IndexBuilder WithParentsComputedField(string fieldName)
+        {
+            var field = new ParentsField {FieldName = fieldName};
+            _index.Configuration.DocumentOptions.ComputedIndexFields.Add(field);
             return this;
         }
 

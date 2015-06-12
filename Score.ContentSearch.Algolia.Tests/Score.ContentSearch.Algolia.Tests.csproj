@@ -126,6 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlgoliaBaseIndexTests.cs" />
+    <Compile Include="AlgoliaDocumentBuilderTests\AddComputedIndexFieldsTests.cs" />
     <Compile Include="Fakes\AlgoliaDataCrowler.cs" />
     <Compile Include="AlgoliaDocumentBuilderTests\AddFieldTests.cs" />
     <Compile Include="AlgoliaIndexOperationsTests.cs" />

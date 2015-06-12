@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using Score.ContentSearch.Algolia.FieldsConfiguration;
 using Sitecore.ContentSearch;
@@ -18,6 +19,8 @@ namespace Score.ContentSearch.Algolia
             Document["path"] = item.Paths.Path;
             Document["objectID"] = item.Language.Name + "_" + item.ID.ToGuid().ToString();
             Document["ID"] = item.ID.ToGuid().ToString();
+
+            //todo: use Sitecore.ContentSearch.ComputedFields.ParsedLanguage
             Document["language"] = item.Language.Name;
         }
 
@@ -72,6 +75,8 @@ namespace Score.ContentSearch.Algolia
             if (enumerable != null)
             {
                 var array = new JArray(enumerable);
+                if (!array.Any())
+                    return true;
                 Document.Add(fieldName, array);
                 return true;
             }

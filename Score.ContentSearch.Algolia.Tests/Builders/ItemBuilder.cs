@@ -20,6 +20,15 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
         public const string DateFieldName = "Date";
         public const string PriceFieldName = "Price";
 
+
+        public ItemBuilder AddSubItem()
+        {
+            var subitem = new DbItem("subitem");
+            _item.Children.Add(subitem);
+            subitem.ParentID = _item.ID;
+            return this;
+        }
+
         public ItemBuilder WithDisplayName(string value)
         {
             var field = new DbField(ID.NewID)

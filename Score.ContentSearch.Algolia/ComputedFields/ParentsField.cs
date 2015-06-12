@@ -1,5 +1,10 @@
-﻿using Sitecore.ContentSearch;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Sitecore;
+using Sitecore.Caching.Generics;
+using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.ComputedFields;
+using Sitecore.Data.Items;
 
 namespace Score.ContentSearch.Algolia.ComputedFields
 {
@@ -9,13 +14,29 @@ namespace Score.ContentSearch.Algolia.ComputedFields
         {
             var item = (SitecoreIndexableItem)indexable;
 
-            if (item == null)
-                return string.Empty;
+            var data = new List<string>();
 
-            if (item.Item.Parent != null)
-                return item.Item.Parent.ID.ToString();
+            AddParent(item.Item.Parent, data);
 
-            return "no parent";
+            if (!data.Any())
+                return null;
+
+            return data;
+        }
+
+        private void AddParent(Item item, List<string> storage)
+        {
+            if (item == null || 
+                item.ID == ItemIDs.ContentRoot ||
+                item.ID == ItemIDs.RootID)
+                return;
+
+            storage.Add(item.ID.ToString());
+
+            if (item.Parent == null)
+                return;
+
+            AddParent(item.Parent, storage);
         }
 
         public string FieldName { get; set; }
