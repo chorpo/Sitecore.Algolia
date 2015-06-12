@@ -6,6 +6,7 @@ using Score.ContentSearch.Algolia.FieldsConfiguration;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.ComputedFields;
 using Sitecore.ContentSearch.Diagnostics;
+using Sitecore.Data.Fields;
 using Sitecore.Data.Items;
 
 namespace Score.ContentSearch.Algolia
@@ -14,34 +15,91 @@ namespace Score.ContentSearch.Algolia
     {
         public AlgoliaDocumentBuilder(IIndexable indexable, IProviderUpdateContext context) : base(indexable, context)
         {
-            var item = (Item)(indexable as SitecoreIndexableItem);
-            Document["name"] = item.Name;
-            Document["path"] = item.Paths.Path;
-            Document["objectID"] = item.Language.Name + "_" + item.ID.ToGuid().ToString();
-            Document["ID"] = item.ID.ToGuid().ToString();
 
-            //todo: use Sitecore.ContentSearch.ComputedFields.ParsedLanguage
-            Document["language"] = item.Language.Name;
         }
 
         #region AbstractDocumentBuilder
+
+        public override void AddSpecialFields()
+        {
+            var item = (Item)(this.Indexable as SitecoreIndexableItem);
+            this.AddSpecialField("objectID", item.Language.Name + "_" + item.ID.ToGuid(), false);
+            this.AddSpecialField("_id", this.Indexable.Id.ToString(), false);
+
+
+            //below is base.AddSpecialFields()
+            //we do not call base method because we want to keep only business data in index 
+
+            //this.AddSpecialField("_uniqueid", this.Indexable.UniqueId.Value.ToString(), false);
+            //this.AddSpecialField("_datasource", (object)this.Indexable.DataSource.ToLowerInvariant(), false);
+            //this.AddSpecialField("_indexname", (object)this.Index.Name.ToLowerInvariant(), false);
+            IIndexableBuiltinFields indexableBuiltinFields = this.Indexable as IIndexableBuiltinFields;
+            if (indexableBuiltinFields == null)
+                return;
+            //this.AddSpecialField("_database", (object)indexableBuiltinFields.Database, false);
+            this.AddSpecialField("_language", (object)indexableBuiltinFields.Language, false);
+            //this.AddSpecialField("_template", indexableBuiltinFields.TemplateId, false);
+            //this.AddSpecialField("_parent", indexableBuiltinFields.Parent, false);
+            //if (indexableBuiltinFields.IsLatestVersion)
+            //    this.AddSpecialField("_latestversion", (object)true, false);
+            //this.AddSpecialField("_version", (object)indexableBuiltinFields.Version, false);
+            //this.AddSpecialField("_group", indexableBuiltinFields.Group, false);
+            //if (indexableBuiltinFields.IsClone)
+            //    this.AddSpecialField("_isclone", (object)true, false);
+            this.AddSpecialField("_fullpath", (object)indexableBuiltinFields.FullPath, false);
+            if (this.Options.ExcludeAllSpecialFields)
+                return;
+            this.AddSpecialField("_name", (object)indexableBuiltinFields.Name, false);
+            //this.AddSpecialField("_displayname", (object)indexableBuiltinFields.DisplayName, false);
+            //this.AddSpecialField("_creator", (object)indexableBuiltinFields.CreatedBy, false);
+            //this.AddSpecialField("_editor", (object)indexableBuiltinFields.UpdatedBy, false);
+            //this.AddSpecialField("_templatename", (object)indexableBuiltinFields.TemplateName, false);
+            //this.AddSpecialField("_created", (object)indexableBuiltinFields.CreatedDate, false);
+            //this.AddSpecialField("_updated", (object)indexableBuiltinFields.UpdatedDate, false);
+            //this.AddSpecialField("_path", (object)indexableBuiltinFields.Paths, false);
+            //this.AddSpecialField("_content", (object)indexableBuiltinFields.Name, false);
+            //this.AddSpecialField("_content", (object)indexableBuiltinFields.DisplayName, false);
+            //if (this.Options.Tags == null || this.Options.Tags.Length <= 0)
+            //    return;
+            //this.AddSpecialField("_tags", (object)this.Options.Tags, false);
+        }
+
+        #region AddField
+
+        public override void AddField(IIndexableDataField field)
+        {
+            var fieldConfig =
+                base.Index.Configuration.FieldMap.GetFieldConfiguration(field) as SimpleFieldsConfiguration;
+            if (fieldConfig == null || !ShouldAddField(field, fieldConfig))
+            {
+                return;
+            }
+
+            var reader = base.Index.Configuration.FieldReaders.GetFieldReader(field);
+            var value = reader.GetFieldValue(field);
+
+            if (value == null)
+                return;
+
+            AddField(field.Name, value);
+        }
 
         public override void AddField(string fieldName, object fieldValue, bool append = false)
         {
             //reader can return JObject for complex data 
             //builder should merge that data into document
-            if (AddAsJObject(fieldName, fieldValue, append))
+            if (AddFieldAsJObject(fieldName, fieldValue, append))
                 return;
 
             //collections to be added as Array
-            if (AddAsEnumarable(fieldName, fieldValue, append))
+            if (AddFieldAsEnumarable(fieldName, fieldValue, append))
                 return;
 
             //otherwise - add new field (for simple types data)
-            AddAsPlainField(fieldName, fieldValue, append);
+            AddFieldAsPlainField(fieldName, fieldValue, append);
         }
 
-        private bool AddAsPlainField(string fieldName, object fieldValue, bool append = false)
+        private bool AddFieldAsPlainField(string fieldName, object fieldValue, bool append = false)
         {
             var stringValue = fieldValue as string;
 
@@ -57,7 +115,6 @@ namespace Score.ContentSearch.Algolia
             return true;
         }
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -65,7 +122,7 @@ namespace Score.ContentSearch.Algolia
         /// <param name="fieldValue"></param>
         /// <param name="append"></param>
         /// <returns>true if added</returns>
-        private bool AddAsEnumarable(string fieldName, object fieldValue, bool append = false)
+        private bool AddFieldAsEnumarable(string fieldName, object fieldValue, bool append = false)
         {
             if (fieldValue is string)
                 return false;
@@ -84,7 +141,7 @@ namespace Score.ContentSearch.Algolia
             return false;
         }
 
-        private bool AddAsJObject(string fieldName, object fieldValue, bool append = false)
+        private bool AddFieldAsJObject(string fieldName, object fieldValue, bool append = false)
         {
             //reader can return JObject for complex data 
             //builder should merge that data into document
@@ -108,28 +165,11 @@ namespace Score.ContentSearch.Algolia
             return false;
         }
 
-
-        public override void AddField(IIndexableDataField field)
-        {
-            var fieldConfig =
-                base.Index.Configuration.FieldMap.GetFieldConfiguration(field) as SimpleFieldsConfiguration;
-            if (fieldConfig == null || !ShouldAddField(field, fieldConfig))
-            {
-                return;
-            }
-
-            var reader = base.Index.Configuration.FieldReaders.GetFieldReader(field);
-            var value = reader.GetFieldValue(field);
-
-            if (value == null)
-                return;
-
-            AddField(field.Name, value);
-        }
-
+        #endregion
+        
         public override void AddBoost()
         {
-            throw new NotImplementedException();
+            //Algolia manages boost in GUI
         }
 
         public override void AddComputedIndexFields()
@@ -183,7 +223,7 @@ namespace Score.ContentSearch.Algolia
 
         public override void AddProviderCustomFields()
         {
-            throw new NotImplementedException();
+            //so far nothing provider specific
         }
 
         #endregion

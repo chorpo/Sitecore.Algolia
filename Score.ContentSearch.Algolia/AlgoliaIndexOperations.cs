@@ -72,7 +72,13 @@ namespace Score.ContentSearch.Algolia
             }
 
             var builder = new AlgoliaDocumentBuilder(indexable, context);
+
+            builder.AddSpecialFields();
             builder.AddItemFields();
+            builder.AddComputedIndexFields();
+            builder.AddProviderCustomFields();
+            builder.AddBoost();
+
             return builder.Document;
         }
       

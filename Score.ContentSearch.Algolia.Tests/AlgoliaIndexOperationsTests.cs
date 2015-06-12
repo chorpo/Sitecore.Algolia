@@ -24,7 +24,7 @@ namespace Score.ContentSearch.Algolia.Tests
         public void UpdateTest()
         {
             // arrange
-            using (var db = new Db { _source })
+            using (var db = new Db {_source})
             {
                 var item = db.GetItem("/sitecore/content/source");
                 var indexable = new SitecoreIndexableItem(item);
@@ -39,15 +39,21 @@ namespace Score.ContentSearch.Algolia.Tests
 
                 var index = new IndexBuilder().Build();
                 context.Setup(t => t.Index).Returns(index);
-                
+
                 var operations = new AlgoliaIndexOperations(index);
 
                 //Act
                 operations.Update(indexable, context.Object, new ProviderIndexConfiguration());
 
                 //Assert
-                context.Verify(t => t.UpdateDocument(It.IsAny<object>(), It.IsAny<object>(), It.IsAny<IExecutionContext>()), Times.Once);
+                context.Verify(
+                    t => t.UpdateDocument(It.IsAny<object>(), It.IsAny<object>(), It.IsAny<IExecutionContext>()),
+                    Times.Once);
                 Assert.AreEqual("en_" + TestData.TestItemKey.ToLower(), (string)doc["objectID"]);
+                Assert.AreEqual("/sitecore/content/source", (string)doc["_fullpath"]);
+                Assert.AreEqual("source", (string)doc["_name"]);
+                Assert.AreEqual("en", (string)doc["_language"]);
+                Assert.AreEqual(TestData.TestItemId.ToString(), (string)doc["_id"]);
             }
         }
 
@@ -55,7 +61,7 @@ namespace Score.ContentSearch.Algolia.Tests
         public void AddTest()
         {
             // arrange
-            using (var db = new Db { _source })
+            using (var db = new Db {_source})
             {
                 var item = db.GetItem("/sitecore/content/source");
                 var indexable = new SitecoreIndexableItem(item);
@@ -78,10 +84,12 @@ namespace Score.ContentSearch.Algolia.Tests
 
                 //Assert
                 context.Verify(t => t.AddDocument(It.IsAny<object>(), It.IsAny<IExecutionContext>()), Times.Once);
-                Assert.AreEqual("en_" + TestData.TestItemKey.ToLower(), (string)doc["objectID"]);
+                Assert.AreEqual("en_" + TestData.TestItemKey.ToLower(), (string) doc["objectID"]);
+                Assert.AreEqual("/sitecore/content/source", (string)doc["_fullpath"]);
+                Assert.AreEqual("source", (string)doc["_name"]);
+                Assert.AreEqual("en", (string)doc["_language"]);
+                Assert.AreEqual(TestData.TestItemId.ToString(), (string)doc["_id"]);
             }
         }
-
     }
-
 }
