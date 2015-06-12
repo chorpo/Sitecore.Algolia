@@ -140,7 +140,7 @@ namespace Score.ContentSearch.Algolia
 
             foreach (var element in dictionary)
             {
-                Document[element.Key] = new JValue(element.Value);
+                AddField(element.Key, element.Value);
             }               
             return true;
         }
