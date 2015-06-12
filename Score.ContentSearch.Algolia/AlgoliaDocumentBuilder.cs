@@ -193,29 +193,33 @@ namespace Score.ContentSearch.Algolia
                     continue;
                 }
                 
-                if (obj is IEnumerable && !(obj is string))
-                {
-                    IEnumerator enumerator2 = (obj as IEnumerable).GetEnumerator();
-                    try
-                    {
-                        while (enumerator2.MoveNext())
-                        {
-                            object current2 = enumerator2.Current;
 
-                            this.AddField(current.FieldName, current2, false);
 
-                        }
-                        continue;
-                    }
-                    finally
-                    {
-                        IDisposable disposable = enumerator2 as IDisposable;
-                        if (disposable != null)
-                        {
-                            disposable.Dispose();
-                        }
-                    }
-                }
+                //Enumerables are supported in AddField and should be added as Array
+
+                //if (obj is IEnumerable && !(obj is string))
+                //{
+                //    IEnumerator enumerator2 = (obj as IEnumerable).GetEnumerator();
+                //    try
+                //    {
+                //        while (enumerator2.MoveNext())
+                //        {
+                //            object current2 = enumerator2.Current;
+
+                //            this.AddField(current.FieldName, current2, false);
+
+                //        }
+                //        continue;
+                //    }
+                //    finally
+                //    {
+                //        IDisposable disposable = enumerator2 as IDisposable;
+                //        if (disposable != null)
+                //        {
+                //            disposable.Dispose();
+                //        }
+                //    }
+                //}
 
                 this.AddField(current.FieldName, obj, false);
             }

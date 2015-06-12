@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Score.ContentSearch.Algolia.Tests.Builders;
 using Sitecore.ContentSearch;
@@ -34,7 +36,9 @@ namespace Score.ContentSearch.Algolia.Tests.AlgoliaDocumentBuilderTests
 
                 //Assert
                 var doc = sut.Document;
-                Assert.AreEqual(TestData.TestItemId.ToString(), (string)doc["parents"]);
+                var parents = (JArray)doc["parents"];
+                parents.Count.Should().Be(1);
+                ((string)parents.First).Should().Be(TestData.TestItemId.ToString());
             }
         }
     }

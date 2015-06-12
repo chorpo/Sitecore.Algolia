@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Score.ContentSearch.Algolia.Abstract;
 using Score.ContentSearch.Algolia.Queries;
 using Sitecore.ContentSearch;
+using Sitecore.ContentSearch.Diagnostics;
 using Sitecore.ContentSearch.Maintenance;
 using Sitecore.ContentSearch.Maintenance.Strategies;
 using Sitecore.ContentSearch.Security;
