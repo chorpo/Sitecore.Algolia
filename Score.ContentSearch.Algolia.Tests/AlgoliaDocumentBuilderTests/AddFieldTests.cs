@@ -37,7 +37,7 @@ namespace Score.ContentSearch.Algolia.Tests.AlgoliaDocumentBuilderTests
                 
                 //Assert
                 JObject doc = sut.Document;
-                Assert.AreEqual("test", (string)doc["displayname"]);
+                Assert.AreEqual("test", (string)doc["display name"]);
             }
         }
 
@@ -65,7 +65,7 @@ namespace Score.ContentSearch.Algolia.Tests.AlgoliaDocumentBuilderTests
 
                 //Assert
                 JObject doc = sut.Document;
-                Assert.AreEqual("test", (string)doc["displayname"]);
+                Assert.AreEqual("test", (string)doc["display name"]);
             }
         }
 
@@ -185,6 +185,37 @@ namespace Score.ContentSearch.Algolia.Tests.AlgoliaDocumentBuilderTests
                 JObject doc = sut.Document;
                 Assert.AreEqual(123.456, (double)doc["price"]);
                 Assert.AreEqual(JTokenType.Float, doc["price"].Type);
+            }
+        }
+
+        [Test]
+        public void AddDictionaryTest()
+        {
+            // arrange
+            using (var db = new Db { new ItemBuilder().Build() })
+            {
+                var item = db.GetItem("/sitecore/content/source");
+                var indexable = new SitecoreIndexableItem(item);
+
+                var context = new Mock<IProviderUpdateContext>();
+                var index = new IndexBuilder()
+                    .Build();
+                context.Setup(t => t.Index).Returns(index);
+                var sut = new AlgoliaDocumentBuilder(indexable, context.Object);
+
+                var value = new Dictionary<string, object>
+                {
+                    {"Price", "$0-$6"},
+                    {"Blade Count", "2 Blades"}
+                };
+
+                //Act
+                sut.AddField("any name", value);
+
+                //Assert
+                JObject doc = sut.Document;
+                ((string)doc["Price"]).Should().Be("$0-$6");
+                ((string)doc["Blade Count"]).Should().Be("2 Blades");
             }
         }
 

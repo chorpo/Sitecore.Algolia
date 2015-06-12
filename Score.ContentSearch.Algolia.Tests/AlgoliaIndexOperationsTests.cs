@@ -130,5 +130,39 @@ namespace Score.ContentSearch.Algolia.Tests
                 ((string) parents.First).Should().Be(TestData.TestItemId.ToString());
             }
         }
+
+        //[Test]
+        //public void AddOperationShouldLoadItemFields()
+        //{
+        //    // arrange
+        //    using (var db = new Db { new ItemBuilder().WithDisplayName("Name").Build() })
+        //    {
+        //        var item = db.GetItem("/sitecore/content/source");
+        //        var indexable = new SitecoreIndexableItem(item);
+        //        IEnumerable<JObject> docs = null;
+
+        //        var index = new IndexBuilder().WithIndexAllFields().Build();
+        //        var algoliaRepository = new Mock<IAlgoliaRepository>();
+        //        algoliaRepository.Setup(
+        //            t => t.SaveObjectsAsync(It.IsAny<IEnumerable<JObject>>()))
+        //            .Callback(
+        //                (IEnumerable<JObject> objects) =>
+        //                    docs = objects)
+        //            .ReturnsAsync(new JObject());
+
+        //        var context = new AlgoliaUpdateContext(index, algoliaRepository.Object);
+
+        //        var operations = new AlgoliaIndexOperations(index);
+
+        //        //Act
+        //        operations.Add(indexable, context, new ProviderIndexConfiguration());
+        //        context.Commit();
+
+        //        //Assert
+        //        var itemDoc = docs.First(t => (string)t["_name"] == "source");
+        //        var value = (string)itemDoc["display name"];
+        //        value.Should().Be("Name");
+        //    }
+        //}
     }
 }

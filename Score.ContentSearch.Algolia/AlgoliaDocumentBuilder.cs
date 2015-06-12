@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using Score.ContentSearch.Algolia.FieldsConfiguration;
@@ -95,6 +96,10 @@ namespace Score.ContentSearch.Algolia
             if (AddFieldAsJObject(fieldName, fieldValue, append))
                 return;
 
+            //add every element of dictionary as field
+            if (AddFieldAsDictionary(fieldName, fieldValue, append))
+                return;
+
             //collections to be added as Array
             if (AddFieldAsEnumarable(fieldName, fieldValue, append))
                 return;
@@ -126,6 +131,20 @@ namespace Score.ContentSearch.Algolia
             Document[fieldName] = new JValue(fieldValue);
             return true;
         }
+
+        private bool AddFieldAsDictionary(string fieldName, object fieldValue, bool append = false)
+        {
+            var dictionary = fieldValue as IDictionary<string, object>;
+
+            if (dictionary == null) return false;
+
+            foreach (var element in dictionary)
+            {
+                Document[element.Key] = new JValue(element.Value);
+            }               
+            return true;
+        }
+
 
         /// <summary>
         /// 

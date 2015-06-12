@@ -44,6 +44,12 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
             return this;
         }
 
+        public IndexBuilder WithIndexAllFields()
+        {
+            _index.Configuration.IndexAllFields = true;
+            return this;
+        }
+
         public IndexBuilder WithDefaultFieldReader(string fieldTypeName)
         {
             AddStandardFieldReader(fieldTypeName, "DefaultFieldReader");

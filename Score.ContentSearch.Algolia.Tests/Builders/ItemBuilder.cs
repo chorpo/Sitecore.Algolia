@@ -14,7 +14,7 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
             _item = new DbItem("source", new ID(TestData.TestItemGuid));
         }
 
-        public const string DispalyNameFieldName = "DisplayName";
+        public const string DispalyNameFieldName = "Display Name";
         public const string CountFieldName = "Count";
         public const string LocationFieldName = "Location";
         public const string DateFieldName = "Date";
