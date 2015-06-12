@@ -86,6 +86,10 @@ namespace Score.ContentSearch.Algolia
 
         public override void AddField(string fieldName, object fieldValue, bool append = false)
         {
+            //Empty values should be skipped
+            if (AddFieldAsEmpty(fieldName, fieldValue, append))
+                return;
+
             //reader can return JObject for complex data 
             //builder should merge that data into document
             if (AddFieldAsJObject(fieldName, fieldValue, append))
@@ -97,6 +101,14 @@ namespace Score.ContentSearch.Algolia
 
             //otherwise - add new field (for simple types data)
             AddFieldAsPlainField(fieldName, fieldValue, append);
+        }
+
+        private bool AddFieldAsEmpty(string fieldName, object fieldValue, bool append = false)
+        {
+            if (fieldValue == null)
+                return true;
+
+            return false;
         }
 
         private bool AddFieldAsPlainField(string fieldName, object fieldValue, bool append = false)

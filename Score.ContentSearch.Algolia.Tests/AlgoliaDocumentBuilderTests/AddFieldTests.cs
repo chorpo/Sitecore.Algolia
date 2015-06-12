@@ -188,7 +188,33 @@ namespace Score.ContentSearch.Algolia.Tests.AlgoliaDocumentBuilderTests
             }
         }
 
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("   ")]
+        public void EmptyValuesShouldNotBeAdded(object value)
+        {
+            // arrange
+            using (var db = new Db { new ItemBuilder().Build() })
+            {
+                var item = db.GetItem("/sitecore/content/source");
+                var indexable = new SitecoreIndexableItem(item);
 
+                var context = new Mock<IProviderUpdateContext>();
+                var index = new IndexBuilder()
+                    .Build();
+                context.Setup(t => t.Index).Returns(index);
+                var sut = new AlgoliaDocumentBuilder(indexable, context.Object);
+
+                //Act
+                sut.AddField("field", value);
+
+                var actual = sut.Document;
+
+                //Assert
+                actual["field"].Should().BeNull();
+            }
+        }
+        
         [Test]
         public void StringListShuldBeAddedAsArray()
         {
