@@ -89,11 +89,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\IAlgoliaConfig.cs" />
+    <Compile Include="Abstract\ITagsMap.cs" />
     <Compile Include="AlgoliaBaseIndex.cs" />
     <Compile Include="AlgoliaConfig.cs" />
     <Compile Include="AlgoliaDocumentBuilder.cs" />
     <Compile Include="AlgoliaIndexConfiguration.cs" />
     <Compile Include="AlgoliaSearchContext.cs" />
+    <Compile Include="AlgoliaTagsMap.cs" />
     <Compile Include="ComputedFields\ParentsField.cs" />
     <Compile Include="DefaultAlgoliaDocumentTypeMapper.cs" />
     <Compile Include="FieldReaders\GeoLocationFieldReader.cs" />
