@@ -76,6 +76,35 @@ namespace Score.ContentSearch.Algolia.Tests
         }
 
         [Test]
+        public void AtrrayShouldBeAddedAsTag()
+        {
+            //Arrange
+            var config = new List<AlgoliaTagConfig>
+            {
+                new AlgoliaTagConfig
+                {
+                    FieldName = "data"
+                }
+            };
+
+            var doc = new JObject();
+            doc["data"] = new JArray()
+            {
+                "first",
+                "second"
+            };
+            var sut = new AlgoliaTagsProcessor(config);
+
+            //Act
+            sut.ProcessDocument(doc);
+
+            //Assert
+            doc["_tags"].Count().Should().Be(2);
+            (doc["_tags"]).First(token => token.Value<string>() == "first");
+            (doc["_tags"]).First(token => token.Value<string>() == "second");
+        }
+
+        [Test]
         public void ConfigWithHideFieldShouldRemoveField()
         {
             //Arrange

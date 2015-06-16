@@ -11,5 +11,3 @@ namespace Score.ContentSearch.Algolia
         }
     }
 }
-
-//, IIndexPropertyStore propertyStore
