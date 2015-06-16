@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using Score.ContentSearch.Algolia.Abstract;
 using Sitecore.ContentSearch;
 
 namespace Score.ContentSearch.Algolia
@@ -8,6 +9,6 @@ namespace Score.ContentSearch.Algolia
         //todo: Delete
         public IIndexDocumentPropertyMapper<JObject> IndexDocumentPropertyMapper { get; set; }
 
-
+        public ITagsProcessor TagProcessor { get; set; }
     }
 }

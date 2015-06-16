@@ -124,6 +124,12 @@ namespace Score.ContentSearch.Algolia
             documentBuilder.AddProviderCustomFields();
             documentBuilder.AddBoost();
 
+            var algoliaDocumentBuilder = documentBuilder as AlgoliaDocumentBuilder;
+            if (algoliaDocumentBuilder != null)
+            {
+                algoliaDocumentBuilder.GenerateTags();
+            }
+            
             return documentBuilder.Document;
         }
 

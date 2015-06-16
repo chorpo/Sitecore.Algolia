@@ -95,7 +95,8 @@
     <Compile Include="AlgoliaDocumentBuilder.cs" />
     <Compile Include="AlgoliaIndexConfiguration.cs" />
     <Compile Include="AlgoliaSearchContext.cs" />
-    <Compile Include="AlgoliaTagsMap.cs" />
+    <Compile Include="AlgoliaTagConfig.cs" />
+    <Compile Include="AlgoliaTagsProcessor.cs" />
     <Compile Include="ComputedFields\ParentsField.cs" />
     <Compile Include="DefaultAlgoliaDocumentTypeMapper.cs" />
     <Compile Include="FieldReaders\GeoLocationFieldReader.cs" />

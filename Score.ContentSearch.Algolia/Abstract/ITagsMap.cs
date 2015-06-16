@@ -11,7 +11,7 @@ namespace Score.ContentSearch.Algolia.Abstract
     /// <summary>
     /// Convertds Fields to Tags
     /// </summary>
-    public interface ITagsMap
+    public interface ITagsProcessor
     {
         void ProcessDocument(JObject doc);
     }

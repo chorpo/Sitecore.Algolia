@@ -13,18 +13,19 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
     internal class IndexBuilder
     {
         private readonly ISearchIndex _index;
+        private readonly AlgoliaIndexConfiguration _configuration;
 
         public IndexBuilder()
         {
             var algoliaRepository = new Mock<IAlgoliaRepository>();
             _index = new AlgoliaBaseIndex("index_name", algoliaRepository.Object);
-            var configuration = new ProviderIndexConfiguration
+            _configuration = new AlgoliaIndexConfiguration
             {
                 DocumentOptions = new DocumentBuilderOptions(),
                 FieldMap = new FieldMap(),
                 FieldReaders = new FieldReaderMap(),
             };
-            _index.Configuration = configuration;
+            _index.Configuration = _configuration;
         }
 
         public IndexBuilder WithSimpleFieldTypeMap(string typeKey)
@@ -41,6 +42,18 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
         {
             var field = new ParentsField {FieldName = fieldName};
             _index.Configuration.DocumentOptions.ComputedIndexFields.Add(field);
+            return this;
+        }
+
+        public IndexBuilder WithTagsBuilderForId()
+        {
+            _configuration.TagProcessor = new AlgoliaTagsProcessor(new List<AlgoliaTagConfig>
+            {
+                new AlgoliaTagConfig
+                {
+                    FieldName = "_id"
+                }
+            });
             return this;
         }
 

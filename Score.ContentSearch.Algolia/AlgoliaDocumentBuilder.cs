@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using Score.ContentSearch.Algolia.Abstract;
 using Score.ContentSearch.Algolia.FieldsConfiguration;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.ComputedFields;
@@ -14,9 +15,17 @@ namespace Score.ContentSearch.Algolia
 {
     public class AlgoliaDocumentBuilder : AbstractDocumentBuilder<JObject>
     {
+        private ITagsProcessor _tagsProcessor;
+
         public AlgoliaDocumentBuilder(IIndexable indexable, IProviderUpdateContext context) : base(indexable, context)
         {
+            var config = context.Index.Configuration as AlgoliaIndexConfiguration;
 
+            if (config != null)
+            {
+                _tagsProcessor = config.TagProcessor;
+            }
+            
         }
 
         #region AbstractDocumentBuilder
@@ -259,6 +268,14 @@ namespace Score.ContentSearch.Algolia
         public override void AddProviderCustomFields()
         {
             //so far nothing provider specific
+        }
+
+        public virtual void GenerateTags()
+        {
+            if (_tagsProcessor == null)
+                return;
+
+            _tagsProcessor.ProcessDocument(Document);
         }
 
         #endregion

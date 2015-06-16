@@ -131,6 +131,41 @@ namespace Score.ContentSearch.Algolia.Tests
             }
         }
 
+        [Test]
+        public void AddOperationShouldGenerateTags()
+        {
+            // arrange
+            using (var db = new Db { new ItemBuilder().AddSubItem().Build() })
+            {
+                var item = db.GetItem("/sitecore/content/source");
+                var indexable = new SitecoreIndexableItem(item);
+                IEnumerable<JObject> docs = null;
+
+                var index = new IndexBuilder().WithTagsBuilderForId().Build();
+                var algoliaRepository = new Mock<IAlgoliaRepository>();
+                algoliaRepository.Setup(
+                    t => t.SaveObjectsAsync(It.IsAny<IEnumerable<JObject>>()))
+                    .Callback(
+                        (IEnumerable<JObject> objects) =>
+                            docs = objects)
+                    .ReturnsAsync(new JObject());
+
+                var context = new AlgoliaUpdateContext(index, algoliaRepository.Object);
+
+                var operations = new AlgoliaIndexOperations(index);
+
+                //Act
+                operations.Add(indexable, context, new ProviderIndexConfiguration());
+                context.Commit();
+
+                //Assert
+                var itemDoc = docs.First(t => (string)t["_name"] == "source");
+                var tags = (JArray)itemDoc["_tags"];
+                tags.Count.Should().Be(1);
+                ((string)tags.First).Should().Be(TestData.TestItemId.ToString());
+            }
+        }
+
         //[Test]
         //public void AddOperationShouldLoadItemFields()
         //{
