@@ -38,6 +38,8 @@ namespace Score.ContentSearch.Algolia
 
         public List<IIndexUpdateStrategy> Strategies { get; private set; }
 
+        public string Site { get; set; }
+
         public IAlgoliaRepository Repository
         {
             get { return _repository; }

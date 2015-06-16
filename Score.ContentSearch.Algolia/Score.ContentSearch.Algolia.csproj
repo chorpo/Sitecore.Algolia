@@ -89,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\IAlgoliaConfig.cs" />
+    <Compile Include="Abstract\ISiteSpecificField.cs" />
     <Compile Include="Abstract\ITagsMap.cs" />
     <Compile Include="AlgoliaBaseIndex.cs" />
     <Compile Include="AlgoliaConfig.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="AlgoliaSearchContext.cs" />
     <Compile Include="AlgoliaTagConfig.cs" />
     <Compile Include="AlgoliaTagsProcessor.cs" />
+    <Compile Include="ComputedFields\CurrentItemLinkField.cs" />
     <Compile Include="ComputedFields\ParentsField.cs" />
     <Compile Include="DefaultAlgoliaDocumentTypeMapper.cs" />
     <Compile Include="FieldReaders\GeoLocationFieldReader.cs" />

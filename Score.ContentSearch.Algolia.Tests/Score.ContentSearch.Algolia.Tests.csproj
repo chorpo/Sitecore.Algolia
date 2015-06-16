@@ -128,6 +128,7 @@
     <Compile Include="AlgoliaBaseIndexTests.cs" />
     <Compile Include="AlgoliaDocumentBuilderTests\AddComputedIndexFieldsTests.cs" />
     <Compile Include="AlgoliaTagsProcessorTests.cs" />
+    <Compile Include="ComputedFields\CurrentItemLinkFieldTest.cs" />
     <Compile Include="Fakes\AlgoliaDataCrowler.cs" />
     <Compile Include="AlgoliaDocumentBuilderTests\AddFieldTests.cs" />
     <Compile Include="AlgoliaIndexOperationsTests.cs" />
@@ -143,6 +144,9 @@
     <Compile Include="TestData.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Configuration\Site.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Configuration\ComputedField.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

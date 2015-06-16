@@ -216,6 +216,17 @@ namespace Score.ContentSearch.Algolia
         {
             foreach (IComputedIndexField current in base.Options.ComputedIndexFields)
             {
+                var siteSpecificField = current as ISiteSpecificField;
+                if (siteSpecificField != null)
+                {
+                    var algoliaIndex = Index as AlgoliaSearchIndex;
+
+                    if (algoliaIndex != null)
+                    {
+                        siteSpecificField.Site = algoliaIndex.Site;
+                    }
+                }
+
                 object obj;
                 try
                 {

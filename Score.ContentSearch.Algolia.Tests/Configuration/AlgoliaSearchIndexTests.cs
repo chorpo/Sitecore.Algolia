@@ -110,6 +110,16 @@ namespace Score.ContentSearch.Algolia.Tests.Configuration
             doc["_id"].Should().BeNull();
         }
 
+        [Test]
+        public void ShouldLoadSite()
+        {
+            //Act
+            var index = LoadIndexConfiguration("Site.config");
+
+            //Assert
+            index.Site.Should().Be("MySite");
+        }
+
         private AlgoliaSearchIndex LoadIndexConfiguration(string fileName)
         {
             //Arrange
