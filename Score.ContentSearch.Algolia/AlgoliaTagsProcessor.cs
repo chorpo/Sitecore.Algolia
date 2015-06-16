@@ -32,8 +32,7 @@ namespace Score.ContentSearch.Algolia
         }
 
         #endregion
-
-
+        
         public void ProcessDocument(JObject doc)
         {
             foreach (var algoliaTagConfig in _tagsConfig)

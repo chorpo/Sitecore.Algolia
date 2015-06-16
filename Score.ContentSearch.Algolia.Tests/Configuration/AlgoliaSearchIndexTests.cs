@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Xml;
 using FluentAssertions;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Score.ContentSearch.Algolia.Tests.Fakes;
 using Sitecore.ContentSearch;
@@ -101,6 +102,12 @@ namespace Score.ContentSearch.Algolia.Tests.Configuration
 
             configuration.TagsProcessor.Should().NotBeNull();
             configuration.TagsProcessor.Should().BeOfType<AlgoliaTagsProcessor>();
+            
+            var doc = new JObject();
+            doc["_id"] = "myId";
+            configuration.TagsProcessor.ProcessDocument(doc);
+            doc["_tags"].First(t => t.Value<string>() == "id_myId");
+            doc["_id"].Should().BeNull();
         }
 
         private AlgoliaSearchIndex LoadIndexConfiguration(string fileName)
