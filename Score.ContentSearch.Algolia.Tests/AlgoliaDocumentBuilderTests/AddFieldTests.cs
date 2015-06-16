@@ -219,6 +219,37 @@ namespace Score.ContentSearch.Algolia.Tests.AlgoliaDocumentBuilderTests
             }
         }
 
+        [Test]
+        public void AddDictionaryWithCollectionTest()
+        {
+            // arrange
+            using (var db = new Db { new ItemBuilder().Build() })
+            {
+                var item = db.GetItem("/sitecore/content/source");
+                var indexable = new SitecoreIndexableItem(item);
+
+                var context = new Mock<IProviderUpdateContext>();
+                var index = new IndexBuilder()
+                    .Build();
+                context.Setup(t => t.Index).Returns(index);
+                var sut = new AlgoliaDocumentBuilder(indexable, context.Object);
+
+                var value = new Dictionary<string, List<string>>
+                {
+                    {"Price", new List<string>() {"$0-$6"}},
+                    {"Blade Count", new List<string>() {"2 Blades"}}
+                };
+
+                //Act
+                sut.AddField("any name", value);
+
+                //Assert
+                JObject doc = sut.Document;
+                ((string)doc["Price"][0]).Should().Be("$0-$6");
+                ((string)doc["Blade Count"][0]).Should().Be("2 Blades");
+            }
+        }
+
         [TestCase(null)]
         [TestCase("")]
         [TestCase("   ")]

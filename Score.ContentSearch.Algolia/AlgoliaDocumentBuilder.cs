@@ -134,13 +134,13 @@ namespace Score.ContentSearch.Algolia
 
         private bool AddFieldAsDictionary(string fieldName, object fieldValue, bool append = false)
         {
-            var dictionary = fieldValue as IDictionary<string, object>;
+            var dictionary = fieldValue as IDictionary;
 
             if (dictionary == null) return false;
 
-            foreach (var element in dictionary)
+            foreach (DictionaryEntry element in dictionary)
             {
-                AddField(element.Key, element.Value);
+                AddField(element.Key.ToString(), element.Value);
             }               
             return true;
         }
