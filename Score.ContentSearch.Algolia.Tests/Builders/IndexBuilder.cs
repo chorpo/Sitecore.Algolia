@@ -47,7 +47,7 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
 
         public IndexBuilder WithTagsBuilderForId()
         {
-            _configuration.TagProcessor = new AlgoliaTagsProcessor(new List<AlgoliaTagConfig>
+            _configuration.TagsProcessor = new AlgoliaTagsProcessor(new List<AlgoliaTagConfig>
             {
                 new AlgoliaTagConfig
                 {

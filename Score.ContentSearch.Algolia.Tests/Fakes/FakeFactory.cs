@@ -1,4 +1,11 @@
-﻿using Sitecore;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration.Provider;
+using System.Linq;
+using System.Reflection;
+using System.Xml;
+using Sitecore;
 using Sitecore.Collections;
 using Sitecore.Configuration;
 using Sitecore.Data;
@@ -19,16 +26,8 @@ using Sitecore.Text;
 using Sitecore.Web;
 using Sitecore.Xml;
 using Sitecore.Xml.XPath;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Configuration.Provider;
-using System.Linq;
-using System.Reflection;
-using System.Xml;
 
-
-namespace Score.ContentSearch.Algolia.Tests.Configuration
+namespace Score.ContentSearch.Algolia.Tests.Fakes
 {
     // Type: Sitecore.Configuration.Factory
 // Assembly: Sitecore.Kernel, Version=7.0.0.0, Culture=neutral, PublicKeyToken=null

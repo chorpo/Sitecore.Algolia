@@ -23,7 +23,7 @@ namespace Score.ContentSearch.Algolia
 
             if (config != null)
             {
-                _tagsProcessor = config.TagProcessor;
+                _tagsProcessor = config.TagsProcessor;
             }
             
         }

@@ -2,6 +2,7 @@
 using System.Xml;
 using FluentAssertions;
 using NUnit.Framework;
+using Score.ContentSearch.Algolia.Tests.Fakes;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.ComputedFields;
 using Sitecore.ContentSearch.Maintenance;
@@ -86,6 +87,20 @@ namespace Score.ContentSearch.Algolia.Tests.Configuration
             index.Configuration.DocumentOptions.ComputedIndexFields.Count.Should().Be(1);
             index.Configuration.DocumentOptions.ComputedIndexFields.First()
                 .Should().BeOfType<SmallCreatedDate>();
+        }
+
+        [Test]
+        public void ShouldLoadTagsProcessor()
+        {
+            //Act
+            var index = LoadIndexConfiguration("TagsProcessor.config");
+
+            //Assert
+            var configuration = index.Configuration as AlgoliaIndexConfiguration;
+            configuration.Should().NotBeNull();
+
+            configuration.TagsProcessor.Should().NotBeNull();
+            configuration.TagsProcessor.Should().BeOfType<AlgoliaTagsProcessor>();
         }
 
         private AlgoliaSearchIndex LoadIndexConfiguration(string fileName)

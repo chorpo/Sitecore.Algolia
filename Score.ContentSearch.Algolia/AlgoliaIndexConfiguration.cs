@@ -9,6 +9,6 @@ namespace Score.ContentSearch.Algolia
         //todo: Delete
         public IIndexDocumentPropertyMapper<JObject> IndexDocumentPropertyMapper { get; set; }
 
-        public ITagsProcessor TagProcessor { get; set; }
+        public ITagsProcessor TagsProcessor { get; set; }
     }
 }

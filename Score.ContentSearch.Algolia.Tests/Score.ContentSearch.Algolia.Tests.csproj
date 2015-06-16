@@ -134,7 +134,7 @@
     <Compile Include="Builders\IndexBuilder.cs" />
     <Compile Include="Builders\ItemBuilder.cs" />
     <Compile Include="Configuration\AlgoliaSearchIndexTests.cs" />
-    <Compile Include="Configuration\FakeFactory.cs" />
+    <Compile Include="Fakes\FakeFactory.cs" />
     <Compile Include="FieldReaders\GeoLocationFieldReaderTests.cs" />
     <Compile Include="Helpers\QueryExtentions.cs" />
     <Compile Include="Integrations\AddItemsIntegrations.cs" />
@@ -144,6 +144,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Configuration\ComputedField.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Configuration\TagsProcessor.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Configuration\IncludeTemplate.config">

@@ -9,14 +9,29 @@ namespace Score.ContentSearch.Algolia
     {
         public const string TagsFieldName = "_tags";
 
-        private readonly IEnumerable<AlgoliaTagConfig> _tagsConfig;
+        private readonly ICollection<AlgoliaTagConfig> _tagsConfig;
 
-        public AlgoliaTagsProcessor(IEnumerable<AlgoliaTagConfig> tagsConfig)
+        public AlgoliaTagsProcessor(ICollection<AlgoliaTagConfig> tagsConfig)
         {
             if (tagsConfig == null) 
                 throw new ArgumentNullException("tagsConfig");
             _tagsConfig = tagsConfig;
         }
+
+        #region For Sitecore Config instantiation
+
+        public AlgoliaTagsProcessor()
+        {
+            _tagsConfig = new List<AlgoliaTagConfig>();
+        }
+
+        public void AddTagConfig(AlgoliaTagConfig tag)
+        {
+            if (tag == null) throw new ArgumentNullException("tag");
+            _tagsConfig.Add(tag);
+        }
+
+        #endregion
 
 
         public void ProcessDocument(JObject doc)
