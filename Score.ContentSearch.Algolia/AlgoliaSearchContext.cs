@@ -60,6 +60,7 @@ namespace Score.ContentSearch.Algolia
         }
 
         public ISearchIndex Index { get; private set; }
+        public bool ConvertQueryDatesToUtc { get; set; }
         public SearchSecurityOptions SecurityOptions { get; private set; }
     }
 }

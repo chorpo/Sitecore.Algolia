@@ -121,7 +121,8 @@ namespace Score.ContentSearch.Algolia
             documentBuilder.AddSpecialFields();
             documentBuilder.AddItemFields();
             documentBuilder.AddComputedIndexFields();
-            documentBuilder.AddProviderCustomFields();
+            //Sitecore8 does not implement this
+            //documentBuilder.AddProviderCustomFields();
             documentBuilder.AddBoost();
 
             var algoliaDocumentBuilder = documentBuilder as AlgoliaDocumentBuilder;

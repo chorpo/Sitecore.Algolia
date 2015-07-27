@@ -275,11 +275,15 @@ namespace Score.ContentSearch.Algolia
                 this.AddField(current.FieldName, obj, false);
             }
         }
-
-        public override void AddProviderCustomFields()
-        {
-            //so far nothing provider specific
+#if (SITECORE8)
+#else
+    public override void AddProviderCustomFields()
+         {
+            //no logic so far
         }
+#endif
+
+
 
         public virtual void GenerateTags()
         {

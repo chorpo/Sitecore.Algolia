@@ -7,6 +7,9 @@ using Score.ContentSearch.Algolia.Abstract;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Linq.Common;
 using Sitecore.Data;
+#if (SITECORE8)
+using Sitecore.ContentSearch.Sharding;
+#endif
 
 namespace Score.ContentSearch.Algolia
 {
@@ -108,6 +111,10 @@ namespace Score.ContentSearch.Algolia
         }
 
         public ICommitPolicyExecutor CommitPolicyExecutor { get; private set; }
+
+#if (SITECORE8)
+        public IEnumerable<Shard> ShardsWithPendingChanges { get; private set; }
+#endif
 
         #endregion
 
