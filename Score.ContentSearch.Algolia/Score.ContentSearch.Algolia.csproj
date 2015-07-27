@@ -33,9 +33,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(SitecoreVersion)' != '' And $(SitecoreVersion) &gt;= 8">
-    <DefineConstants>SITECORE8</DefineConstants>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Sandbox|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\sandbox\Website\bin\</OutputPath>
@@ -44,6 +41,9 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(SitecoreVersion)' != '' And $(SitecoreVersion) &gt;= 8">
+    <DefineConstants>SITECORE8</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Security">
@@ -108,11 +108,6 @@
     <Compile Include="ComputedFields\ParentsField.cs" />
     <Compile Include="DefaultAlgoliaDocumentTypeMapper.cs" />
     <Compile Include="FieldReaders\GeoLocationFieldReader.cs" />
-    <Compile Include="Queries\AlgoliaFieldNameTranslator.cs" />
-    <Compile Include="Queries\AlgoliaQuery.cs" />
-    <Compile Include="Queries\AlgoliaQueryMapper.cs" />
-    <Compile Include="Queries\AlgoliaQueryMapperState.cs" />
-    <Compile Include="Queries\AlgoliaQueryOptimizer.cs" />
     <Compile Include="AlgoliaRepository.cs" />
     <Compile Include="Abstract\IAlgoliaRepository.cs" />
     <Compile Include="AlgoliaIndexOperations.cs" />
@@ -123,6 +118,11 @@
     <Compile Include="FieldReaders\NumberFieldReader.cs" />
     <Compile Include="FieldsConfiguration\SimpleFieldsConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\AlgoliaFieldNameTranslator.cs" />
+    <Compile Include="Queries\AlgoliaQuery.cs" />
+    <Compile Include="Queries\AlgoliaQueryMapper.cs" />
+    <Compile Include="Queries\AlgoliaQueryMapperState.cs" />
+    <Compile Include="Queries\AlgoliaQueryOptimizer.cs" />
     <Compile Include="Queries\AlgoliaQueryOptimizerState.cs" />
     <Compile Include="Queries\AlgoliaSearchResultItem.cs" />
     <Compile Include="Queries\LinqToAlgoliaIndex.cs" />

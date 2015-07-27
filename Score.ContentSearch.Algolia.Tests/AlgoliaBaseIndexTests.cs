@@ -43,7 +43,6 @@ namespace Score.ContentSearch.Algolia.Tests
                 sut.PropertyStore = new NullPropertyStore();
                 var configuration = new AlgoliaIndexConfiguration();
                 configuration.DocumentOptions = new DocumentBuilderOptions();
-                configuration.IndexDocumentPropertyMapper = new DefaultAlgoliaDocumentTypeMapper();
                 sut.Configuration = configuration;
                 var crowler = new SitecoreItemCrawler();
                 crowler.Database = "master";
@@ -76,7 +75,6 @@ namespace Score.ContentSearch.Algolia.Tests
                 sut.PropertyStore = new NullPropertyStore();
                 var configuration = new AlgoliaIndexConfiguration();
                 configuration.DocumentOptions = new DocumentBuilderOptions();
-                configuration.IndexDocumentPropertyMapper = new DefaultAlgoliaDocumentTypeMapper();
                 configuration.ExcludeTemplate(TestData.TestTemplateId.ToString());
                 
                 sut.Configuration = configuration;

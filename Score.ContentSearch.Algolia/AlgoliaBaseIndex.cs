@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Score.ContentSearch.Algolia.Abstract;
-using Score.ContentSearch.Algolia.Queries;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Diagnostics;
 using Sitecore.ContentSearch.Maintenance;
@@ -80,6 +79,10 @@ namespace Score.ContentSearch.Algolia
         {
             //not used - only in Sitecore8
             //base.VerifyNotDisposed();
+
+            CrawlingLog.Log.Debug(string.Format("PerformRebuild - Disposed - {0}", isDisposed), null);
+            CrawlingLog.Log.Debug(string.Format("PerformRebuild - Initialized - {0}", initialized), null);
+
             if (!base.ShouldStartIndexing(indexingOptions))
             {
                 return;
@@ -257,22 +260,14 @@ namespace Score.ContentSearch.Algolia
         {
             _summary = new AlgoliaSearchIndexSummary(_repository, PropertyStore);
 
-            this.FieldNameTranslator = new AlgoliaFieldNameTranslator();
+            //this.FieldNameTranslator = new AlgoliaFieldNameTranslator();
 
             var config = this.Configuration as AlgoliaIndexConfiguration;
             if (config == null)
             {
                 throw new ConfigurationErrorsException("Index has no configuration.");
             }
-            if (config.IndexDocumentPropertyMapper == null)
-            {
-                throw new ConfigurationErrorsException("AlgoliaDocumentPropertyMapper has not been configured.");
-            }
-            var mapper = config.IndexDocumentPropertyMapper as ISearchIndexInitializable;
-            if (mapper != null)
-            {
-                mapper.Initialize(this);
-            }
+           
 #if SITECORE8
             initialized = true;
 #endif
