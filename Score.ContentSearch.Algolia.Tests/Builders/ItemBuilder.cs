@@ -69,7 +69,7 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
         {
             var field = new DbField(ID.NewID)
             {
-                Value = "20141217T033000Z",
+                Value = "20141217T033000",
                 Type = "datetime",
                 Name = DateFieldName
             };
