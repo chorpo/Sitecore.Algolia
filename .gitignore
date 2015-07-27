@@ -13,3 +13,4 @@ Algolia.Search/obj/
 *.user
 libs/Sitecore/
 /sitecore-version.props
+sandbox/
