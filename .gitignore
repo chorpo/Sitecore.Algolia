@@ -12,3 +12,4 @@ Score.ContentSearch.Algolia/obj/
 Algolia.Search/obj/
 *.user
 libs/Sitecore/
+/sitecore-version.props
