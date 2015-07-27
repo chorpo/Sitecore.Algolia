@@ -11,3 +11,4 @@ Score.ContentSearch.Algolia.Tests/obj/
 Score.ContentSearch.Algolia/obj/
 Algolia.Search/obj/
 *.user
+libs/Sitecore/
