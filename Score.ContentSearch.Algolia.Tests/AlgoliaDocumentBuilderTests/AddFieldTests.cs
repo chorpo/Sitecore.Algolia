@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Score.ContentSearch.Algolia.Tests.Builders;
 using Sitecore.Collections;
+using Sitecore.Configuration;
 using Sitecore.ContentSearch;
 using Sitecore.FakeDb;
 
@@ -107,7 +108,6 @@ namespace Score.ContentSearch.Algolia.Tests.AlgoliaDocumentBuilderTests
             {
                 var item = db.GetItem("/sitecore/content/source");
                 var indexable = new SitecoreIndexableItem(item);
-
 
                 var context = new Mock<IProviderUpdateContext>();
                 var index = new IndexBuilder()

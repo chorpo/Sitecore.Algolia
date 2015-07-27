@@ -37,17 +37,20 @@ namespace Score.ContentSearch.Algolia.Tests
                 item.Should().NotBeNull();
 
                 var repository = new Mock<IAlgoliaRepository>();
+                repository.Setup(t => t.ClearIndexAsync()).ReturnsAsync(JObject.Parse(@"{""taskID"": 722}"));
 
                 var sut = new AlgoliaBaseIndex("test", repository.Object);
                 sut.PropertyStore = new NullPropertyStore();
                 var configuration = new AlgoliaIndexConfiguration();
                 configuration.DocumentOptions = new DocumentBuilderOptions();
+                configuration.IndexDocumentPropertyMapper = new DefaultAlgoliaDocumentTypeMapper();
                 sut.Configuration = configuration;
                 var crowler = new SitecoreItemCrawler();
                 crowler.Database = "master";
                 crowler.Root = "/sitecore/content";
                 sut.Crawlers.Add(crowler);
                 crowler.Initialize(sut);
+                sut.Initialize();
                 
                 //Act
                 sut.Rebuild();
@@ -67,12 +70,13 @@ namespace Score.ContentSearch.Algolia.Tests
                 item.Should().NotBeNull();
 
                 var repository = new Mock<IAlgoliaRepository>();
+                repository.Setup(t => t.ClearIndexAsync()).ReturnsAsync(JObject.Parse(@"{""taskID"": 722}"));
 
                 var sut = new AlgoliaBaseIndex("test", repository.Object);
                 sut.PropertyStore = new NullPropertyStore();
                 var configuration = new AlgoliaIndexConfiguration();
                 configuration.DocumentOptions = new DocumentBuilderOptions();
-
+                configuration.IndexDocumentPropertyMapper = new DefaultAlgoliaDocumentTypeMapper();
                 configuration.ExcludeTemplate(TestData.TestTemplateId.ToString());
                 
                 sut.Configuration = configuration;
@@ -81,12 +85,13 @@ namespace Score.ContentSearch.Algolia.Tests
                 crowler.Root = "/sitecore/content";
                 sut.Crawlers.Add(crowler);
                 crowler.Initialize(sut);
+                sut.Initialize();
 
                 //Act
                 sut.Rebuild();
 
                 //Assert
-                repository.Verify(t => t.SaveObjectsAsync(It.Is<IEnumerable<JObject>>(o => o.Count() == 0)), Times.Once);
+                repository.Verify(t => t.SaveObjectsAsync(It.Is<IEnumerable<JObject>>(o => !o.Any())), Times.Once);
             }
         }
     }

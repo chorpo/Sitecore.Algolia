@@ -14,11 +14,17 @@ using Sitecore.ContentSearch.Maintenance;
 using Sitecore.ContentSearch.Maintenance.Strategies;
 using Sitecore.ContentSearch.Security;
 
+#if (SITECORE8)
+using Sitecore.ContentSearch.Sharding;
+#endif
+
+
 namespace Score.ContentSearch.Algolia
 {
     public class AlgoliaBaseIndex : AbstractSearchIndex
     {
         private readonly IAlgoliaRepository _repository;
+        protected object indexUpdateLock = new object();
 
         public AlgoliaBaseIndex(string name, IAlgoliaRepository repository)
         {
@@ -34,7 +40,7 @@ namespace Score.ContentSearch.Algolia
         private readonly string _name;
         private ISearchIndexSummary _summary;
         private readonly ISearchIndexSchema schema;
-        private bool initialized;
+
 
         public List<IIndexUpdateStrategy> Strategies { get; private set; }
 
@@ -53,6 +59,51 @@ namespace Score.ContentSearch.Algolia
             this.Crawlers.Add(crawler);
         }
 
+        protected virtual object GetFullRebuildLockObject()
+        {
+            return this.indexUpdateLock;
+        }
+
+        protected virtual void DoReset(IProviderUpdateContext context)
+        {
+            //not used - only in Sitecore8
+            //base.VerifyNotDisposed();
+
+            var result = _repository.ClearIndexAsync().Result;
+
+            var taskId = result["taskID"].ToString();
+
+            _repository.WaitTaskAsync(taskId).Wait();
+        }
+
+        protected override void PerformRebuild(IndexingOptions indexingOptions, CancellationToken cancellationToken)
+        {
+            //not used - only in Sitecore8
+            //base.VerifyNotDisposed();
+            if (!base.ShouldStartIndexing(indexingOptions))
+            {
+                return;
+            }
+            lock (this.GetFullRebuildLockObject())
+            {
+                using (IProviderUpdateContext providerUpdateContext = this.CreateFullRebuildContext())
+                {
+                    CrawlingLog.Log.Warn(string.Format("[Index={0}] Reset Started", this.Name), null);
+                    this.DoReset(providerUpdateContext);
+                    CrawlingLog.Log.Warn(string.Format("[Index={0}] Reset Ended", this.Name), null);
+                    CrawlingLog.Log.Warn(string.Format("[Index={0}] Full Rebuild Started", this.Name), null);
+                    this.DoRebuild(providerUpdateContext, indexingOptions, cancellationToken);
+                    CrawlingLog.Log.Warn(string.Format("[Index={0}] Full Rebuild Ended", this.Name), null);
+                }
+            }
+        }
+
+        protected override void PerformRefresh(IIndexable indexableStartingPoint, IndexingOptions indexingOptions,
+            CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void AddStrategy(IIndexUpdateStrategy strategy)
         {
             strategy.Initialize(this);
@@ -66,7 +117,9 @@ namespace Score.ContentSearch.Algolia
 
         public override void Rebuild(IndexingOptions indexingOptions)
         {
-            this.DoRebuild(indexingOptions, CancellationToken.None);
+            //not used - only in Sitecore8
+            //base.VerifyNotDisposed();
+            this.PerformRebuild(indexingOptions, CancellationToken.None);
         }
 
         protected virtual IProviderUpdateContext CreateFullRebuildContext()
@@ -74,9 +127,9 @@ namespace Score.ContentSearch.Algolia
             return this.CreateUpdateContext();
         }
 
-        protected virtual void DoRebuild(IndexingOptions indexingOptions, CancellationToken cancellationToken)
+        protected virtual void DoRebuild(IProviderUpdateContext context, IndexingOptions indexingOptions, CancellationToken cancellationToken)
         {
-            Stopwatch stopwatch = new Stopwatch();
+            var stopwatch = new Stopwatch();
             stopwatch.Start();
             using (IProviderUpdateContext providerUpdateContext = this.CreateFullRebuildContext())
             {
@@ -123,7 +176,7 @@ namespace Score.ContentSearch.Algolia
         public override Task RefreshAsync(IIndexable indexableStartingPoint, IndexingOptions indexingOptions,
             CancellationToken cancellationToken)
         {
-            return Task.Run(() => Console.WriteLine(""));
+            return Task.Run(() => Console.WriteLine(""), cancellationToken);
         }
 
         public override void Update(IIndexableUniqueId indexableUniqueId)
@@ -220,6 +273,9 @@ namespace Score.ContentSearch.Algolia
             {
                 mapper.Initialize(this);
             }
+#if SITECORE8
+            initialized = true;
+#endif
         }
 
         public override IProviderUpdateContext CreateUpdateContext()
@@ -254,6 +310,25 @@ namespace Score.ContentSearch.Algolia
         public override ProviderIndexConfiguration Configuration { get; set; }
         public override IIndexOperations Operations { get { return new AlgoliaIndexOperations(this); } }
 
+
+#if (SITECORE8)
+        public override bool IsSharded
+        {
+            get { return false;}
+        }
+
+        public override IShardingStrategy ShardingStrategy { get; set; }
+
+        public override IShardFactory ShardFactory
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public override IEnumerable<Shard> Shards
+        {
+            get { throw new NotImplementedException(); }
+        }
+#endif
         #endregion
 
         protected virtual void DoRebuild(IndexingOptions indexingOptions)
