@@ -79,9 +79,11 @@ namespace Score.ContentSearch.Algolia
         {
             //not used - only in Sitecore8
             //base.VerifyNotDisposed();
-
+            
+#if (SITECORE8)
             CrawlingLog.Log.Debug(string.Format("PerformRebuild - Disposed - {0}", isDisposed), null);
             CrawlingLog.Log.Debug(string.Format("PerformRebuild - Initialized - {0}", initialized), null);
+#endif
 
             if (!base.ShouldStartIndexing(indexingOptions))
             {
