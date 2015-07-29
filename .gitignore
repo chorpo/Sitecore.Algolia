@@ -14,3 +14,4 @@ Algolia.Search/obj/
 libs/Sitecore/
 /sitecore-version.props
 sandbox/
+*.nupkg

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Score.ContentSearch.Algolia.$sitecore$</id>
+    <version>$version$</version>
+    <title>Sitecore Search provider for Algolia</title>
+    <authors>Brainjocks</authors>
+    <owners>Brainjocks</owners>
+    <licenseUrl>https://bitbucket.org/brainjocks/score-contentsearch-algolia</licenseUrl>
+    <projectUrl>https://bitbucket.org/brainjocks/score-contentsearch-algolia</projectUrl>
+    <iconUrl>http://www.brainjocks.com/~/media/Images/BrainJocks/Branding/brainjocks_score_icon</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Algolia ContenSearch provider for Sitecore $sitecore$</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>Sitecore SCORE Algolia ContentSearch</tags>
+    <dependencies>
+      <dependency id="Mono.Security" version="3.2.3.0" />
+      <dependency id="PCLCrypto" version="1.0.2.15130" />
+      <dependency id="Validation" version="2.0.6.15003" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Score.ContentSearch.Algolia\bin\$configuration$\Algolia.Search.dll" target="lib/net45" />
+    <file src="Score.ContentSearch.Algolia\bin\$configuration$\Score.ContentSearch.Algolia.dll" target="lib/net45" />
+  </files>
+</package>       
