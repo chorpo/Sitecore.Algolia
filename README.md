@@ -11,6 +11,7 @@ Sample script for 7.2 Update 4 -  `powershell -File ../score-automation/setup.ps
         * Run the `Command Prompt` with administrative privileges
         * Execute `powershell Set-ExecutionPolicy RemoteSigned`
     * If copy process complains about a particular Sitecore DLL being in use just run the setup script again
+3. Copy Sitecore lincese xml file into `Score.ContentSearch.Algolia.Tests` folder
 
                                                                   
 
