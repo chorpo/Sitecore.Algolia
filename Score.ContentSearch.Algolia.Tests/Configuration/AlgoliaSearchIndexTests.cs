@@ -111,6 +111,25 @@ namespace Score.ContentSearch.Algolia.Tests.Configuration
         }
 
         [Test]
+        public void TagProcessorPreffixShouldBeDefinedInTag()
+        {
+            //Act
+            var index = LoadIndexConfiguration("TagsProcessorSecondTagNoPreffix.config");
+
+            //Assert
+            var configuration = index.Configuration as AlgoliaIndexConfiguration;
+            configuration.Should().NotBeNull();
+
+            configuration.TagsProcessor.Should().NotBeNull();
+            configuration.TagsProcessor.Should().BeOfType<AlgoliaTagsProcessor>();
+
+            var doc = new JObject();
+            doc["_language"] = "en";
+            configuration.TagsProcessor.ProcessDocument(doc);
+            doc["_tags"].First(t => t.Value<string>() == "en");
+        }
+
+        [Test]
         public void ShouldLoadSite()
         {
             //Act

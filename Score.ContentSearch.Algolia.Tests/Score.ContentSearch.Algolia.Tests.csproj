@@ -141,6 +141,9 @@
     <None Include="Configuration\ComputedField.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Configuration\TagsProcessorSecondTagNoPreffix.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Configuration\TagsProcessor.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
