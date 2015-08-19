@@ -96,6 +96,7 @@
     <Compile Include="AlgoliaSearchContext.cs" />
     <Compile Include="AlgoliaTagConfig.cs" />
     <Compile Include="AlgoliaTagsProcessor.cs" />
+    <Compile Include="ComputedFields\ContentField.cs" />
     <Compile Include="ComputedFields\CurrentItemLinkField.cs" />
     <Compile Include="ComputedFields\ParentsField.cs" />
     <Compile Include="DefaultAlgoliaDocumentTypeMapper.cs" />
