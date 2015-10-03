@@ -55,7 +55,9 @@ namespace Score.ContentSearch.Algolia
             _repository.SaveObjectsAsync(data).Wait();
             _updateDocs.Clear();
 
-            _repository.DeleteObjectsAsync(_deleteIds.Select(t => t.ToGuid().ToString())).Wait();
+            var stringsToDelete = _deleteIds.Select(t => t.ToGuid().ToString()).ToList();
+
+            _repository.DeleteObjectsAsync(stringsToDelete).Wait();
             _deleteIds.Clear();
         }
 

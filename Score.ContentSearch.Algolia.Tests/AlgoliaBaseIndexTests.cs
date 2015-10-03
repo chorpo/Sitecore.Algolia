@@ -92,5 +92,38 @@ namespace Score.ContentSearch.Algolia.Tests
                 repository.Verify(t => t.SaveObjectsAsync(It.Is<IEnumerable<JObject>>(o => !o.Any())), Times.Once);
             }
         }
+
+        [Test]
+        public void DeleteTest()
+        {
+            // arrange
+            using (var db = new Db { _source })
+            {
+                var item = db.GetItem("/sitecore/content/source");
+                item.Should().NotBeNull();
+
+                var repository = new Mock<IAlgoliaRepository>();
+                repository.Setup(t => t.DeleteObjectsAsync(It.IsAny < IEnumerable < string >> ()))
+                    .ReturnsAsync(JObject.Parse(@"{""taskID"": 722}"));
+
+                var sut = new AlgoliaBaseIndex("test", repository.Object);
+                sut.PropertyStore = new NullPropertyStore();
+                var configuration = new AlgoliaIndexConfiguration();
+                configuration.DocumentOptions = new DocumentBuilderOptions();
+                sut.Configuration = configuration;
+                var crowler = new SitecoreItemCrawler();
+                crowler.Database = "master";
+                crowler.Root = "/sitecore/content";
+                sut.Crawlers.Add(crowler);
+                crowler.Initialize(sut);
+                sut.Initialize();
+
+                //Act
+                sut.Delete(new IndexableId<ID>(item.ID));
+
+                //Assert
+                repository.Verify(t => t.DeleteObjectsAsync(It.Is<IEnumerable<string>>(o => o.Count() == 1)), Times.Once);
+            }
+        }
     }
 }

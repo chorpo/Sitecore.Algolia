@@ -1,6 +1,4 @@
-﻿using Sitecore.ContentSearch.Maintenance;
-
-namespace Score.ContentSearch.Algolia
+﻿namespace Score.ContentSearch.Algolia
 {
     public class AlgoliaSearchIndex : AlgoliaBaseIndex
     {       

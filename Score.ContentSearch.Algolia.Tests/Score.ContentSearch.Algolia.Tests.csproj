@@ -158,7 +158,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
-    <None Include="SampleIndex.config" />
+    <None Include="SampleConfiguration\AlgoliaTestIndex.Sc7.config" />
+    <None Include="SampleConfiguration\AlgoliaTestIndex.Sc8.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="license.xml">

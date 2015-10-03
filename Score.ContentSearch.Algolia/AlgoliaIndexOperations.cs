@@ -39,7 +39,7 @@ namespace Score.ContentSearch.Algolia
 
         public void Delete(IIndexable indexable, IProviderUpdateContext context)
         {
-            throw new NotImplementedException();
+            Delete(indexable.Id, context);
         }
 
         public void Delete(IIndexableId id, IProviderUpdateContext context)
