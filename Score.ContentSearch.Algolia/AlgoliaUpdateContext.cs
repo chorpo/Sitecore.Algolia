@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Score.ContentSearch.Algolia.Abstract;
 using Sitecore.ContentSearch;
+using Sitecore.ContentSearch.Diagnostics;
 using Sitecore.ContentSearch.Linq.Common;
 using Sitecore.Data;
 #if (SITECORE8)
@@ -55,10 +56,15 @@ namespace Score.ContentSearch.Algolia
             _repository.SaveObjectsAsync(data).Wait();
             _updateDocs.Clear();
 
-            var stringsToDelete = _deleteIds.Select(t => t.ToGuid().ToString()).ToList();
+            var stringsToDelete = _deleteIds.Select(t => t.ToString()).ToList();
 
-            _repository.DeleteObjectsAsync(stringsToDelete).Wait();
+            foreach (var id in stringsToDelete)
+            {
+                _repository.DeleteAllObjByTag("id_" + id).Wait();
+            }
             _deleteIds.Clear();
+            CrawlingLog.Log.Info(string.Format("Update Context Committed: {0} updated, {1} deleted", 
+                data.Count, stringsToDelete.Count));
         }
 
         public void Optimize()

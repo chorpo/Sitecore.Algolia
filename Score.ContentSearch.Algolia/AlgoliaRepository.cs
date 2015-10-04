@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Algolia.Search;
 using Newtonsoft.Json.Linq;
 using Score.ContentSearch.Algolia.Abstract;
+using Sitecore.Common;
 
 namespace Score.ContentSearch.Algolia
 {
     public class AlgoliaRepository : IAlgoliaRepository
     {
         private readonly Index _index;
+        private int ApiChunkSize = 1000;
 
         public AlgoliaRepository(IAlgoliaConfig algoliaConfig)
         {
@@ -29,9 +32,34 @@ namespace Score.ContentSearch.Algolia
             return result;
         }
 
-        public Task<JObject> DeleteObjectsAsync(IEnumerable<String> objects)
+        public async Task<int> DeleteAllObjByTag(string tag)
         {
-            return _index.DeleteObjectsAsync(objects);
+            var query = new Query();
+            query.SetTagFilters(tag);
+            query.SetNbHitsPerPage(ApiChunkSize);
+            query.SetAttributesToRetrieve(new List<string> { "objectID" });
+
+            int processed = 0;
+            ICollection<string> hits = await GetElements(query);
+            while (hits.Any())
+            {
+                var deletionResponse = await _index.DeleteObjectsAsync(hits);
+                var taskId = (string)deletionResponse["taskID"];
+                await _index.WaitTaskAsync(taskId);
+                processed += hits.Count;
+                hits = await GetElements(query);
+            }
+
+            return processed;
+        }
+
+        private async Task<ICollection<string>> GetElements(Query query)
+        {
+            var data = await _index.SearchAsync(query);
+            var hits = (JArray)data["hits"];
+
+            var objectIds = hits.Select(hit => (string)hit["objectID"]).ToList();
+            return objectIds;
         }
 
         public Task WaitTaskAsync(string taskID)

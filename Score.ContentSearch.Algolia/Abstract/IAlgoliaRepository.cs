@@ -9,7 +9,7 @@ namespace Score.ContentSearch.Algolia.Abstract
     {
         Task<JObject> SaveObjectsAsync(IEnumerable<JObject> objects);
         Task<JObject> AddObjectAsync(object content, string objectId = null);
-        Task<JObject> DeleteObjectsAsync(IEnumerable<String> objects);
+        Task<int> DeleteAllObjByTag(string tag);
         Task WaitTaskAsync(string taskID);
         Task<JObject> SearchAsync(global::Algolia.Search.Query q);
         Task<JObject> ClearIndexAsync();

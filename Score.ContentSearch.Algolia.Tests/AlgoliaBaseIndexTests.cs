@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -102,9 +103,12 @@ namespace Score.ContentSearch.Algolia.Tests
                 var item = db.GetItem("/sitecore/content/source");
                 item.Should().NotBeNull();
 
+                string id = string.Empty;
+
                 var repository = new Mock<IAlgoliaRepository>();
-                repository.Setup(t => t.DeleteObjectsAsync(It.IsAny < IEnumerable < string >> ()))
-                    .ReturnsAsync(JObject.Parse(@"{""taskID"": 722}"));
+                repository.Setup(t => t.DeleteAllObjByTag(It.IsAny<string>()))
+                    .ReturnsAsync(1)
+                    .Callback<string>(s => id = s);
 
                 var sut = new AlgoliaBaseIndex("test", repository.Object);
                 sut.PropertyStore = new NullPropertyStore();
@@ -122,7 +126,9 @@ namespace Score.ContentSearch.Algolia.Tests
                 sut.Delete(new IndexableId<ID>(item.ID));
 
                 //Assert
-                repository.Verify(t => t.DeleteObjectsAsync(It.Is<IEnumerable<string>>(o => o.Count() == 1)), Times.Once);
+                repository.Verify(t => t.DeleteAllObjByTag(It.IsAny<string>()), Times.Once);
+                id.Should().Be("id_" + item.ID);
+                repository.Verify(t => t.DeleteAllObjByTag("id_" + item.ID.ToString()), Times.Once);
             }
         }
     }

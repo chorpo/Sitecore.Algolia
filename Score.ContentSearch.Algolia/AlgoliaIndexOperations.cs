@@ -68,7 +68,6 @@ namespace Score.ContentSearch.Algolia
 
         #endregion
 
-
         private JObject BuildDataToIndex(IProviderUpdateContext context, IIndexable version)
         {
             bool flag = InboundIndexFilterPipeline.Run(context.Index.Locator.GetInstance<ICorePipeline>(), new InboundIndexFilterArgs(version));
@@ -89,8 +88,6 @@ namespace Score.ContentSearch.Algolia
             //}
             return indexData;
         }
-
-
 
         internal JObject GetIndexData(IIndexable indexable, IProviderUpdateContext context)
         {
