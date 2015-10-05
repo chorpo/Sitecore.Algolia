@@ -98,6 +98,7 @@
     <Compile Include="AlgoliaTagsProcessor.cs" />
     <Compile Include="ComputedFields\ContentField.cs" />
     <Compile Include="ComputedFields\CurrentItemLinkField.cs" />
+    <Compile Include="ComputedFields\CategoriesField.cs" />
     <Compile Include="ComputedFields\ParentsField.cs" />
     <Compile Include="DefaultAlgoliaDocumentTypeMapper.cs" />
     <Compile Include="FieldReaders\GeoLocationFieldReader.cs" />
