@@ -326,6 +326,35 @@ namespace Score.ContentSearch.Algolia
             get { throw new NotImplementedException(); }
         }
 #endif
+
+#if SITECORE81
+        public override bool EnableItemLanguageFallback
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override bool EnableFieldLanguageFallback
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+#endif
+
         #endregion
 
         protected virtual void DoRebuild(IndexingOptions indexingOptions)

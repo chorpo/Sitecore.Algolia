@@ -13,7 +13,7 @@ namespace Score.ContentSearch.Algolia
         private readonly IAlgoliaRepository _repository;
         private readonly IIndexPropertyStore _propertyStore;
 
-        public AlgoliaSearchIndexSummary( 
+        public AlgoliaSearchIndexSummary(
             IAlgoliaRepository repository,
             IIndexPropertyStore propertyStore)
         {
@@ -27,7 +27,7 @@ namespace Score.ContentSearch.Algolia
             {
                 IsHealthy = false;
                 var response = _repository.SearchAsync(new Query("")).Result;
-                var result = (long) response["nbHits"];
+                var result = (long)response["nbHits"];
                 //Index is Healthy if I can pull the data
                 IsHealthy = true;
                 return result;
@@ -61,5 +61,21 @@ namespace Score.ContentSearch.Algolia
         public bool OutOfDateIndex { get; private set; }
         public IDictionary<string, string> UserData { get; private set; }
         public long? LastUpdatedTimestamp { get; set; }
+
+#if SITECORE81
+        public IIndexableInfo LastIndexedEntry
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+#endif
+
     }
 }

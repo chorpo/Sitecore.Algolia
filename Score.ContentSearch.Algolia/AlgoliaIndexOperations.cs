@@ -70,16 +70,16 @@ namespace Score.ContentSearch.Algolia
 
         private JObject BuildDataToIndex(IProviderUpdateContext context, IIndexable version)
         {
-            bool flag = InboundIndexFilterPipeline.Run(context.Index.Locator.GetInstance<ICorePipeline>(), new InboundIndexFilterArgs(version));
-            if (flag)
-            {
+            //bool flag = InboundIndexFilterPipeline.Run(context.Index.Locator.GetInstance<ICorePipeline>(), new InboundIndexFilterArgs(version));
+            //if (flag)
+            //{
                 //this.events.RaiseEvent("indexing:excludedfromindex", new object[]
                 //{
                 //    this.index.Name,
                 //    version.UniqueId
                 //});
-                return null;
-            }
+                //return null;
+            //}
             var indexData = this.GetIndexData(version, context);
             //if (indexData.IsEmpty)
             //{

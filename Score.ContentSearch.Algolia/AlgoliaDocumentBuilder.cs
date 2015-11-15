@@ -283,8 +283,6 @@ namespace Score.ContentSearch.Algolia
         }
 #endif
 
-
-
         public virtual void GenerateTags()
         {
             if (_tagsProcessor == null)
