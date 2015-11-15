@@ -42,8 +42,11 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(SitecoreVersion)' != '' And $(SitecoreVersion) &gt;= 8">
+  <PropertyGroup Condition="'$(SitecoreVersion)' != '' And '$(SitecoreVersion)' &gt;= 8">
     <DefineConstants>SITECORE8</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(SitecoreVersion)' != '' And '$(SitecoreVersion)' &gt;= 8.1">
+    <DefineConstants>SITECORE81</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Security">
