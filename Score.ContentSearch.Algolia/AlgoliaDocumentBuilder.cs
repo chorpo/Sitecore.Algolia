@@ -15,7 +15,7 @@ namespace Score.ContentSearch.Algolia
 {
     public class AlgoliaDocumentBuilder : AbstractDocumentBuilder<JObject>
     {
-        private ITagsProcessor _tagsProcessor;
+        private readonly ITagsProcessor _tagsProcessor;
 
         public AlgoliaDocumentBuilder(IIndexable indexable, IProviderUpdateContext context) : base(indexable, context)
         {
@@ -71,7 +71,7 @@ namespace Score.ContentSearch.Algolia
             //this.AddSpecialField("_content", (object)indexableBuiltinFields.DisplayName, false);
             //if (this.Options.Tags == null || this.Options.Tags.Length <= 0)
             //    return;
-            //this.AddSpecialField("_tags", (object)this.Options.Tags, false);
+            this.AddField("_tags", new List<string> {"id_" + this.Indexable.Id });
         }
 
         #region AddField
@@ -282,8 +282,6 @@ namespace Score.ContentSearch.Algolia
             //no logic so far
         }
 #endif
-
-
 
         public virtual void GenerateTags()
         {

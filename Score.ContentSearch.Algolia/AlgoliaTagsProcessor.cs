@@ -79,11 +79,14 @@ namespace Score.ContentSearch.Algolia
                 tagValues = tagValues.Select(t => tagConfig.TagPreffix + t).ToList();               
             }
 
-            var tags = (JArray)doc[TagsFieldName] ?? new JArray();
+            tagValues = tagValues.Distinct().ToList();
 
-            tagValues.ForEach(t => tags.Add(t));
+            var jtags = (JArray)doc[TagsFieldName] ?? new JArray();
+            var tags = jtags.ToObject<string[]>();
 
-            doc[TagsFieldName] = tags;
+            tags = tags.Union(tagValues).ToArray();
+
+            doc[TagsFieldName] = new JArray(tags);
         }
     }
 }

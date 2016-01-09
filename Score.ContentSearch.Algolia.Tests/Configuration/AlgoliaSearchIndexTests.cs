@@ -156,5 +156,16 @@ namespace Score.ContentSearch.Algolia.Tests.Configuration
             return factory.CreateObject<AlgoliaSearchIndex>(configNode);
         }
 
+        [Test]
+        public void CrawlerNoIndexTest()
+        {
+            //Act
+            var index = LoadIndexConfiguration("CrawlerNoIndex.config");
+
+            //Assert
+            var crawler = index.Crawlers.First() as AlgoliaCrawler;
+            crawler.NoIndexFieldName.Should().Be("No Index");
+        }
+
     }
 }

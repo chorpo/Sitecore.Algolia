@@ -120,7 +120,6 @@
     <Compile Include="AlgoliaDocumentBuilderTests\AddComputedIndexFieldsTests.cs" />
     <Compile Include="AlgoliaTagsProcessorTests.cs" />
     <Compile Include="ComputedFields\CurrentItemLinkFieldTest.cs" />
-    <Compile Include="Fakes\AlgoliaDataCrowler.cs" />
     <Compile Include="AlgoliaDocumentBuilderTests\AddFieldTests.cs" />
     <Compile Include="AlgoliaIndexOperationsTests.cs" />
     <Compile Include="Builders\IndexBuilder.cs" />
@@ -130,11 +129,15 @@
     <Compile Include="FieldReaders\GeoLocationFieldReaderTests.cs" />
     <Compile Include="Helpers\QueryExtentions.cs" />
     <Compile Include="Integrations\AddItemsIntegrations.cs" />
+    <Compile Include="AlgoliaCrawlerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\QueriesTests.cs" />
     <Compile Include="TestData.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Configuration\CrawlerNoIndex.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Configuration\Site.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -158,7 +161,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
-    <None Include="SampleIndex.config" />
+    <None Include="SampleConfiguration\AlgoliaTestIndex.Sc7.config" />
+    <None Include="SampleConfiguration\AlgoliaTestIndex.Sc8.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="license.xml">

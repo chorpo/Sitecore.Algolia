@@ -39,7 +39,7 @@ namespace Score.ContentSearch.Algolia
 
         public void Delete(IIndexable indexable, IProviderUpdateContext context)
         {
-            throw new NotImplementedException();
+            Delete(indexable.Id, context);
         }
 
         public void Delete(IIndexableId id, IProviderUpdateContext context)
@@ -68,19 +68,18 @@ namespace Score.ContentSearch.Algolia
 
         #endregion
 
-
         private JObject BuildDataToIndex(IProviderUpdateContext context, IIndexable version)
         {
-            bool flag = InboundIndexFilterPipeline.Run(context.Index.Locator.GetInstance<ICorePipeline>(), new InboundIndexFilterArgs(version));
-            if (flag)
-            {
+            //bool flag = InboundIndexFilterPipeline.Run(context.Index.Locator.GetInstance<ICorePipeline>(), new InboundIndexFilterArgs(version));
+            //if (flag)
+            //{
                 //this.events.RaiseEvent("indexing:excludedfromindex", new object[]
                 //{
                 //    this.index.Name,
                 //    version.UniqueId
                 //});
-                return null;
-            }
+                //return null;
+            //}
             var indexData = this.GetIndexData(version, context);
             //if (indexData.IsEmpty)
             //{
@@ -89,8 +88,6 @@ namespace Score.ContentSearch.Algolia
             //}
             return indexData;
         }
-
-
 
         internal JObject GetIndexData(IIndexable indexable, IProviderUpdateContext context)
         {

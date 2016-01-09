@@ -219,26 +219,14 @@ namespace Score.ContentSearch.Algolia
             Update(indexableInfo.Select(t => t.IndexableUniqueId));
         }
 
-        public override void Delete(IIndexableId indexableId)
-        {
-            Delete(indexableId, IndexingOptions.Default);
-        }
-
-        public override void Delete(IIndexableId indexableId, IndexingOptions indexingOptions)
-        {
-            using (var context = this.CreateUpdateContext())
-            {
-                foreach (var crawler in this.Crawlers)
-                {
-                    crawler.Delete(context, indexableId, indexingOptions);
-                }
-                context.Commit();
-            }
-        }
-
         public override void Delete(IIndexableUniqueId indexableUniqueId)
         {
             Delete(indexableUniqueId, IndexingOptions.Default);
+        }
+
+        public override void Delete(IIndexableId indexableId)
+        {
+            Delete(indexableId, IndexingOptions.Default);
         }
 
         public override void Delete(IIndexableUniqueId indexableUniqueId, IndexingOptions indexingOptions)
@@ -248,6 +236,18 @@ namespace Score.ContentSearch.Algolia
                 foreach (var crawler in this.Crawlers)
                 {
                     crawler.Delete(context, indexableUniqueId, indexingOptions);
+                }
+                context.Commit();
+            }
+        }
+
+        public override void Delete(IIndexableId indexableId, IndexingOptions indexingOptions)
+        {
+            using (var context = this.CreateUpdateContext())
+            {
+                foreach (var crawler in this.Crawlers)
+                {
+                    crawler.Delete(context, indexableId, indexingOptions);
                 }
                 context.Commit();
             }
@@ -326,6 +326,32 @@ namespace Score.ContentSearch.Algolia
             get { throw new NotImplementedException(); }
         }
 #endif
+
+#if SITECORE81
+        public override bool EnableItemLanguageFallback
+        {
+            get { return false; }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override bool EnableFieldLanguageFallback
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+#endif
+
         #endregion
 
         protected virtual void DoRebuild(IndexingOptions indexingOptions)

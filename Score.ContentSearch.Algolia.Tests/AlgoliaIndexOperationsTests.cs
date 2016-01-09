@@ -161,8 +161,9 @@ namespace Score.ContentSearch.Algolia.Tests
                 //Assert
                 var itemDoc = docs.First(t => (string)t["_name"] == "source");
                 var tags = (JArray)itemDoc["_tags"];
-                tags.Count.Should().Be(1);
-                ((string)tags.First).Should().Be(TestData.TestItemId.ToString());
+                tags.Count.Should().Be(2);
+
+                tags.ToObject<string[]>().Contains(TestData.TestItemId.ToString()).Should().BeTrue();
             }
         }
 

@@ -153,6 +153,62 @@ namespace Score.ContentSearch.Algolia.Tests
             ((string)doc["_id"]).Should().Be("myId");
             (doc["_tags"]).First(token => token.Value<string>() == "id_myId");
         }
+
+        [Test]
+        public void TransformedTagsShouldNotBeDuplicated()
+        {
+            //Arrange
+            var config = new List<AlgoliaTagConfig>
+            {
+                new AlgoliaTagConfig
+                {
+                    FieldName = "tag"
+                },
+                 new AlgoliaTagConfig
+                {
+                    FieldName = "tag"
+                }
+            };
+
+            var doc = new JObject();
+            doc["tag"] = "myId";
+            var sut = new AlgoliaTagsProcessor(config);
+
+            //Act
+            sut.ProcessDocument(doc);
+
+            //Assert
+            var tags = (doc["_tags"]).ToObject<string[]>();
+            tags.Count(t => t == "myId").Should().Be(1);
+        }
+
+        [Test]
+        public void OverridenTagsShouldNotBeDuplicated()
+        {
+            //Arrange
+            var config = new List<AlgoliaTagConfig>
+            {
+                new AlgoliaTagConfig
+                {
+                    FieldName = "tag"
+                },
+            };
+
+            var doc = new JObject();
+            doc["tag"] = "myId";
+            doc["_tags"] = new JArray()
+            {
+                new JValue ("myId")
+            };
+            var sut = new AlgoliaTagsProcessor(config);
+
+            //Act
+            sut.ProcessDocument(doc);
+
+            //Assert
+            var tags = (doc["_tags"]).ToObject<string[]>();
+            tags.Count(t => t == "myId").Should().Be(1);
+        }
     }
 
 

@@ -45,6 +45,12 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
             return this;
         }
 
+        public IndexBuilder WithIncludedTemplate(string templateId)
+        {
+            _index.Configuration.IncludeTemplate(templateId);
+            return this;
+        }
+
         public IndexBuilder WithTagsBuilderForId()
         {
             _configuration.TagsProcessor = new AlgoliaTagsProcessor(new List<AlgoliaTagConfig>

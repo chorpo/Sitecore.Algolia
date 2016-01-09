@@ -42,8 +42,11 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(SitecoreVersion)' != '' And $(SitecoreVersion) &gt;= 8">
+  <PropertyGroup Condition="'$(SitecoreVersion)' != '' And '$(SitecoreVersion)' &gt;= 8">
     <DefineConstants>SITECORE8</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(SitecoreVersion)' != '' And '$(SitecoreVersion)' &gt;= 8.1">
+    <DefineConstants>SITECORE8;SITECORE81</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Security">
@@ -91,6 +94,7 @@
     <Compile Include="Abstract\ITagsMap.cs" />
     <Compile Include="AlgoliaBaseIndex.cs" />
     <Compile Include="AlgoliaConfig.cs" />
+    <Compile Include="AlgoliaCrawler.cs" />
     <Compile Include="AlgoliaDocumentBuilder.cs" />
     <Compile Include="AlgoliaIndexConfiguration.cs" />
     <Compile Include="AlgoliaSearchContext.cs" />
@@ -98,6 +102,7 @@
     <Compile Include="AlgoliaTagsProcessor.cs" />
     <Compile Include="ComputedFields\ContentField.cs" />
     <Compile Include="ComputedFields\CurrentItemLinkField.cs" />
+    <Compile Include="ComputedFields\CategoriesField.cs" />
     <Compile Include="ComputedFields\ParentsField.cs" />
     <Compile Include="DefaultAlgoliaDocumentTypeMapper.cs" />
     <Compile Include="FieldReaders\GeoLocationFieldReader.cs" />

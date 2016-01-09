@@ -1,0 +1,22 @@
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
+  <PropertyGroup>
+    <SitecoreVersion>8.1</SitecoreVersion>
+    <HasGetItemReferencesPipeline>True</HasGetItemReferencesPipeline>
+  </PropertyGroup>
+ 
+  <!--
+
+  <UsingTask AssemblyFile="$(MSBuildProjectDirectory)\..\Libs\BJBuild\BJBuildTasks.dll" TaskName="GetFileAndProductVersion" />
+
+  <Target Name="GetSitecoreVersion">
+    <Message Text="Obtaining Sitecore version information..." Importance="high" />
+    <GetFileAndProductVersion AssemblyFilePath="..\Libs\Sitecore\Sitecore.Kernel.dll">
+      <Output PropertyName="SitecoreVersion" TaskParameter="ProductMajorMinorVersion" />
+    </GetFileAndProductVersion>
+    <Message Text="SitecoreVersion is $(SitecoreVersion)" Importance="high" />
+  </Target>
+
+   -->
+
+</Project>
