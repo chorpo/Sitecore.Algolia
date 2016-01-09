@@ -330,10 +330,7 @@ namespace Score.ContentSearch.Algolia
 #if SITECORE81
         public override bool EnableItemLanguageFallback
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { return false; }
 
             set
             {

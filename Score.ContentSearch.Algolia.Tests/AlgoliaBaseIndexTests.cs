@@ -45,9 +45,11 @@ namespace Score.ContentSearch.Algolia.Tests
                 var configuration = new AlgoliaIndexConfiguration();
                 configuration.DocumentOptions = new DocumentBuilderOptions();
                 sut.Configuration = configuration;
-                var crowler = new SitecoreItemCrawler();
-                crowler.Database = "master";
-                crowler.Root = "/sitecore/content";
+                var crowler = new SitecoreItemCrawler
+                {
+                    Database = "master",
+                    Root = "/sitecore/content"
+                };
                 sut.Crawlers.Add(crowler);
                 crowler.Initialize(sut);
                 sut.Initialize();
