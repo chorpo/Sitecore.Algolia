@@ -45,13 +45,13 @@ namespace Score.ContentSearch.Algolia.Tests
                 var configuration = new AlgoliaIndexConfiguration();
                 configuration.DocumentOptions = new DocumentBuilderOptions();
                 sut.Configuration = configuration;
-                var crowler = new SitecoreItemCrawler
+                var crawler = new SitecoreItemCrawler
                 {
                     Database = "master",
                     Root = "/sitecore/content"
                 };
-                sut.Crawlers.Add(crowler);
-                crowler.Initialize(sut);
+                sut.Crawlers.Add(crawler);
+                crawler.Initialize(sut);
                 sut.Initialize();
                 
                 //Act
@@ -63,7 +63,7 @@ namespace Score.ContentSearch.Algolia.Tests
         }
 
         [Test]
-        public void CrowlerShouldExcludeTemplates()
+        public void CrawlerShouldExcludeTemplates()
         {
             // arrange
             using (var db = new Db { _source })
@@ -81,11 +81,80 @@ namespace Score.ContentSearch.Algolia.Tests
                 configuration.ExcludeTemplate(TestData.TestTemplateId.ToString());
                 
                 sut.Configuration = configuration;
-                var crowler = new SitecoreItemCrawler();
-                crowler.Database = "master";
-                crowler.Root = "/sitecore/content";
-                sut.Crawlers.Add(crowler);
-                crowler.Initialize(sut);
+                var crawler = new SitecoreItemCrawler();
+                crawler.Database = "master";
+                crawler.Root = "/sitecore/content";
+                sut.Crawlers.Add(crawler);
+                crawler.Initialize(sut);
+                sut.Initialize();
+
+                //Act
+                sut.Rebuild();
+
+                //Assert
+                repository.Verify(t => t.SaveObjectsAsync(It.Is<IEnumerable<JObject>>(o => !o.Any())), Times.Once);
+            }
+        }
+
+        [Test]
+        public void CrawlerShouldIncludeTemplates()
+        {
+            // arrange
+            using (var db = new Db { _source })
+            {
+                var item = db.GetItem("/sitecore/content/source");
+                item.Should().NotBeNull();
+
+                var repository = new Mock<IAlgoliaRepository>();
+                repository.Setup(t => t.ClearIndexAsync()).ReturnsAsync(JObject.Parse(@"{""taskID"": 722}"));
+
+                var sut = new AlgoliaBaseIndex("test", repository.Object);
+                sut.PropertyStore = new NullPropertyStore();
+                var configuration = new AlgoliaIndexConfiguration();
+                configuration.DocumentOptions = new DocumentBuilderOptions();
+                configuration.IncludeTemplate(TestData.TestTemplateId.ToString());
+
+                sut.Configuration = configuration;
+                var crawler = new SitecoreItemCrawler();
+                crawler.Database = "master";
+                crawler.Root = "/sitecore/content";
+                sut.Crawlers.Add(crawler);
+                crawler.Initialize(sut);
+                sut.Initialize();
+
+                //Act
+                sut.Rebuild();
+
+                //Assert
+                repository.Verify(t => t.SaveObjectsAsync(It.Is<IEnumerable<JObject>>(o => o.Any())), Times.Once);
+            }
+        }
+
+        [Test]
+        public void CrawlerShouldIncludeOnlyDEfinedTemplates()
+        {
+            // arrange
+            using (var db = new Db { _source })
+            {
+                var item = db.GetItem("/sitecore/content/source");
+                item.Should().NotBeNull();
+
+                var repository = new Mock<IAlgoliaRepository>();
+                repository.Setup(t => t.ClearIndexAsync()).ReturnsAsync(JObject.Parse(@"{""taskID"": 722}"));
+
+                var sut = new AlgoliaBaseIndex("test", repository.Object);
+                sut.PropertyStore = new NullPropertyStore();
+                var configuration = new AlgoliaIndexConfiguration();
+                configuration.DocumentOptions = new DocumentBuilderOptions();
+                //Our Template should be exluded in IncludeTemplate is not empty
+                configuration.IncludeTemplate(ID.NewID.ToString());
+
+                sut.Configuration = configuration;
+                var crawler = new SitecoreItemCrawler();
+                crawler.Database = "master";
+                crawler.Root = "/sitecore/content";
+                sut.Crawlers.Add(crawler);
+                crawler.Initialize(sut);
                 sut.Initialize();
 
                 //Act
@@ -117,11 +186,11 @@ namespace Score.ContentSearch.Algolia.Tests
                 var configuration = new AlgoliaIndexConfiguration();
                 configuration.DocumentOptions = new DocumentBuilderOptions();
                 sut.Configuration = configuration;
-                var crowler = new SitecoreItemCrawler();
-                crowler.Database = "master";
-                crowler.Root = "/sitecore/content";
-                sut.Crawlers.Add(crowler);
-                crowler.Initialize(sut);
+                var crawler = new SitecoreItemCrawler();
+                crawler.Database = "master";
+                crawler.Root = "/sitecore/content";
+                sut.Crawlers.Add(crawler);
+                crawler.Initialize(sut);
                 sut.Initialize();
 
                 //Act

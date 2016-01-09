@@ -94,6 +94,7 @@
     <Compile Include="Abstract\ITagsMap.cs" />
     <Compile Include="AlgoliaBaseIndex.cs" />
     <Compile Include="AlgoliaConfig.cs" />
+    <Compile Include="AlgoliaCrawler.cs" />
     <Compile Include="AlgoliaDocumentBuilder.cs" />
     <Compile Include="AlgoliaIndexConfiguration.cs" />
     <Compile Include="AlgoliaSearchContext.cs" />

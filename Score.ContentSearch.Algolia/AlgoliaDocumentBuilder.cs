@@ -15,7 +15,7 @@ namespace Score.ContentSearch.Algolia
 {
     public class AlgoliaDocumentBuilder : AbstractDocumentBuilder<JObject>
     {
-        private ITagsProcessor _tagsProcessor;
+        private readonly ITagsProcessor _tagsProcessor;
 
         public AlgoliaDocumentBuilder(IIndexable indexable, IProviderUpdateContext context) : base(indexable, context)
         {
