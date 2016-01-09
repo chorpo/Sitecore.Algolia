@@ -135,6 +135,9 @@
     <Compile Include="TestData.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Configuration\CrawlerNoIndex.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Configuration\Site.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
