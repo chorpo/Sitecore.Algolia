@@ -160,11 +160,11 @@ namespace Score.ContentSearch.Algolia.Tests.Configuration
         public void CrawlerNoIndexTest()
         {
             //Act
-            var index = LoadIndexConfiguration("CrawlerNoIndex.config");
+            var index = LoadIndexConfiguration("CrawlerShowInSearchResults.config");
 
             //Assert
             var crawler = index.Crawlers.First() as AlgoliaCrawler;
-            crawler.NoIndexFieldName.Should().Be("No Index");
+            crawler.ShowInSearchResultsFieldName.Should().Be("Show In Search Results");
         }
 
     }

@@ -11,7 +11,7 @@ namespace Score.ContentSearch.Algolia
 {
     public class AlgoliaCrawler: SitecoreItemCrawler
     {
-        public string NoIndexFieldName { get; set; }
+        public string ShowInSearchResultsFieldName { get; set; }
 
         protected override bool IsExcludedFromIndex(SitecoreIndexableItem indexable, bool checkLocation = false)
         {
@@ -22,10 +22,13 @@ namespace Score.ContentSearch.Algolia
 
             var obj = (Item)indexable;
 
-            if (!string.IsNullOrWhiteSpace(NoIndexFieldName))
+            if (!string.IsNullOrWhiteSpace(ShowInSearchResultsFieldName))
             {
-                var noIndex = obj[NoIndexFieldName];
-                result = !string.IsNullOrWhiteSpace(noIndex);
+                var showInSearchResultsField = obj.Fields[ShowInSearchResultsFieldName];
+                if (showInSearchResultsField != null)
+                {
+                    result = string.IsNullOrWhiteSpace(showInSearchResultsField.Value);
+                }
             }
 
             return result;
