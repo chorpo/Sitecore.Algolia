@@ -20,17 +20,17 @@ namespace Score.ContentSearch.Algolia.Tests
     [TestFixture]
     public class AlgoliaCrawlerTests
     {
-        [TestCase("No Index", false)]
-        [TestCase("no index", false)]
+        [TestCase("Show In Search Results", false)]
+        [TestCase("show in search results", false)]
         [TestCase("", true)]
         [TestCase(null, true)]
         [TestCase("Another Field", true)]
-        public void CrawlerExludeNoIndexDocuments(string noIndexFieldName, bool shouldBeCrawled)
+        public void CrawlerExludeNotShowInSearchResultsDocuments(string showInSearchResultsFieldName, bool shouldBeCrawled)
         {
             // arrange
             var source = new DbItem("source", TestData.TestItemId, TestData.TestTemplateId)
             {
-                {"No Index", "1" }
+                {"Show In Search Results", "" }
             };
             using (var db = new Db {source})
             {
@@ -52,7 +52,7 @@ namespace Score.ContentSearch.Algolia.Tests
                 {
                     Database = "master",
                     Root = "/sitecore/content",
-                    NoIndexFieldName = noIndexFieldName,
+                    ShowInSearchResultsFieldName = showInSearchResultsFieldName,
                 };
                 sut.Crawlers.Add(crawler);
                 crawler.Initialize(sut);
