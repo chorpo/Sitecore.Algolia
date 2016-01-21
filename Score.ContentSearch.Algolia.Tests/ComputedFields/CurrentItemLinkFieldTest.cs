@@ -7,6 +7,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using Score.ContentSearch.Algolia.ComputedFields;
 using Score.ContentSearch.Algolia.Tests.Builders;
+using Sitecore;
 using Sitecore.ContentSearch;
 using Sitecore.FakeDb;
 using Sitecore.Links;
@@ -20,7 +21,7 @@ namespace Score.ContentSearch.Algolia.Tests.ComputedFields
         public void ShouldComputeValueForNoConfiguration()
         {
             //Arrange
-            using (var db = new Db { new ItemBuilder().Build() })
+            using (var db = new Db {new ItemBuilder().Build()})
             {
                 var item = db.GetItem("/sitecore/content/source");
                 var indexable = new SitecoreIndexableItem(item);
@@ -58,6 +59,35 @@ namespace Score.ContentSearch.Algolia.Tests.ComputedFields
 
                 //Assert
                 actual.Should().Be("/en/content/source.aspx");
+            }
+        }
+
+        [Test]
+        public void ShouldLoadSite()
+        {
+            //Arrange
+            var fakeSite = new Sitecore.FakeDb.Sites.FakeSiteContext(
+                new Sitecore.Collections.StringDictionary
+                {
+                    {"name", "website"},
+                    {"database", "web"}
+                });
+
+            // switch the context site
+            using (new Sitecore.Sites.SiteContextSwitcher(fakeSite))
+            using (var db = new Db {new ItemBuilder().Build()})
+            {
+                var item = db.GetItem("/sitecore/content/source");
+                var indexable = new SitecoreIndexableItem(item);
+
+                var sut = new CurrentItemLinkField();
+                sut.Site = Context.Site.Name;
+
+                //Act
+                var actual = sut.ComputeFieldValue(indexable);
+
+                //Assert
+                actual.Should().Be("//cdsite/en/sitecore/content/source.aspx");
             }
         }
     }
