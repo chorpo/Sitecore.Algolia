@@ -2,14 +2,15 @@
 
 Provider code is not tied to specific Sitecore version. Whenever you want to develop or test against specific Sitecore version you can ... But that flexibility has back side. Some manual steps should be performed to make solution compilable.
 
-1. Copy Sitecore DLLs for specific Sitecore version to **Libs/Sitecore** folder:
+1. Copy Sitecore DLLs for specific Sitecore version to **\Libs\Sitecore** folder:
     * sitecore.nexus.dll
     * Newtonsoft.Json.dll
     * Sitecore.ContentSearch.dll
     * Sitecore.ContentSearch.Linq.dll
     * Sitecore.Kernel.dll
 
-2.  Copy **sitecore-version.props** file into solution root from **Automation\Sitecore-Versions\{SitecoreVersion}** 
+2. Copy **sitecore-version.props** file into solution root from **\Automation\Sitecore-Versions\{SitecoreVersion}** 
+3. Copy your sitecore license into **\Score.ContentSearch.Algolia.Tests** folder to enable tests
 
 ## Setup Local Environment using PS script
 
@@ -33,3 +34,16 @@ If Powershell complains about execution policy please do the following and try a
 * Execute `powershell Set-ExecutionPolicy RemoteSigned`
 
 If copy process complains about a particular Sitecore DLL being in use just run the setup script again
+
+# Build Configurations
+
+## Debug
+
+## Release
+
+Used for Releases generation
+
+## Sandbox
+
+Similar to Debug but copies output dlls into **..\sandbox\Website\bin\** folder
+
