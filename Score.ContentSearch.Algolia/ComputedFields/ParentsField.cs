@@ -10,6 +10,11 @@ namespace Score.ContentSearch.Algolia.ComputedFields
 {
     public class ParentsField: IComputedIndexField
     {
+        /// <summary>
+        /// Returns IDs of all Parent Items
+        /// </summary>
+        /// <param name="indexable"></param>
+        /// <returns></returns>
         public object ComputeFieldValue(IIndexable indexable)
         {
             var item = (SitecoreIndexableItem)indexable;

@@ -11,6 +11,9 @@ using Sitecore.Data.Items;
 
 namespace Score.ContentSearch.Algolia.ComputedFields
 {
+    /// <summary>
+    /// Returns Names of all Parent Items inside current Site
+    /// </summary>
     public class CategoriesField: IComputedIndexField, ISiteSpecificField
     {
         private ID _homepageId;
@@ -50,10 +53,7 @@ namespace Score.ContentSearch.Algolia.ComputedFields
             var homepagePath = site.RootPath + site.StartItem;
             var database = item.Item.Database;
 
-            if (database == null)
-                return null;
-
-            return database.GetItem(homepagePath);
+            return database?.GetItem(homepagePath);
         }
 
 

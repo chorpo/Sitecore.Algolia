@@ -10,7 +10,7 @@ Provider code is not tied to specific Sitecore version. Whenever you want to dev
     * Sitecore.Kernel.dll
 
 2. Copy **sitecore-version.props** file into solution root from **Automation/Sitecore-Versions/{SitecoreVersion}** 
-3. Copy your sitecore license into **\Score.ContentSearch.Algolia.Tests** folder to enable tests
+3. Copy your sitecore license into **Score.ContentSearch.Algolia.Tests** folder to enable tests
 
 ## Setup Local Environment using PS script
 

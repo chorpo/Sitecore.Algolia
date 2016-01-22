@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Score.ContentSearch.Algolia.Abstract;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.ComputedFields;
 using Sitecore.Links;
 using Sitecore.Sites;
 using Sitecore.Web;
-using Sitecore.Web.UI.WebControls;
 
 namespace Score.ContentSearch.Algolia.ComputedFields
 {
@@ -42,7 +38,7 @@ namespace Score.ContentSearch.Algolia.ComputedFields
                 if (siteContext == null)
                     throw new Exception($"Site {Site} cannot be reached");
 
-                //we typicaly generate index on CM but site URLs in CM will not work for CD
+                //we typically generate index on CM but site URLs in CM will not work for CD
                 //replacing "targetHostName" is not good solution because it breaks PE in CM
                 //"cdTargetHostName" site argument should solve that issue. Index uses it instead of targetHostName and PE continue using "targetHostName" 
                 var cmTargetHostName = siteContext.Properties["cdTargetHostName"];

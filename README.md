@@ -1,27 +1,28 @@
-# Score Algolia search provider
+# Siteore search provider Algolia
 
-## Setup Local Environment
+Algolia is a Hosted Search API that delivers instant and relevant results. Search Provider implements crawling part of index integration.
 
-Once you cloned the repo and **prior to opening the solution in Visual Studio** please do the following:
+## Why another provider?
 
-1. Check-out **score-automation** repository
-2. Run **setup.ps1** script for desired Sitecore version. 
-3. Copy Sitecore lincese xml file into **Score.ContentSearch.Algolia.Tests** folder
+* Algolia is blazing fast, requires no maintenance and very little configuration
+* Algolia has easy to use UI framework
+* Provider built with Multitenancy available out of the box
 
-### Powershell Script details
 
-Sample Scripts
+## What you cannot do with this provider
 
-* 7.2 Update 4 -  `powershell -File ../score-automation/setup.ps1 -sitecoreVersion 7.2.150407`.
-* 8.0 Update 3 -  `powershell -File ../score-automation/setup.ps1 -sitecoreVersion 8.0.150427`.
-* 8.1 Initial  -  `powershell -File ../score-automation/setup.ps1 -sitecoreVersion 8.1.151003`. 
+Algolia is shyning in domain search like site or product catalog. It extremly fast and easy to use and configue. But there is price for that. It is not as flexible as other general purpose engine (Lucene). 
 
-If Powershell complains about execution policy please do the following and try again
+You cannot replace standard Sitecore Indexes like we do with Solr.
 
-* Run the **Command Prompt** with administrative privileges
-* Execute `powershell Set-ExecutionPolicy RemoteSigned`
+ 
+# Features
 
-If copy process complains about a particular Sitecore DLL being in use just run the setup script again
+
+## Computed Fields
+
+### CategoriesField
+
                                                                   
 
 
