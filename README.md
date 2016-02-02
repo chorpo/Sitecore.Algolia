@@ -1,4 +1,4 @@
-# Siteore search provider Algolia
+# Sitecore search provider for Algolia
 
 Algolia is a Hosted Search API that delivers instant and relevant results. Search Provider implements crawling part of index integration.
 
@@ -22,7 +22,3 @@ You cannot replace standard Sitecore Indexes like we do with Solr.
 ## Computed Fields
 
 ### CategoriesField
-
-                                                                  
-
-
