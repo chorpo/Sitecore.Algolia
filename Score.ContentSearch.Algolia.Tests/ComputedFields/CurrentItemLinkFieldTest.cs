@@ -10,6 +10,7 @@ using Score.ContentSearch.Algolia.Tests.Builders;
 using Sitecore;
 using Sitecore.ContentSearch;
 using Sitecore.FakeDb;
+using Sitecore.FakeDb.Sites;
 using Sitecore.Links;
 
 namespace Score.ContentSearch.Algolia.Tests.ComputedFields
@@ -46,7 +47,7 @@ namespace Score.ContentSearch.Algolia.Tests.ComputedFields
                     {"rootPath", "/sitecore"}
                 });
             //Arrange
-            using (new Sitecore.Sites.SiteContextSwitcher(fakeSite))
+            using (new FakeSiteContextSwitcher(fakeSite))
             using (var db = new Db {new ItemBuilder().Build()})
             {
                 var item = db.GetItem("/sitecore/content/source");
@@ -66,15 +67,16 @@ namespace Score.ContentSearch.Algolia.Tests.ComputedFields
         public void ShouldLoadSite()
         {
             //Arrange
-            var fakeSite = new Sitecore.FakeDb.Sites.FakeSiteContext(
+            var fakeSite = new FakeSiteContext(
                 new Sitecore.Collections.StringDictionary
                 {
                     {"name", "website"},
-                    {"database", "web"}
+                    {"database", "web"},
+                    {"cdTargetHostName", "cdsite"}
                 });
 
             // switch the context site
-            using (new Sitecore.Sites.SiteContextSwitcher(fakeSite))
+            using (new FakeSiteContextSwitcher(fakeSite))
             using (var db = new Db {new ItemBuilder().Build()})
             {
                 var item = db.GetItem("/sitecore/content/source");

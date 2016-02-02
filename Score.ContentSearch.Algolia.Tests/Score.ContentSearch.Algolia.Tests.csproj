@@ -62,8 +62,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\Sitecore\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NSubstitute">
-      <HintPath>..\packages\NSubstitute.1.8.1.0\lib\net45\NSubstitute.dll</HintPath>
+    <Reference Include="NSubstitute, Version=1.9.2.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
+      <HintPath>..\packages\NSubstitute.1.9.2.0\lib\net45\NSubstitute.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
@@ -83,12 +84,13 @@
     <Reference Include="Sitecore.ContentSearch.Linq">
       <HintPath>..\libs\Sitecore\Sitecore.ContentSearch.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="Sitecore.FakeDb, Version=0.27.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Sitecore.FakeDb.0.27.2\lib\net45\Sitecore.FakeDb.dll</HintPath>
+    <Reference Include="Sitecore.FakeDb, Version=0.38.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sitecore.FakeDb.0.38.0\lib\net45\Sitecore.FakeDb.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Sitecore.FakeDb.NSubstitute">
-      <HintPath>..\packages\Sitecore.FakeDb.NSubstitute.0.27.2\lib\net45\Sitecore.FakeDb.NSubstitute.dll</HintPath>
+    <Reference Include="Sitecore.FakeDb.NSubstitute, Version=0.38.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sitecore.FakeDb.NSubstitute.0.38.0\lib\net45\Sitecore.FakeDb.NSubstitute.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Sitecore.Kernel">
       <HintPath>..\libs\Sitecore\Sitecore.Kernel.dll</HintPath>
@@ -135,6 +137,7 @@
     <Compile Include="TestData.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App_Config\FieldTypes.config" />
     <None Include="Configuration\CrawlerShowInSearchResults.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -157,9 +160,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="App.config" />
-    <None Include="App_Config\FieldTypes.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
     <None Include="SampleConfiguration\AlgoliaTestIndex.Sc7.config" />
     <None Include="SampleConfiguration\AlgoliaTestIndex.Sc8.config" />
