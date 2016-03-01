@@ -1,10 +1,8 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
 using Sitecore.ContentSearch;
-using Sitecore.ContentSearch.Abstractions;
 using Sitecore.ContentSearch.Diagnostics;
 using Sitecore.ContentSearch.Linq.Common;
-using Sitecore.ContentSearch.Pipelines.IndexingFilters;
 using Sitecore.Diagnostics;
 using Sitecore.Events;
 using Sitecore.Reflection;
@@ -14,10 +12,11 @@ namespace Score.ContentSearch.Algolia
     public class AlgoliaIndexOperations : IIndexOperations
     {
         private readonly ISearchIndex _index;
+        private const string LogPreffix = "AlgoliaIndexOperations: ";
 
         public AlgoliaIndexOperations(ISearchIndex index)
         {
-            if (index == null) throw new ArgumentNullException("index");
+            if (index == null) throw new ArgumentNullException(nameof(index));
             _index = index;
         }
 
@@ -26,6 +25,11 @@ namespace Score.ContentSearch.Algolia
         public void Update(IIndexable indexable, IProviderUpdateContext context,
             ProviderIndexConfiguration indexConfiguration)
         {
+            if (indexable == null) throw new ArgumentNullException(nameof(indexable));
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
+            CrawlingLog.Log.Debug($"{LogPreffix} {_index.Name} Update {indexable.Id}");
+
             var doc = BuildDataToIndex(context, indexable);
 
             if (doc == null)
@@ -44,17 +48,25 @@ namespace Score.ContentSearch.Algolia
 
         public void Delete(IIndexableId id, IProviderUpdateContext context)
         {
+            if (id == null) throw new ArgumentNullException(nameof(id));
+
+            CrawlingLog.Log.Debug($"{LogPreffix} {_index.Name} Delete IIndexableId {id.Value}");
             context.Delete(id);
         }
 
         public void Delete(IIndexableUniqueId indexableUniqueId, IProviderUpdateContext context)
         {
+            CrawlingLog.Log.Debug($"{LogPreffix} {_index.Name} Delete IIndexableUniqueId {indexableUniqueId.Value}");
             context.Delete(indexableUniqueId);
         }
 
         public void Add(IIndexable indexable, IProviderUpdateContext context,
             ProviderIndexConfiguration indexConfiguration)
         {
+            if (indexable == null) throw new ArgumentNullException(nameof(indexable));
+
+            CrawlingLog.Log.Debug($"{LogPreffix} {_index.Name} Add {indexable.Id}");
+
             var doc = BuildDataToIndex(context, indexable);
 
             if (doc == null)

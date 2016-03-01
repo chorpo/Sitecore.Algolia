@@ -24,6 +24,7 @@ namespace Score.ContentSearch.Algolia
     {
         private readonly IAlgoliaRepository _repository;
         protected object indexUpdateLock = new object();
+        private const string LogPreffix = "AlgoliaIndexOperations: ";
 
         public AlgoliaBaseIndex(string name, IAlgoliaRepository repository)
         {
@@ -77,9 +78,11 @@ namespace Score.ContentSearch.Algolia
 
         protected override void PerformRebuild(IndexingOptions indexingOptions, CancellationToken cancellationToken)
         {
+            CrawlingLog.Log.Debug($"{LogPreffix} {Name} PerformRebuild()");
+
             //not used - only in Sitecore8
             //base.VerifyNotDisposed();
-            
+
 #if (SITECORE8)
             CrawlingLog.Log.Debug(string.Format("PerformRebuild - Disposed - {0}", isDisposed), null);
             CrawlingLog.Log.Debug(string.Format("PerformRebuild - Initialized - {0}", initialized), null);
@@ -93,12 +96,12 @@ namespace Score.ContentSearch.Algolia
             {
                 using (IProviderUpdateContext providerUpdateContext = this.CreateFullRebuildContext())
                 {
-                    CrawlingLog.Log.Warn(string.Format("[Index={0}] Reset Started", this.Name), null);
+                    CrawlingLog.Log.Warn($"[Index={this.Name}] Reset Started", null);
                     this.DoReset(providerUpdateContext);
-                    CrawlingLog.Log.Warn(string.Format("[Index={0}] Reset Ended", this.Name), null);
-                    CrawlingLog.Log.Warn(string.Format("[Index={0}] Full Rebuild Started", this.Name), null);
+                    CrawlingLog.Log.Warn($"[Index={this.Name}] Reset Ended", null);
+                    CrawlingLog.Log.Warn($"[Index={this.Name}] Full Rebuild Started", null);
                     this.DoRebuild(providerUpdateContext, indexingOptions, cancellationToken);
-                    CrawlingLog.Log.Warn(string.Format("[Index={0}] Full Rebuild Ended", this.Name), null);
+                    CrawlingLog.Log.Warn($"[Index={this.Name}] Full Rebuild Ended", null);
                 }
             }
         }
