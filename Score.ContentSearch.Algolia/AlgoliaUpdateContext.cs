@@ -33,8 +33,8 @@ namespace Score.ContentSearch.Algolia
             ISearchIndex index,
             IAlgoliaRepository repository)
         {
-            if (index == null) throw new ArgumentNullException("index");
-            if (repository == null) throw new ArgumentNullException("repository");
+            if (index == null) throw new ArgumentNullException(nameof(index));
+            if (repository == null) throw new ArgumentNullException(nameof(repository));
 
             _index = index;
             _repository = repository;
@@ -63,8 +63,7 @@ namespace Score.ContentSearch.Algolia
                 _repository.DeleteAllObjByTag("id_" + id).Wait();
             }
             _deleteIds.Clear();
-            CrawlingLog.Log.Info(string.Format("Update Context Committed: {0} updated, {1} deleted", 
-                data.Count, stringsToDelete.Count));
+            CrawlingLog.Log.Info($"Update Context Committed: {data.Count} updated, {stringsToDelete.Count} deleted");
         }
 
         public void Optimize()
@@ -113,12 +112,7 @@ namespace Score.ContentSearch.Algolia
         public bool IsParallel { get; private set; }
         public ParallelOptions ParallelOptions { get; private set; }
 
-        public ISearchIndex Index
-        {
-            get { return _index; }
-        }
-
-        public ICommitPolicyExecutor CommitPolicyExecutor { get; private set; }
+        public ISearchIndex Index => _index;
 
 #if (SITECORE8)
         public IEnumerable<Shard> ShardsWithPendingChanges { get; private set; }

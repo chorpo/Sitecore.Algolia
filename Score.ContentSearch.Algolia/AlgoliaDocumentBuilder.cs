@@ -37,7 +37,7 @@ namespace Score.ContentSearch.Algolia
             this.AddSpecialField("_id", this.Indexable.Id.ToString(), false);
 
 
-            //below is base.AddSpecialFields()
+            //lines below are copied from base.AddSpecialFields()
             //we do not call base method because we want to keep only business data in index 
 
             //this.AddSpecialField("_uniqueid", this.Indexable.UniqueId.Value.ToString(), false);
@@ -185,10 +185,9 @@ namespace Score.ContentSearch.Algolia
         {
             //reader can return JObject for complex data 
             //builder should merge that data into document
-            if (fieldValue is JObject)
+            var jvalue = fieldValue as JObject;
+            if (jvalue != null)
             {
-                var jvalue = fieldValue as JObject;
-
                 //Available in 6.0
                 //Document.Merge(jvalue);
 
@@ -235,8 +234,7 @@ namespace Score.ContentSearch.Algolia
                 catch (Exception exception)
                 {
                     CrawlingLog.Log.Warn(
-                        string.Format("Could not compute value for ComputedIndexField: {0} for indexable: {1}",
-                            current.FieldName, base.Indexable.UniqueId), exception);
+                        $"Could not compute value for ComputedIndexField: {current.FieldName} for indexable: {base.Indexable.UniqueId}", exception);
                     if (base.Settings.StopOnCrawlFieldError())
                     {
                         throw;

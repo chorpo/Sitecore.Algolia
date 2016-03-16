@@ -23,21 +23,20 @@ namespace Score.ContentSearch.Algolia
     public class AlgoliaBaseIndex : AbstractSearchIndex
     {
         private readonly IAlgoliaRepository _repository;
-        protected object indexUpdateLock = new object();
+        protected object IndexUpdateLock = new object();
         private const string LogPreffix = "AlgoliaIndexOperations: ";
 
         public AlgoliaBaseIndex(string name, IAlgoliaRepository repository)
         {
-            if (repository == null) throw new ArgumentNullException("repository");
-            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentOutOfRangeException("name");
+            if (repository == null) throw new ArgumentNullException(nameof(repository));
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentOutOfRangeException(nameof(name));
 
-            _name = name;
+            Name = name;
 
             _repository = repository;
             this.Strategies = new List<IIndexUpdateStrategy>();
         }
 
-        private readonly string _name;
         private ISearchIndexSummary _summary;
         private readonly ISearchIndexSchema schema;
 
@@ -46,10 +45,7 @@ namespace Score.ContentSearch.Algolia
 
         public string Site { get; set; }
 
-        public IAlgoliaRepository Repository
-        {
-            get { return _repository; }
-        }
+        public IAlgoliaRepository Repository => _repository;
 
         #region ISearchIndex
 
@@ -61,14 +57,11 @@ namespace Score.ContentSearch.Algolia
 
         protected virtual object GetFullRebuildLockObject()
         {
-            return this.indexUpdateLock;
+            return this.IndexUpdateLock;
         }
 
         protected virtual void DoReset(IProviderUpdateContext context)
         {
-            //not used - only in Sitecore8
-            //base.VerifyNotDisposed();
-
             var result = _repository.ClearIndexAsync().Result;
 
             var taskId = result["taskID"].ToString();
@@ -79,9 +72,6 @@ namespace Score.ContentSearch.Algolia
         protected override void PerformRebuild(IndexingOptions indexingOptions, CancellationToken cancellationToken)
         {
             CrawlingLog.Log.Debug($"{LogPreffix} {Name} PerformRebuild()");
-
-            //not used - only in Sitecore8
-            //base.VerifyNotDisposed();
 
 #if (SITECORE8)
             CrawlingLog.Log.Debug(string.Format("PerformRebuild - Disposed - {0}", isDisposed), null);
@@ -125,8 +115,6 @@ namespace Score.ContentSearch.Algolia
 
         public override void Rebuild(IndexingOptions indexingOptions)
         {
-            //not used - only in Sitecore8
-            //base.VerifyNotDisposed();
             this.PerformRebuild(indexingOptions, CancellationToken.None);
         }
 
@@ -265,8 +253,6 @@ namespace Score.ContentSearch.Algolia
         {
             _summary = new AlgoliaSearchIndexSummary(_repository, PropertyStore);
 
-            //this.FieldNameTranslator = new AlgoliaFieldNameTranslator();
-
             var config = this.Configuration as AlgoliaIndexConfiguration;
             if (config == null)
             {
@@ -294,15 +280,9 @@ namespace Score.ContentSearch.Algolia
             return new AlgoliaSearchContext(this, options);
         }
 
-        public override string Name { get { return _name; }  }
+        public override string Name { get; }
 
-        public override ISearchIndexSummary Summary
-        {
-            get
-            {
-                return _summary;
-            }
-        }
+        public override ISearchIndexSummary Summary => _summary;
 
         public override ISearchIndexSchema Schema { get { return schema; } }
         public override IIndexPropertyStore PropertyStore { get; set; }

@@ -8,7 +8,7 @@ using Sitecore.Data.Items;
 
 namespace Score.ContentSearch.Algolia.ComputedFields
 {
-    public class ParentsField: IComputedIndexField
+    public class ParentIdsField: IComputedIndexField
     {
         /// <summary>
         /// Returns IDs of all Parent Items

@@ -22,7 +22,7 @@ namespace Score.ContentSearch.Algolia
 
         public Task<JObject> SaveObjectsAsync(IEnumerable<JObject> objects)
         {
-            if (objects == null) throw new ArgumentNullException("objects");
+            if (objects == null) throw new ArgumentNullException(nameof(objects));
             return _index.SaveObjectsAsync(objects);
         }
 

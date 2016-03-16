@@ -40,7 +40,7 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
 
         public IndexBuilder WithParentsComputedField(string fieldName)
         {
-            var field = new ParentsField {FieldName = fieldName};
+            var field = new ParentIdsField {FieldName = fieldName};
             _index.Configuration.DocumentOptions.ComputedIndexFields.Add(field);
             return this;
         }

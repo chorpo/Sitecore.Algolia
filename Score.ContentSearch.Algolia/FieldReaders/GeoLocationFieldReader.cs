@@ -9,12 +9,8 @@ namespace Score.ContentSearch.Algolia.FieldReaders
     {
         public override object GetFieldValue(IIndexableDataField indexableField)
         {
-            if (!(indexableField is SitecoreItemDataField))
-            {
-                return null;
-            }
             Field field = indexableField as SitecoreItemDataField;
-            if (string.IsNullOrWhiteSpace(field.Value))
+            if (string.IsNullOrWhiteSpace(field?.Value))
                 return null;
 
             var values = field.Value.Split(',');
@@ -27,12 +23,13 @@ namespace Score.ContentSearch.Algolia.FieldReaders
             if (double.TryParse(values[0], out lat)
                 && double.TryParse(values[1], out lng))
             {
-                var location = new JObject();
-                location["lat"] = lat;
-                location["lng"] = lng;
+                var location = new JObject
+                {
+                    ["lat"] = lat,
+                    ["lng"] = lng
+                };
 
-                var result = new JObject();
-                result["_geoloc"] = location;
+                var result = new JObject {["_geoloc"] = location};
 
                 return result;
             }

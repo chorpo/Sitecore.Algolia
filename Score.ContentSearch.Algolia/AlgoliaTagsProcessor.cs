@@ -16,7 +16,7 @@ namespace Score.ContentSearch.Algolia
         public AlgoliaTagsProcessor(ICollection<AlgoliaTagConfig> tagsConfig)
         {
             if (tagsConfig == null) 
-                throw new ArgumentNullException("tagsConfig");
+                throw new ArgumentNullException(nameof(tagsConfig));
             _tagsConfig = tagsConfig;
         }
 
@@ -29,7 +29,7 @@ namespace Score.ContentSearch.Algolia
 
         public void AddTagConfig(AlgoliaTagConfig tag)
         {
-            if (tag == null) throw new ArgumentNullException("tag");
+            if (tag == null) throw new ArgumentNullException(nameof(tag));
             _tagsConfig.Add(tag);
         }
 

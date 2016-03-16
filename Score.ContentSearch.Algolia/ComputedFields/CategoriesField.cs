@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Score.ContentSearch.Algolia.Abstract;
 using Sitecore;
@@ -14,6 +15,7 @@ namespace Score.ContentSearch.Algolia.ComputedFields
     /// <summary>
     /// Returns Names of all Parent Items inside current Site
     /// </summary>
+    [Obsolete("Implementation Should Allow field selection")]
     public class CategoriesField: IComputedIndexField, ISiteSpecificField
     {
         private ID _homepageId;

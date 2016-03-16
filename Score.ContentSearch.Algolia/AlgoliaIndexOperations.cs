@@ -135,11 +135,8 @@ namespace Score.ContentSearch.Algolia
             documentBuilder.AddBoost();
 
             var algoliaDocumentBuilder = documentBuilder as AlgoliaDocumentBuilder;
-            if (algoliaDocumentBuilder != null)
-            {
-                algoliaDocumentBuilder.GenerateTags();
-            }
-            
+            algoliaDocumentBuilder?.GenerateTags();
+
             return documentBuilder.Document;
         }
 
