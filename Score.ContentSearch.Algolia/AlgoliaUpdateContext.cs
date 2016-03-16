@@ -114,6 +114,8 @@ namespace Score.ContentSearch.Algolia
 
         public ISearchIndex Index => _index;
 
+        public ICommitPolicyExecutor CommitPolicyExecutor { get; private set; }
+
 #if (SITECORE8)
         public IEnumerable<Shard> ShardsWithPendingChanges { get; private set; }
 #endif
