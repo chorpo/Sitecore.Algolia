@@ -6,8 +6,8 @@
     <title>Sitecore Search provider for Algolia</title>
     <authors>Brainjocks</authors>
     <owners>Brainjocks</owners>
-    <licenseUrl>https://bitbucket.org/brainjocks/score-contentsearch-algolia</licenseUrl>
-    <projectUrl>https://bitbucket.org/brainjocks/score-contentsearch-algolia</projectUrl>
+    <licenseUrl>https://github.com/dharnitski/Sitecore.Algolia/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/dharnitski/Sitecore.Algolia</projectUrl>
     <iconUrl>http://www.brainjocks.com/~/media/Images/BrainJocks/Branding/brainjocks_score_icon</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Algolia ContenSearch provider for Sitecore $sitecore$</description>
