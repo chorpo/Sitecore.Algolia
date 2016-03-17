@@ -4,21 +4,16 @@ Algolia is a Hosted Search API that delivers instant and relevant results. Searc
 
 ## Why another provider?
 
-* Algolia is blazing fast, requires no maintenance and very little configuration
-* Algolia has easy to use UI framework
-* Provider built with Multitenancy available out of the box
+Sitecore supports Lucene and Solr, other vendors have their engines like Coveo. So, why anybody wants to build one more provider?
+Becasue it is different:
+
+* Algolia is cool, blazing fast, requires no maintenance and easily configurable
+* Algolia includes modern [instantsearch.js](https://community.algolia.com/instantsearch.js) UX Framefork that simplifies construction of custom Search pages   
+* Search Provider designed for Domain search and Multitenancy
 
 
-## What you cannot do with this provider
+## Is there anything you cannot do with this provider?
 
-Algolia is shyning in domain search like site or product catalog. It extremly fast and easy to use and configue. But there is price for that. It is not as flexible as other general purpose engine (Lucene). 
+Algolia is a razor comparing to swiss army knife. Index designed for speed and easy use and do not implement all the features that generic search engine has.
+As a result Algolia cannot replace default Sitecore indexes.
 
-You cannot replace standard Sitecore Indexes like we do with Solr.
-
- 
-# Features
-
-
-## Computed Fields
-
-### CategoriesField
