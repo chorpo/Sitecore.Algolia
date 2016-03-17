@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>Score.ContentSearch.Algolia.$sitecore$</id>
+    <id>Algolia.Sitecore.$sitecore$</id>
     <version>$version$</version>
     <title>Sitecore Search provider for Algolia</title>
     <authors>Brainjocks</authors>
@@ -12,7 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Algolia ContenSearch provider for Sitecore $sitecore$</description>
     <releaseNotes></releaseNotes>
-    <copyright>Copyright 2015</copyright>
+    <copyright>Copyright 2016</copyright>
     <tags>Sitecore SCORE Algolia ContentSearch</tags>
     <dependencies>
       <dependency id="Mono.Security" version="3.2.3.0" />
