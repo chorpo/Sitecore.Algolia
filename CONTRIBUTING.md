@@ -44,7 +44,7 @@ If copy process complains about a particular Sitecore DLL being in use just run 
 
 ## Debug
 
-Default DEV envronment
+Default DEV environment
 
 ## Release
 
@@ -52,5 +52,5 @@ Used for release bytes generation
 
 ## Sandbox
 
-Similar to Debug but copies output dlls into **/sandbox/Website/bin/** folder
+Similar to Debug but copies output DLLs into **/sandbox/Website/bin/** folder
 
