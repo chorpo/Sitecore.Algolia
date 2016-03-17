@@ -1,0 +1,17 @@
+packages/
+*.suo
+Score.ContentSearch.Algolia/bin/
+Score.ContentSearch.Algolia.Tests/bin/
+*.ncrunchproject
+*.ncrunchsolution
+Score.ContentSearch.Algolia.Tests/license.xml
+*.cache
+Algolia.Search/bin/
+Score.ContentSearch.Algolia.Tests/obj/
+Score.ContentSearch.Algolia/obj/
+Algolia.Search/obj/
+*.user
+libs/Sitecore/
+/sitecore-version.props
+sandbox/
+*.nupkg
