@@ -13,7 +13,7 @@
     <description>Algolia ContenSearch provider for Sitecore $sitecore$</description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2016</copyright>
-    <tags>Sitecore SCORE Algolia ContentSearch</tags>
+    <tags>Sitecore SCORE Algolia ContentSearch BrainJocks</tags>
     <dependencies>
       <dependency id="Mono.Security" version="3.2.3.0" />
       <dependency id="PCLCrypto" version="1.0.2.15130" />
