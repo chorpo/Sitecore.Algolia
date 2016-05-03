@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Score.ContentSearch.Algolia.Abstract;
-using Score.ContentSearch.Algolia.FieldsConfiguration;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.ComputedFields;
 using Sitecore.ContentSearch.Diagnostics;
-using Sitecore.Data.Fields;
 using Sitecore.Data.Items;
-using Sitecore.Data.LanguageFallback;
 
 namespace Score.ContentSearch.Algolia
 {
