@@ -161,6 +161,7 @@
     </None>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="SampleConfiguration\AlgoliaTestConfiguration.config" />
     <None Include="SampleConfiguration\AlgoliaTestIndex.Sc7.config" />
     <None Include="SampleConfiguration\AlgoliaTestIndex.Sc8.config" />
   </ItemGroup>
