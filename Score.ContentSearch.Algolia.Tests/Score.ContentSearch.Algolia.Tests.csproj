@@ -120,6 +120,7 @@
   <ItemGroup>
     <Compile Include="AlgoliaBaseIndexTests.cs" />
     <Compile Include="AlgoliaDocumentBuilderTests\AddComputedIndexFieldsTests.cs" />
+    <Compile Include="AlgoliaDocumentBuilderTests\AddItemFieldsTests.cs" />
     <Compile Include="AlgoliaTagsProcessorTests.cs" />
     <Compile Include="ComputedFields\CurrentItemLinkFieldTest.cs" />
     <Compile Include="AlgoliaDocumentBuilderTests\AddFieldTests.cs" />
@@ -161,7 +162,7 @@
     </None>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="SampleConfiguration\AlgoliaTestConfiguration.config" />
+    <None Include="SampleConfiguration\AlgoliaTestConfiguration.Sc81.config" />
     <None Include="SampleConfiguration\AlgoliaTestIndex.Sc7.config" />
     <None Include="SampleConfiguration\AlgoliaTestIndex.Sc8.config" />
   </ItemGroup>

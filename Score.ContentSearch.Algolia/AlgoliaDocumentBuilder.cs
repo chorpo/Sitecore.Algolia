@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Score.ContentSearch.Algolia.Abstract;
 using Score.ContentSearch.Algolia.FieldsConfiguration;
@@ -10,6 +12,7 @@ using Sitecore.ContentSearch.ComputedFields;
 using Sitecore.ContentSearch.Diagnostics;
 using Sitecore.Data.Fields;
 using Sitecore.Data.Items;
+using Sitecore.Data.LanguageFallback;
 
 namespace Score.ContentSearch.Algolia
 {
@@ -25,14 +28,14 @@ namespace Score.ContentSearch.Algolia
             {
                 _tagsProcessor = config.TagsProcessor;
             }
-            
+
         }
 
         #region AbstractDocumentBuilder
 
         public override void AddSpecialFields()
         {
-            var item = (Item)(this.Indexable as SitecoreIndexableItem);
+            var item = (Item) (this.Indexable as SitecoreIndexableItem);
             this.AddSpecialField("objectID", item.Language.Name + "_" + item.ID.ToGuid(), false);
             this.AddSpecialField("_id", this.Indexable.Id.ToString(), false);
 
@@ -47,7 +50,7 @@ namespace Score.ContentSearch.Algolia
             if (indexableBuiltinFields == null)
                 return;
             //this.AddSpecialField("_database", (object)indexableBuiltinFields.Database, false);
-            this.AddSpecialField("_language", (object)indexableBuiltinFields.Language, false);
+            this.AddSpecialField("_language", (object) indexableBuiltinFields.Language, false);
             //this.AddSpecialField("_template", indexableBuiltinFields.TemplateId, false);
             //this.AddSpecialField("_parent", indexableBuiltinFields.Parent, false);
             //if (indexableBuiltinFields.IsLatestVersion)
@@ -56,10 +59,10 @@ namespace Score.ContentSearch.Algolia
             //this.AddSpecialField("_group", indexableBuiltinFields.Group, false);
             //if (indexableBuiltinFields.IsClone)
             //    this.AddSpecialField("_isclone", (object)true, false);
-            this.AddSpecialField("_fullpath", (object)indexableBuiltinFields.FullPath, false);
+            this.AddSpecialField("_fullpath", (object) indexableBuiltinFields.FullPath, false);
             if (this.Options.ExcludeAllSpecialFields)
                 return;
-            this.AddSpecialField("_name", (object)indexableBuiltinFields.Name, false);
+            this.AddSpecialField("_name", (object) indexableBuiltinFields.Name, false);
             //this.AddSpecialField("_displayname", (object)indexableBuiltinFields.DisplayName, false);
             //this.AddSpecialField("_creator", (object)indexableBuiltinFields.CreatedBy, false);
             //this.AddSpecialField("_editor", (object)indexableBuiltinFields.UpdatedBy, false);
@@ -71,16 +74,14 @@ namespace Score.ContentSearch.Algolia
             //this.AddSpecialField("_content", (object)indexableBuiltinFields.DisplayName, false);
             //if (this.Options.Tags == null || this.Options.Tags.Length <= 0)
             //    return;
-            this.AddField("_tags", new List<string> {"id_" + this.Indexable.Id });
+            this.AddField("_tags", new List<string> {"id_" + this.Indexable.Id});
         }
 
         #region AddField
 
         public override void AddField(IIndexableDataField field)
         {
-            var fieldConfig =
-                base.Index.Configuration.FieldMap.GetFieldConfiguration(field) as SimpleFieldsConfiguration;
-            if (fieldConfig == null || !ShouldAddField(field, fieldConfig))
+            if (!ShouldAddField(field))
             {
                 return;
             }
@@ -150,7 +151,7 @@ namespace Score.ContentSearch.Algolia
             foreach (DictionaryEntry element in dictionary)
             {
                 AddField(element.Key.ToString(), element.Value);
-            }               
+            }
             return true;
         }
 
@@ -205,7 +206,7 @@ namespace Score.ContentSearch.Algolia
         }
 
         #endregion
-        
+
         public override void AddBoost()
         {
             //Algolia manages boost in GUI
@@ -234,45 +235,19 @@ namespace Score.ContentSearch.Algolia
                 catch (Exception exception)
                 {
                     CrawlingLog.Log.Warn(
-                        $"Could not compute value for ComputedIndexField: {current.FieldName} for indexable: {base.Indexable.UniqueId}", exception);
+                        $"Could not compute value for ComputedIndexField: {current.FieldName} for indexable: {base.Indexable.UniqueId}",
+                        exception);
                     if (base.Settings.StopOnCrawlFieldError())
                     {
                         throw;
                     }
                     continue;
                 }
-                
-
-
-                //Enumerables are supported in AddField and should be added as Array
-
-                //if (obj is IEnumerable && !(obj is string))
-                //{
-                //    IEnumerator enumerator2 = (obj as IEnumerable).GetEnumerator();
-                //    try
-                //    {
-                //        while (enumerator2.MoveNext())
-                //        {
-                //            object current2 = enumerator2.Current;
-
-                //            this.AddField(current.FieldName, current2, false);
-
-                //        }
-                //        continue;
-                //    }
-                //    finally
-                //    {
-                //        IDisposable disposable = enumerator2 as IDisposable;
-                //        if (disposable != null)
-                //        {
-                //            disposable.Dispose();
-                //        }
-                //    }
-                //}
 
                 this.AddField(current.FieldName, obj, false);
             }
         }
+
 #if (SITECORE8)
 #else
     public override void AddProviderCustomFields()
@@ -290,15 +265,11 @@ namespace Score.ContentSearch.Algolia
         }
 
         #endregion
-        
-        private bool ShouldAddField(IIndexableDataField field, SimpleFieldsConfiguration config)
+
+        private bool ShouldAddField(IIndexableDataField field)
         {
             if (!base.Index.Configuration.IndexAllFields)
             {
-                if (config == null || (config.FieldName == null && config.FieldTypeName == null))
-                {
-                    return false;
-                }
                 if (field.Value == null)
                 {
                     return false;

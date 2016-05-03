@@ -32,7 +32,7 @@ namespace Score.ContentSearch.Algolia.Tests
         public void RebuildTest()
         {
             // arrange
-            using (var db = new Db { _source })
+            using (var db = new Db {_source})
             {
                 var item = db.GetItem("/sitecore/content/source");
                 item.Should().NotBeNull();
@@ -53,7 +53,7 @@ namespace Score.ContentSearch.Algolia.Tests
                 sut.Crawlers.Add(crawler);
                 crawler.Initialize(sut);
                 sut.Initialize();
-                
+
                 //Act
                 sut.Rebuild();
 
@@ -66,7 +66,7 @@ namespace Score.ContentSearch.Algolia.Tests
         public void CrawlerShouldExcludeTemplates()
         {
             // arrange
-            using (var db = new Db { _source })
+            using (var db = new Db {_source})
             {
                 var item = db.GetItem("/sitecore/content/source");
                 item.Should().NotBeNull();
@@ -79,7 +79,7 @@ namespace Score.ContentSearch.Algolia.Tests
                 var configuration = new AlgoliaIndexConfiguration();
                 configuration.DocumentOptions = new DocumentBuilderOptions();
                 configuration.ExcludeTemplate(TestData.TestTemplateId.ToString());
-                
+
                 sut.Configuration = configuration;
                 var crawler = new SitecoreItemCrawler();
                 crawler.Database = "master";
@@ -100,7 +100,7 @@ namespace Score.ContentSearch.Algolia.Tests
         public void CrawlerShouldIncludeTemplates()
         {
             // arrange
-            using (var db = new Db { _source })
+            using (var db = new Db {_source})
             {
                 var item = db.GetItem("/sitecore/content/source");
                 item.Should().NotBeNull();
@@ -134,7 +134,7 @@ namespace Score.ContentSearch.Algolia.Tests
         public void CrawlerShouldIncludeOnlyDEfinedTemplates()
         {
             // arrange
-            using (var db = new Db { _source })
+            using (var db = new Db {_source})
             {
                 var item = db.GetItem("/sitecore/content/source");
                 item.Should().NotBeNull();
@@ -169,7 +169,7 @@ namespace Score.ContentSearch.Algolia.Tests
         public void DeleteTest()
         {
             // arrange
-            using (var db = new Db { _source })
+            using (var db = new Db {_source})
             {
                 var item = db.GetItem("/sitecore/content/source");
                 item.Should().NotBeNull();
@@ -202,5 +202,6 @@ namespace Score.ContentSearch.Algolia.Tests
                 repository.Verify(t => t.DeleteAllObjByTag("id_" + item.ID.ToString()), Times.Once);
             }
         }
+
     }
 }

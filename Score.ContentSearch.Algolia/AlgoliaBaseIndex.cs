@@ -323,10 +323,7 @@ namespace Score.ContentSearch.Algolia
 
         public override bool EnableFieldLanguageFallback
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { return false; }
 
             set
             {
