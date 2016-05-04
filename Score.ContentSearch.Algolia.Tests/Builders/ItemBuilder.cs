@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using Sitecore;
 using Sitecore.Data;
 using Sitecore.FakeDb;
 
@@ -7,7 +8,8 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
 {
     internal class ItemBuilder
     {
-         private readonly DbItem _item;
+        private readonly DbItem _item;
+        private DbItem _subitem;
 
         public ItemBuilder()
         {
@@ -19,13 +21,15 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
         public const string LocationFieldName = "Location";
         public const string DateFieldName = "Date";
         public const string PriceFieldName = "Price";
+        public const string ReferenceFieldName = "Reference";
+        public static ID SubitemId = ID.NewID;
 
 
         public ItemBuilder AddSubItem()
         {
-            var subitem = new DbItem("subitem");
-            _item.Children.Add(subitem);
-            subitem.ParentID = _item.ID;
+            _subitem = new DbItem("subitem", SubitemId);
+            _item.Children.Add(_subitem);
+            _subitem.ParentID = _item.ID;
             return this;
         }
 
@@ -99,6 +103,30 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
                 Name = PriceFieldName
             };
             _item.Fields.Add(field);
+            return this;
+        }
+
+        public ItemBuilder WithReference(string fieldType)
+        {
+            var field = new DbField(ID.NewID)
+            {
+                Value = SubitemId.ToString(),
+                Type = fieldType,
+                Name = ReferenceFieldName
+            };
+            _item.Fields.Add(field);
+            return this;
+        }
+
+        public ItemBuilder WithSubitemDisplayName(string value)
+        {
+            var field = new DbField(FieldIDs.DisplayName)
+            {
+                Value = value,
+                Type = "single-line text",
+                Name = "Display Name"
+            };
+            _subitem.Fields.Add(field);
             return this;
         }
 

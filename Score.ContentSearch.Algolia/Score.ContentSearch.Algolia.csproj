@@ -104,6 +104,7 @@
     <Compile Include="ComputedFields\CurrentItemLinkField.cs" />
     <Compile Include="ComputedFields\CategoriesField.cs" />
     <Compile Include="ComputedFields\ParentIdsField.cs" />
+    <Compile Include="ComputedFields\ReferenceField.cs" />
     <Compile Include="DefaultAlgoliaDocumentTypeMapper.cs" />
     <Compile Include="FieldReaders\GeoLocationFieldReader.cs" />
     <Compile Include="AlgoliaRepository.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="AlgoliaSearchIndex.cs" />
     <Compile Include="FieldReaders\DateFieldReader.cs" />
     <Compile Include="FieldReaders\NumberFieldReader.cs" />
+    <Compile Include="FieldReaders\ReferenceFieldReader.cs" />
     <Compile Include="FieldsConfiguration\SimpleFieldsConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\AlgoliaFieldNameTranslator.cs" />
