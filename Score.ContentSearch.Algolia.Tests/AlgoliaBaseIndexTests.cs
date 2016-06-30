@@ -92,7 +92,7 @@ namespace Score.ContentSearch.Algolia.Tests
                 sut.Rebuild();
 
                 //Assert
-                repository.Verify(t => t.SaveObjectsAsync(It.Is<IEnumerable<JObject>>(o => !o.Any())), Times.Once);
+                repository.Verify(t => t.SaveObjectsAsync(It.Is<IEnumerable<JObject>>(o => !o.Any())), Times.Never);
             }
         }
 
@@ -131,7 +131,7 @@ namespace Score.ContentSearch.Algolia.Tests
         }
 
         [Test]
-        public void CrawlerShouldIncludeOnlyDEfinedTemplates()
+        public void CrawlerShouldIncludeOnlyDefinedTemplates()
         {
             // arrange
             using (var db = new Db {_source})
@@ -161,7 +161,7 @@ namespace Score.ContentSearch.Algolia.Tests
                 sut.Rebuild();
 
                 //Assert
-                repository.Verify(t => t.SaveObjectsAsync(It.Is<IEnumerable<JObject>>(o => !o.Any())), Times.Once);
+                repository.Verify(t => t.SaveObjectsAsync(It.Is<IEnumerable<JObject>>(o => !o.Any())), Times.Never);
             }
         }
 

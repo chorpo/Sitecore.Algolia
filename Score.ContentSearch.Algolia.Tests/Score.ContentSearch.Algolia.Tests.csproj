@@ -122,6 +122,7 @@
     <Compile Include="AlgoliaDocumentBuilderTests\AddComputedIndexFieldsTests.cs" />
     <Compile Include="AlgoliaDocumentBuilderTests\AddItemFieldsTests.cs" />
     <Compile Include="AlgoliaTagsProcessorTests.cs" />
+    <Compile Include="AlgoliaUpdateContextTests.cs" />
     <Compile Include="ComputedFields\CurrentItemLinkFieldTest.cs" />
     <Compile Include="AlgoliaDocumentBuilderTests\AddFieldTests.cs" />
     <Compile Include="AlgoliaIndexOperationsTests.cs" />

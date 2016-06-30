@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Score.ContentSearch.Algolia.Abstract;
+using Score.ContentSearch.Algolia.Extensions;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Diagnostics;
 using Sitecore.ContentSearch.Linq.Common;
@@ -52,8 +53,12 @@ namespace Score.ContentSearch.Algolia
 
         public void Commit()
         {
+            CrawlingLog.Log.Debug("   Starting Algolia Commit");
             var data = _updateDocs.Select(t => t.Value).ToList();
-            _repository.SaveObjectsAsync(data).Wait();
+            CrawlingLog.Log.Debug($"Have {data.Count} documents to to Update");
+            var chunks = data.ChunkBy(100).ToList();
+            CrawlingLog.Log.Debug($"Documents split into {chunks.Count} Chunks");
+            chunks.ForEach(chunk => _repository.SaveObjectsAsync(chunk).Wait());
             _updateDocs.Clear();
 
             var stringsToDelete = _deleteIds.Select(t => t.ToString()).ToList();

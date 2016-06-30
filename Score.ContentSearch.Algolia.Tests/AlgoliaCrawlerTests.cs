@@ -62,7 +62,9 @@ namespace Score.ContentSearch.Algolia.Tests
                 sut.Rebuild();
 
                 //Assert
-                repository.Verify(t => t.SaveObjectsAsync(It.Is<IEnumerable<JObject>>(o => o.Any() == shouldBeCrawled)), Times.Once);
+                var actual = shouldBeCrawled ? Times.Once() : Times.Never();
+
+                repository.Verify(t => t.SaveObjectsAsync(It.Is<IEnumerable<JObject>>(o => o.Any())), actual);
             }
         }
     }
