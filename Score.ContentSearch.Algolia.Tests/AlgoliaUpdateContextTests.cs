@@ -24,7 +24,7 @@ namespace Score.ContentSearch.Algolia.Tests
 
             for (int i = 0; i < docCount; i++)
             {
-                sut.AddDocument(JObject.Parse("{\"objectID\": " + i + "}"), (IExecutionContext) null);
+                sut.AddDocument(JObject.Parse("{\"objectID\": \"" + i + "\"}"), (IExecutionContext) null);
             }
 
             //Act
