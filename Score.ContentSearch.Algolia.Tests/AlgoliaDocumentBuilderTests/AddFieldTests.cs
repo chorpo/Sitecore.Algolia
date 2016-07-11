@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Score.ContentSearch.Algolia.Tests.Builders;
+using Sitecore;
 using Sitecore.Collections;
 using Sitecore.Configuration;
 using Sitecore.ContentSearch;
+using Sitecore.Data;
 using Sitecore.FakeDb;
 
 namespace Score.ContentSearch.Algolia.Tests.AlgoliaDocumentBuilderTests
@@ -39,6 +42,43 @@ namespace Score.ContentSearch.Algolia.Tests.AlgoliaDocumentBuilderTests
                 //Assert
                 JObject doc = sut.Document;
                 Assert.AreEqual("test", (string)doc["display name"]);
+            }
+        }
+
+        [TestCase("$name")]
+        [TestCase("Home")]
+        public void StandardValueTest(string defaultValue)
+        {
+            var templateId = new TemplateID(ID.NewID);
+
+            using (var db = new Db
+            {
+                new DbTemplate("Sample", templateId)
+                {
+                    {"Title", defaultValue}
+                }
+            })
+            {
+                var contentRoot = db.GetItem(ItemIDs.ContentRoot);
+                var item = contentRoot.Add("Home", templateId);
+
+                var indexable = new SitecoreIndexableItem(item);
+
+                var context = new Mock<IProviderUpdateContext>();
+                var index = new IndexBuilder()
+                    .WithSimpleFieldTypeMap("text")
+                    .Build();
+                context.Setup(t => t.Index).Returns(index);
+                var sut = new AlgoliaDocumentBuilder(indexable, context.Object);
+
+                var field = new SitecoreItemDataField(item.Fields["Title"]);
+
+                //Act
+                sut.AddField(field);
+
+                //Assert
+                JObject doc = sut.Document;
+                Assert.AreEqual("Home", (string)doc["title"]);
             }
         }
 
