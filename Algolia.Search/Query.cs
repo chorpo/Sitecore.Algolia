@@ -24,7 +24,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Globalization;
+using Algolia.Search.Models;
 
 namespace Algolia.Search
 {
@@ -106,6 +107,7 @@ namespace Algolia.Search
         public Query(String query)
         {
             this.query = query;
+            customParameters = new Dictionary<string, string>();
         }
 
         /// <summary>
@@ -113,6 +115,7 @@ namespace Algolia.Search
         /// </summary>
         public Query()
         {
+            customParameters = new Dictionary<string, string>();
         }
 
         /// <summary>
@@ -126,6 +129,7 @@ namespace Algolia.Search
 	    q.removeStopWords = removeStopWords;
             q.allowTyposOnNumericTokens = allowTyposOnNumericTokens;
             q.analytics = analytics;
+            q.analyticsTags = analyticsTags;
             q.aroundLatLong = aroundLatLong;
             q.aroundLatLongViaIP = aroundLatLongViaIP;
             q.attributes = attributes;
@@ -137,6 +141,8 @@ namespace Algolia.Search
             q.facets = facets;
             q.getRankingInfo = getRankingInfo;
             q.hitsPerPage = hitsPerPage;
+            q.offset = offset;
+            q.length = length;
             q.ignorePlural = ignorePlural;
             q.insideBoundingBox = insideBoundingBox;
             q.insidePolygon = insidePolygon;
@@ -158,6 +164,7 @@ namespace Algolia.Search
             q.filters = filters;
             q.aroundRadius = aroundRadius;
             q.aroundPrecision = aroundPrecision;
+            q.customParameters = customParameters;
             return q;
         }
 
@@ -215,6 +222,15 @@ namespace Algolia.Search
         {
             this.highlightPreTag = preTag;
             this.highlightPostTag = postTag;
+            return this;
+        }
+
+        /// <summary>
+        /// Specify the string that is used as an ellipsis indicator when a snippet is truncated (defaults to the empty string).
+        /// </summary>
+        public Query SetSnippetEllipsisText(string snippetEllipsisText)
+        {
+            this.snippetEllipsisText = snippetEllipsisText;
             return this;
         }
 
@@ -332,6 +348,15 @@ namespace Algolia.Search
         }
 
         /// <summary>
+        /// Tag the query with the specified identifiers
+        /// </summary>
+        public Query SetAnalyticsTags(IEnumerable<String> tags)
+        {
+            analyticsTags = tags;
+            return this;
+        }
+
+        /// <summary>
         ///  If set to false, this query will not use synonyms defined in configuration. Default to true.
         /// </summary>
         public Query EnableSynonyms(bool enabled)
@@ -402,6 +427,41 @@ namespace Algolia.Search
         }
 
         /// <summary>
+        /// Set the offset for the pagination.
+        /// </summary>
+        public Query SetOffset(int? offset)
+        {
+            this.offset = offset;
+            return this;
+        }
+
+        /// <summary>
+        /// Set the length for the pagination.
+        /// </summary>
+        public Query SetLength(int? length)
+        {
+            this.length = length;
+            return this;
+        }
+
+        /// <summary>
+        /// Set the the parameter that controls how the `exact` ranking criterion is computed when the query contains one word
+        /// </summary>
+        public Query ExactOnSingleWordQuery(string singleWordQuery)
+        {
+            this.exactOnSingleWordQuery = singleWordQuery;
+            return this;
+        }
+
+        /// <summary>
+        ///Specify the list of approximation that should be considered as an exact match in the ranking formula
+        /// </summary>
+        public Query AlternativesAsExact(string altExact)
+        {
+            this.alternativesAsExact = altExact;
+            return this;
+        }
+        /// <summary>
         /// Search for entries around a given latitude/longitude with an automatic guessing of the radius depending of the area density 
         /// Note: at indexing, geoloc of an object should be set with _geoloc attribute containing lat and lng attributes (for example {"_geoloc":{"lat":48.853409, "lng":2.348800}})
         /// </summary>
@@ -410,7 +470,7 @@ namespace Algolia.Search
         /// <returns></returns>
         public Query AroundLatitudeLongitude(float latitude, float longitude)
         {
-            aroundLatLong = "aroundLatLng=" + latitude + "," + longitude;
+            aroundLatLong = "aroundLatLng=" + latitude.ToString(CultureInfo.InvariantCulture) + "," + longitude.ToString(CultureInfo.InvariantCulture);
             return this;
         }
 
@@ -422,11 +482,25 @@ namespace Algolia.Search
         /// <param name="longitude">The longitude</param>
         /// <param name="radius">set the maximum distance in meters.</param>
         /// <returns></returns>
+        public Query AroundLatitudeLongitude(float latitude, float longitude, IAllRadius radius)
+        {
+            aroundLatLong = "aroundLatLng=" + latitude.ToString(CultureInfo.InvariantCulture) + "," + longitude.ToString(CultureInfo.InvariantCulture);
+            aroundRadius = radius.GetValue();
+            return this;
+        }
+
+        /// <summary>
+        ///(BACKWARD COMPATIBILITY)Search for entries around a given latitude/longitude. 
+        /// Note: at indexing, geoloc of an object should be set with _geoloc attribute containing lat and lng attributes (for example {"_geoloc":{"lat":48.853409, "lng":2.348800}})
+        /// </summary>
+        /// <param name="latitude">The latitude</param>
+        /// <param name="longitude">The longitude</param>
+        /// <param name="radius">set the maximum distance in meters.</param>
+        /// <returns></returns>
         public Query AroundLatitudeLongitude(float latitude, float longitude, int radius)
         {
-            aroundLatLong = "aroundLatLng=" + latitude + "," + longitude;
-            aroundRadius = radius;
-            return this;
+            var allRadius = new AllRadiusInt { Radius = radius };
+            return AroundLatitudeLongitude(latitude, longitude, allRadius);
         }
 
         /// <summary>
@@ -450,12 +524,27 @@ namespace Algolia.Search
         /// <param name="radius">set the maximum distance in meters.</param>
         /// <param name="precision">set the precision for ranking (for example if you set precision=100, two objects that are distant of less than 100m will be considered as identical for "geo" ranking parameter).</param>
         /// <returns></returns>
-        public Query AroundLatitudeLongitude(float latitude, float longitude, int radius, int precision)
+        public Query AroundLatitudeLongitude(float latitude, float longitude, IAllRadius radius, int precision)
         {
-            aroundLatLong = "aroundLatLng=" + latitude + "," + longitude;
-            aroundRadius = radius;
+            aroundLatLong = "aroundLatLng=" + latitude.ToString(CultureInfo.InvariantCulture) + "," + longitude.ToString(CultureInfo.InvariantCulture);
+            aroundRadius = radius.GetValue();
             aroundPrecision = precision;
             return this;
+        }
+
+        /// <summary>
+        /// (BACKWARD COMPATIBILITY)Search for entries around a given latitude/longitude. 
+        /// Note: at indexing, geoloc of an object should be set with _geoloc attribute containing lat and lng attributes (for example {"_geoloc":{"lat":48.853409, "lng":2.348800}})
+        /// </summary>
+        /// <param name="latitude">The latitude</param>
+        /// <param name="longitude">The longitude</param>
+        /// <param name="radius">set the maximum distance in meters.</param>
+        /// <param name="precision">set the precision for ranking (for example if you set precision=100, two objects that are distant of less than 100m will be considered as identical for "geo" ranking parameter).</param>
+        /// <returns></returns>
+        public Query AroundLatitudeLongitude(float latitude, float longitude, int radius, int precision)
+        {
+            var allRadius = new AllRadiusInt { Radius = radius };
+            return AroundLatitudeLongitude(latitude, longitude, allRadius, precision);
         }
 
         /// <summary>
@@ -464,11 +553,23 @@ namespace Algolia.Search
         /// </summary>
         /// <param name="radius">set the maximum distance in meters.</param>
         /// <returns></returns>
-        public Query AroundLatitudeLongitudeViaIP(int radius)
+        public Query AroundLatitudeLongitudeViaIP(IAllRadius radius)
         {
-            aroundRadius = radius;
+            aroundRadius = radius.GetValue();
             aroundLatLongViaIP = true;
             return this;
+        }
+
+        /// <summary>
+        ///(BACKWARD COMPATIBILITY) Search for entries around a given latitude/longitude (using IP geolocation).
+        /// Note: at indexing, geoloc of an object should be set with _geoloc attribute containing lat and lng attributes (for example {"_geoloc":{"lat":48.853409, "lng":2.348800}})
+        /// </summary>
+        /// <param name="radius">set the maximum distance in meters.</param>
+        /// <returns></returns>
+        public Query AroundLatitudeLongitudeViaIP(int radius)
+        {
+            var allRadius = new AllRadiusInt { Radius = radius };
+            return AroundLatitudeLongitudeViaIP(allRadius);
         }
 
         /// <summary>
@@ -478,12 +579,25 @@ namespace Algolia.Search
         /// <param name="radius">set the maximum distance in meters.</param>
         /// <param name="precision">set the precision for ranking (for example if you set precision=100, two objects that are distant of less than 100m will be considered as identical for "geo" ranking parameter).</param>
         /// <returns></returns>
-        public Query AroundLatitudeLongitudeViaIP(int radius, int precision)
+        public Query AroundLatitudeLongitudeViaIP(IAllRadius radius, int precision)
         {
-            aroundRadius = radius;
+            aroundRadius = radius.GetValue();
             aroundPrecision = precision;
             aroundLatLongViaIP = true;
             return this;
+        }
+
+        /// <summary>
+        /// (BACKWARD COMPATIBILITY) Search for entries around a given latitude/longitude (using IP geolocation).
+        /// Note: at indexing, geoloc of an object should be set with _geoloc attribute containing lat and lng attributes (for example {"_geoloc":{"lat":48.853409, "lng":2.348800}})
+        /// </summary>
+        /// <param name="radius">set the maximum distance in meters.</param>
+        /// <param name="precision">set the precision for ranking (for example if you set precision=100, two objects that are distant of less than 100m will be considered as identical for "geo" ranking parameter).</param>
+        /// <returns></returns>
+        public Query AroundLatitudeLongitudeViaIP(int radius, int precision)
+        {
+            var allRadius = new AllRadiusInt { Radius = radius };
+            return AroundLatitudeLongitudeViaIP(radius, precision);
         }
 
         /// <summary>
@@ -501,9 +615,9 @@ namespace Algolia.Search
         public Query InsideBoundingBox(float latitudeP1, float longitudeP1, float latitudeP2, float longitudeP2)
         {
             if (insideBoundingBox != null) {
-                insideBoundingBox += latitudeP1 + "," + longitudeP1 + "," + latitudeP2 + "," + longitudeP2;
+                insideBoundingBox += latitudeP1.ToString(CultureInfo.InvariantCulture) + "," + longitudeP1.ToString(CultureInfo.InvariantCulture) + "," + latitudeP2.ToString(CultureInfo.InvariantCulture) + "," + longitudeP2.ToString(CultureInfo.InvariantCulture);
             } else {
-                insideBoundingBox = "insideBoundingBox=" + latitudeP1 + "," + longitudeP1 + "," + latitudeP2 + "," + longitudeP2;
+                insideBoundingBox = "insideBoundingBox=" + latitudeP1.ToString(CultureInfo.InvariantCulture) + "," + longitudeP1.ToString(CultureInfo.InvariantCulture) + "," + latitudeP2.ToString(CultureInfo.InvariantCulture) + "," + longitudeP2.ToString(CultureInfo.InvariantCulture);
             }
             return this;
         }
@@ -516,9 +630,9 @@ namespace Algolia.Search
         public Query AddInsidePolygon(float latitude, float longitude)
         {
             if (insidePolygon != null) {
-                insidePolygon += latitude + "," + longitude;
+                insidePolygon += latitude.ToString(CultureInfo.InvariantCulture) + "," + longitude.ToString(CultureInfo.InvariantCulture);
             } else {
-                insidePolygon = "insidePolygon=" + latitude + "," + longitude;
+                insidePolygon = "insidePolygon=" + latitude.ToString(CultureInfo.InvariantCulture) + "," + longitude.ToString(CultureInfo.InvariantCulture);
             }
             return this;
         }
@@ -526,10 +640,19 @@ namespace Algolia.Search
         /// <summary>
         /// Change the radius or around latitude/longitude query
         /// <summary>
+        public Query SetAroundRadius(IAllRadius radius)
+        {
+            aroundRadius = radius.GetValue();
+            return this;
+        }
+
+        /// <summary>
+        /// (BACKWARD COMPATIBILITY) Change the radius or around latitude/longitude query
+        /// <summary>
         public Query SetAroundRadius(int radius)
         {
-            aroundRadius = radius;
-            return this;
+            var allRadius = new AllRadiusInt { Radius = radius };
+            return SetAroundRadius(allRadius);
         }
 
         /// <summary>
@@ -658,12 +781,23 @@ namespace Algolia.Search
         /// <summary>
         /// Allows enabling of stop words removal.
         /// </summary>
-        /// <param name="enabled">Turn it on or off</param>
+        /// <param name="enabled">Turn it on or/off or providing a list of keywords</param>
+        /// <returns></returns>
+        public Query EnableRemoveStopWords(IEnabledRemoveStopWords enabled)
+        {
+            this.removeStopWords = enabled.GetValue();
+            return this;
+        }
+
+        /// <summary>
+        /// Allows enabling of stop words removal.
+        /// </summary>
+        /// <param name="enabled">Turn it on or/off or providing a list of keywords</param>
         /// <returns></returns>
         public Query EnableRemoveStopWords(bool enabled)
         {
-            this.removeStopWords = enabled;
-            return this;
+            var removeStopWord = new EnabledRemoveStopWordsBool { Enabled = enabled };
+           return EnableRemoveStopWords(removeStopWord);
         }
 
         /// <summary>
@@ -695,6 +829,18 @@ namespace Algolia.Search
         public Query SetFacets(IEnumerable<string> facets)
         {
             this.facets = facets;
+            return this;
+        }
+
+        /// <summary>
+        /// Add a custom query parameter
+        /// </summary>
+        /// <param name="name">The name of the custom parameter</param>
+        /// <param name="value">The associated value</param>
+        /// <returns></returns>
+        public Query AddCustomParameter(string name, string value)
+        {
+            this.customParameters.Add(name, value);
             return this;
         }
 
@@ -809,11 +955,11 @@ namespace Algolia.Search
                     first = false;
                 }
             }
-            if (aroundRadius.HasValue) {
+            if (!String.IsNullOrEmpty(aroundRadius)) {
                 if (stringBuilder.Length > 0)
                     stringBuilder += '&';
                 stringBuilder += "aroundRadius=";
-                stringBuilder += aroundRadius.Value.ToString();
+                stringBuilder += aroundRadius;
 
             }
             if (aroundPrecision.HasValue) {
@@ -859,6 +1005,20 @@ namespace Algolia.Search
                     stringBuilder += '&';
                 stringBuilder += "analytics=";
                 stringBuilder += analytics.Value ? "true" : "false";
+            }
+            if (analyticsTags != null)
+            {
+                if (stringBuilder.Length > 0)
+                    stringBuilder += '&';
+                stringBuilder += "analyticsTags=";
+                bool first = true;
+                foreach (string attr in this.analyticsTags)
+                {
+                    if (!first)
+                        stringBuilder += ',';
+                    stringBuilder += Uri.EscapeDataString(attr);
+                    first = false;
+                }
             }
             if (synonyms.HasValue)
             {
@@ -908,12 +1068,12 @@ namespace Algolia.Search
                 stringBuilder += "advancedSyntax=";
                 stringBuilder += advancedSyntax.Value ? "1" : "0";
             }
-            if (removeStopWords.HasValue)
+            if (!String.IsNullOrEmpty(removeStopWords))
             {
                 if (stringBuilder.Length > 0)
                     stringBuilder += '&';
                 stringBuilder += "removeStopWords=";
-                stringBuilder += removeStopWords.Value ? "1" : "0";
+                stringBuilder += removeStopWords;
             }
             if (page.HasValue) {
                 if (stringBuilder.Length > 0)
@@ -926,6 +1086,20 @@ namespace Algolia.Search
                     stringBuilder += '&';
                 stringBuilder += "hitsPerPage=";
                 stringBuilder += hitsPerPage.Value.ToString();
+            }
+            if (length.HasValue)
+            {
+                if (stringBuilder.Length > 0)
+                    stringBuilder += '&';
+                stringBuilder += "length=";
+                stringBuilder += length.Value.ToString();
+            }
+            if (offset.HasValue)
+            {
+                if (stringBuilder.Length > 0)
+                    stringBuilder += '&';
+                stringBuilder += "offset=";
+                stringBuilder += offset.Value.ToString();
             }
             if (tags != null) {
                 if (stringBuilder.Length > 0)
@@ -972,6 +1146,12 @@ namespace Algolia.Search
                 stringBuilder += "&highlightPostTag=";   
                 stringBuilder += highlightPostTag;
             }
+            if (snippetEllipsisText != null) {
+                if (stringBuilder.Length > 0)
+                    stringBuilder += '&';
+                stringBuilder += "snippetEllipsisText=";
+                stringBuilder += Uri.EscapeDataString(snippetEllipsisText);
+            }
             if (query != null) {
                 if (stringBuilder.Length > 0)
                     stringBuilder += '&';
@@ -992,6 +1172,23 @@ namespace Algolia.Search
                 stringBuilder += "optionalWords=";
                 stringBuilder += Uri.EscapeDataString(optionalWords);
             }
+
+            if (!String.IsNullOrEmpty(exactOnSingleWordQuery))
+            {
+                if (stringBuilder.Length > 0)
+                    stringBuilder += '&';
+                stringBuilder += "exactOnSingleWordQuery=";
+                stringBuilder += exactOnSingleWordQuery;
+            }
+
+            if (!String.IsNullOrEmpty(alternativesAsExact))
+            {
+                if (stringBuilder.Length > 0)
+                    stringBuilder += '&';
+                stringBuilder += "alternativesAsExact=";
+                stringBuilder += alternativesAsExact;
+            }
+
             if (restrictSearchableAttributes != null)
             {
                 if (stringBuilder.Length > 0)
@@ -1060,22 +1257,37 @@ namespace Algolia.Search
                 stringBuilder += "referer=";
                 stringBuilder +=  Uri.EscapeDataString(referers);
             }
+            if (customParameters.Count > 0)
+            {
+                foreach (KeyValuePair<string, string> elt in customParameters)
+                {
+                    if (stringBuilder.Length > 0)
+                        stringBuilder += '&';
+                    stringBuilder += elt.Key;
+                    stringBuilder += "=";
+                    stringBuilder += Uri.EscapeDataString(elt.Value);
+                }
+            }
             return stringBuilder;
         }
 
+        private IDictionary<string, string> customParameters;
         private IEnumerable<string> attributes;
         private IEnumerable<string> attributesToHighlight;
         private IEnumerable<string> noTypoToleranceOn;
         private IEnumerable<string> attributesToSnippet;
+        private IEnumerable<string> analyticsTags;
+        private string exactOnSingleWordQuery;
+        private string alternativesAsExact;
         private int? minWordSizeForApprox1;
         private int? aroundPrecision;
-        private int? aroundRadius;
+        private string aroundRadius;
         private int? minWordSizeForApprox2;
         private bool? getRankingInfo;
         private bool? ignorePlural;
         private int? distinct;
         private bool? advancedSyntax;
-        private bool? removeStopWords;
+        private string removeStopWords;
         private bool? analytics;
         private bool? synonyms;
         private bool? replaceSynonyms;
@@ -1083,6 +1295,8 @@ namespace Algolia.Search
         private bool? allowTyposOnNumericTokens;
         private int? page;
         private int? hitsPerPage;
+        private int? offset;
+        private int? length;
         private string filters;
         private string tags;
         private string numerics;
@@ -1094,6 +1308,7 @@ namespace Algolia.Search
         private string similarQuery;
         private string highlightPreTag;
         private string highlightPostTag;
+        private string snippetEllipsisText;
         private int? minProximity;
         private string optionalWords;
         private QueryType? queryType;

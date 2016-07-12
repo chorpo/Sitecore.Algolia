@@ -6,8 +6,6 @@ using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Score.ContentSearch.Algolia.Tests.Builders;
 using Sitecore;
-using Sitecore.Collections;
-using Sitecore.Configuration;
 using Sitecore.ContentSearch;
 using Sitecore.Data;
 using Sitecore.FakeDb;

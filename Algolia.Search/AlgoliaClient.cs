@@ -35,6 +35,7 @@ using System.Reflection;
 using PCLCrypto;
 using Newtonsoft.Json;
 using System.Threading;
+using Algolia.Search.Utils;
 
 namespace Algolia.Search
 {
@@ -53,6 +54,7 @@ namespace Algolia.Search
         private HttpClient _buildHttpClient;
         private HttpMessageHandler _mock;
         private bool _continueOnCapturedContext;
+        private ArrayUtils<string> _arrayUtils;
 
         /// <summary>
         /// Algolia Search initialization
@@ -83,14 +85,16 @@ namespace Algolia.Search
             }
             else
             {
-                _readHosts = new string[] {applicationId + "-dsn.algolia.net",
-                                      applicationId + "-1.algolianet.com",
-                                      applicationId + "-2.algolianet.com",
-                                      applicationId + "-3.algolianet.com"};
-                _writeHosts = new string[] {applicationId + ".algolia.net",
-                                      applicationId + "-1.algolianet.com",
-                                      applicationId + "-2.algolianet.com",
-                                      applicationId + "-3.algolianet.com"};
+                _arrayUtils = new ArrayUtils<string>();
+
+                var baseReadHosts = applicationId + "-dsn.algolia.net";
+                var shuffledReadHosts = new List<string> { applicationId + "-1.algolianet.com", applicationId + "-2.algolianet.com", applicationId + "-3.algolianet.com" };
+                _readHosts = getHosts(baseReadHosts, shuffledReadHosts);
+
+                var baseWriteHosts = applicationId + ".algolia.net";
+                var shuffledWriteHosts = new List<string> { applicationId + "-1.algolianet.com", applicationId + "-2.algolianet.com", applicationId + "-3.algolianet.com" };
+                _writeHosts = getHosts(baseWriteHosts, shuffledWriteHosts);
+
             }
 
             _applicationId = applicationId;
@@ -117,6 +121,21 @@ namespace Algolia.Search
         }
 
         /// <summary>
+        /// return the hosts array with the last 3 elements shuffled
+        /// </summary>
+        /// <param name="baseHost"></param>
+        /// <param name="hosts"></param>
+        /// <returns></returns>
+        public string[] getHosts(string baseHost, IEnumerable<string> hosts)
+        {
+            var result = new List<string> { baseHost };
+            //shuffling all but not the first one
+            var shuffledHosts = _arrayUtils.Shuffle(hosts);
+            result.AddRange(shuffledHosts);
+            return result.ToArray();
+        }
+
+        /// <summary>
         /// Configure the await in the library. Useful to avoid a deadlock with ASP.NET projects.
         /// </summary>
         /// <param name="continueOnCapturedContext">Set to false to turn it off and avoid deadlocks</param>
@@ -138,7 +157,7 @@ namespace Algolia.Search
         /// Set the read timeout for the search and for the build operation
         /// This method should be called before any api call.
         /// </summary>
-        public void setTimeout(int searchTimeout, int writeTimeout)
+        public void setTimeout(double searchTimeout, double writeTimeout)
         {
             SearchHttpClient.Timeout = TimeSpan.FromSeconds(searchTimeout);
             HttpClient.Timeout = TimeSpan.FromSeconds(writeTimeout);
@@ -193,7 +212,8 @@ namespace Algolia.Search
             }
             Dictionary<string, object> requests = new Dictionary<string, object>();
             requests.Add("requests", body);
-            return ExecuteRequest(callType.Search, "POST", "/1/indexes/*/queries?strategy=" + strategy, requests, token);
+            requests.Add("strategy", strategy);
+            return ExecuteRequest(callType.Search, "POST", "/1/indexes/*/queries", requests, token);
 
         }
 
@@ -855,9 +875,13 @@ namespace Algolia.Search
                     {
                         throw;
                     }
-                    catch (OperationCanceledException)
+                    catch (TaskCanceledException e)
                     {
-                        throw;
+                        if (token.IsCancellationRequested)
+                        {
+                            throw e;
+                        }
+                        errors.Add(host, "Timeout expired");
                     }
                     catch (Exception ex)
                     {

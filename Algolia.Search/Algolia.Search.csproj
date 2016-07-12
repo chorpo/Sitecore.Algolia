@@ -73,8 +73,11 @@
     <Compile Include="IndexHelper.cs" />
     <Compile Include="IndexQuery.cs" />
     <Compile Include="JObjectEx.cs" />
+    <Compile Include="Models\AllRadius.cs" />
+    <Compile Include="Models\RemoveStopWords.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query.cs" />
+    <Compile Include="Utils\ArrayHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

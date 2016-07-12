@@ -1,16 +1,7 @@
-﻿using System.Reflection;
-using System.Resources;
+﻿using System.Resources;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-
-
-// Setting ComVisible to false makes the types in this assembly not visible 
-// to COM components.  If you need to access a type in this assembly from 
-// COM, set the ComVisible attribute to true on that type.
-[assembly: ComVisible(false)]
-
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("b400a40e-2440-42a0-9909-319c237c6cf2")]
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -40,6 +31,6 @@ using System.Runtime.InteropServices;
 
 internal class AssemblyInfo
 {
-    public const string AssemblyVersion = "3.1.1";
-    public const string AssemblyFileVersion = "3.1.1";
+    public const string AssemblyVersion = "3.6.5";
+    public const string AssemblyFileVersion = "3.6.5";
 }
