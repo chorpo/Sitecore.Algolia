@@ -105,6 +105,7 @@
     <Compile Include="ComputedFields\CategoriesField.cs" />
     <Compile Include="ComputedFields\ParentIdsField.cs" />
     <Compile Include="DefaultAlgoliaDocumentTypeMapper.cs" />
+    <Compile Include="Dto\AlgoliaIndexInfo.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="FieldReaders\GeoLocationFieldReader.cs" />
     <Compile Include="AlgoliaRepository.cs" />

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Algolia.Search;
 using Newtonsoft.Json.Linq;
 using Score.ContentSearch.Algolia.Abstract;
+using Score.ContentSearch.Algolia.Dto;
 using Sitecore.Common;
 
 namespace Score.ContentSearch.Algolia
@@ -12,12 +13,15 @@ namespace Score.ContentSearch.Algolia
     public class AlgoliaRepository : IAlgoliaRepository
     {
         private readonly Index _index;
+        private readonly string _indexName;
+        private readonly AlgoliaClient _client;
         private int ApiChunkSize = 1000;
 
         public AlgoliaRepository(IAlgoliaConfig algoliaConfig)
         {
-            AlgoliaClient algoliaClient = new AlgoliaClient(algoliaConfig.ApplicationId, algoliaConfig.FullApiKey);
-            _index = algoliaClient.InitIndex(algoliaConfig.IndexName);
+            _client = new AlgoliaClient(algoliaConfig.ApplicationId, algoliaConfig.FullApiKey);
+            _indexName = algoliaConfig.IndexName;
+            _index = _client.InitIndex(_indexName);
         }
 
         public Task<JObject> SaveObjectsAsync(IEnumerable<JObject> objects)
@@ -70,6 +74,12 @@ namespace Score.ContentSearch.Algolia
         public Task<JObject> SearchAsync(Query q)
         {
             return _index.SearchAsync(q);
+        }
+
+        public AlgoliaIndexInfo GetIndexInfo()
+        {
+            var response = _client.ListIndexes();
+            return AlgoliaIndexInfo.LoadFromJson(response, _indexName);
         }
 
         public Task<JObject> ClearIndexAsync()

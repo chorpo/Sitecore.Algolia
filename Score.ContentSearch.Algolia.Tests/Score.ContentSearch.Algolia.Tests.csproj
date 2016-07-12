@@ -129,6 +129,7 @@
     <Compile Include="Builders\IndexBuilder.cs" />
     <Compile Include="Builders\ItemBuilder.cs" />
     <Compile Include="Configuration\AlgoliaSearchIndexTests.cs" />
+    <Compile Include="Dto\AlgoliaIndexInfoTests.cs" />
     <Compile Include="Fakes\FakeFactory.cs" />
     <Compile Include="FieldReaders\GeoLocationFieldReaderTests.cs" />
     <Compile Include="FieldReaders\ReferenceFieldReaderTests.cs" />

@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using Algolia.Search;
 using Score.ContentSearch.Algolia.Abstract;
+using Sitecore;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Maintenance;
+using Sitecore.Diagnostics;
+using Newtonsoft.Json;
+using Score.ContentSearch.Algolia.Dto;
 
 namespace Score.ContentSearch.Algolia
 {
@@ -17,6 +21,9 @@ namespace Score.ContentSearch.Algolia
             IAlgoliaRepository repository,
             IIndexPropertyStore propertyStore)
         {
+            if (repository == null) throw new ArgumentNullException(nameof(repository));
+            if (propertyStore == null) throw new ArgumentNullException(nameof(propertyStore));
+
             _repository = repository;
             _propertyStore = propertyStore;
         }
@@ -26,10 +33,10 @@ namespace Score.ContentSearch.Algolia
             get
             {
                 IsHealthy = false;
-                var response = _repository.SearchAsync(new Query("")).Result;
-                var result = (long)response["nbHits"];
+                var info = _repository.GetIndexInfo();
+                var result = info.Entries;
                 //Index is Healthy if I can pull the data
-                IsHealthy = true;
+                IsHealthy = !info.PendingTask;
                 return result;
             }
         }
@@ -50,29 +57,33 @@ namespace Score.ContentSearch.Algolia
             }
         }
 
-        public bool IsOptimized { get; private set; }
+        public bool IsOptimized => true;
         public bool HasDeletions { get; private set; }
         public int NumberOfFields { get; private set; }
-        public long NumberOfTerms { get; private set; }
+        public long NumberOfTerms => -1L;
         public bool IsClean { get; private set; }
         public string Directory { get; private set; }
-        public bool IsMissingSegment { get; private set; }
-        public int NumberOfBadSegments { get; private set; }
+        public bool IsMissingSegment => false;
+        public int NumberOfBadSegments => 0;
         public bool OutOfDateIndex { get; private set; }
         public IDictionary<string, string> UserData { get; private set; }
         public long? LastUpdatedTimestamp { get; set; }
 
 #if SITECORE81
+        private IIndexableInfo lastIndexedEntry;
+
         public IIndexableInfo LastIndexedEntry
         {
             get
             {
-                throw new NotImplementedException();
+                this.lastIndexedEntry = (JsonConvert.DeserializeObject<IndexableInfo>(_propertyStore.Get(IndexProperties.LastIndexedEntry)) ?? new IndexableInfo());
+                return this.lastIndexedEntry;
             }
-
             set
             {
-                throw new NotImplementedException();
+                Assert.ArgumentNotNull(value, "value");
+                this.lastIndexedEntry = value;
+                _propertyStore.Set(IndexProperties.LastIndexedEntry, JsonConvert.SerializeObject(this.lastIndexedEntry));
             }
         }
 #endif
