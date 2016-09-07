@@ -84,8 +84,8 @@
     <Reference Include="Sitecore.ContentSearch.Linq">
       <HintPath>..\libs\Sitecore\Sitecore.ContentSearch.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="Sitecore.FakeDb, Version=0.38.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sitecore.FakeDb.0.38.0\lib\net45\Sitecore.FakeDb.dll</HintPath>
+    <Reference Include="Sitecore.FakeDb, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sitecore.FakeDb.1.1.3\lib\net45\Sitecore.FakeDb.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Sitecore.FakeDb.NSubstitute, Version=0.38.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -141,7 +141,6 @@
     <Compile Include="TestData.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App_Config\FieldTypes.config" />
     <None Include="Configuration\CrawlerShowInSearchResults.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -163,7 +162,9 @@
     <None Include="Configuration\Algolia.Search.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="SampleConfiguration\AlgoliaTestConfiguration.Sc81.config" />
     <None Include="SampleConfiguration\AlgoliaTestIndex.Sc7.config" />
