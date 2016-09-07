@@ -69,7 +69,7 @@ namespace Score.ContentSearch.Algolia
         public IDictionary<string, string> UserData { get; private set; }
         public long? LastUpdatedTimestamp { get; set; }
 
-#if SITECORE81
+
         private IIndexableInfo lastIndexedEntry;
 
         public IIndexableInfo LastIndexedEntry
@@ -86,7 +86,6 @@ namespace Score.ContentSearch.Algolia
                 _propertyStore.Set(IndexProperties.LastIndexedEntry, JsonConvert.SerializeObject(this.lastIndexedEntry));
             }
         }
-#endif
 
     }
 }
