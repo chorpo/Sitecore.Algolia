@@ -8,7 +8,7 @@ Score.ContentSearch.Algolia.Tests/license.xml
 *.cache
 *.user
 libs/Sitecore/
-/sitecore-version.props
+sitecore-version.props
 sandbox/
 *.nupkg
 Libs/81/
