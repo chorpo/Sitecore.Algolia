@@ -120,6 +120,9 @@
     <Compile Include="TestData.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App_Config\Include\Sitecore.FakeDb.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Configuration\CrawlerShowInSearchResults.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
