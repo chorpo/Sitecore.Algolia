@@ -94,7 +94,11 @@ If ($sitecoreVersion -match '(\d\.\d)\.(\d{6})') {
 Get-ChildItem -Path . -Filter "$solution*" | ?{ $_.PSIsContainer } |`
   %{ CopyFile ".\Automation\Sitecore-Versions\$($sitecore.Version)\packages.config" $_.Name }
 
+# Copy references
 CopyFile ".\Automation\Sitecore-Versions\$($sitecore.Version)\references-qualified.proj" .
+
+Get-ChildItem -Path . -Filter "$solution*Tests" | ?{ $_.PSIsContainer } |`
+  %{ CopyFile ".\Automation\Sitecore-Versions\$($sitecore.Version)\App.config" $_.Name }
 
 " "
 "Set packges and references to work with Sitecore $($sitecore.Version).$($sitecore.Revision)"
