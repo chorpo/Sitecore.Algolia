@@ -14,3 +14,4 @@ Libs/81/
 Libs/82/
 */packages.config
 /references-qualified.proj
+Score.ContentSearch.Algolia.Tests/App.config
