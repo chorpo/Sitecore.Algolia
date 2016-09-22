@@ -5,33 +5,19 @@ You need only sync Sitecore DLLs and project varriables defined in include file.
 
 # Local Environment Setup
 
-Some manual steps required to setup solution:
-
-1. Copy Sitecore DLLs for specific Sitecore version to **Libs/Sitecore** folder:
-    * sitecore.nexus.dll
-    * Newtonsoft.Json.dll
-    * Sitecore.ContentSearch.dll
-    * Sitecore.ContentSearch.Linq.dll
-    * Sitecore.Kernel.dll
-
-2. Copy **sitecore-version.props** file into solution root from **Automation/Sitecore-Versions/{SitecoreVersion}** 
-3. Copy your sitecore license into **Score.ContentSearch.Algolia.Tests** folder to enable Sitecore.FakeDb tests
-
-## Local Environment Setup for SCORE developers
-
 Once you cloned the repo and **prior opening the solution in Visual Studio** perform the following steps:
 
-1. Check-out **score-automation** repository
-2. Run **setup.ps1** script for desired Sitecore version. 
-3. Copy Sitecore lincese xml file into **Score.ContentSearch.Algolia.Tests** folder
+1. Copy your sitecore license into **Score.ContentSearch.Algolia.Tests** folder to enable Sitecore.FakeDb tests
+1. Run **setup.ps1** script with parameters defined below for desired Sitecore version. 
 
 ### Powershell Script details
 
-Sample Scripts
 
-* 7.2 Update 4 -  `powershell -File ../score-automation/setup.ps1 -sitecoreVersion 7.2.150407`.
-* 8.0 Update 3 -  `powershell -File ../score-automation/setup.ps1 -sitecoreVersion 8.0.150427`.
-* 8.1 Initial  -  `powershell -File ../score-automation/setup.ps1 -sitecoreVersion 8.1.151003`. 
+* 7.2 Update 4 -  `powershell -File ./automation/setup.ps1 -sitecoreVersion 7.2.150407`
+* 8.0 Update 3 -  `powershell -File ./automation/setup.ps1 -sitecoreVersion 8.0.150427`
+* 8.1 Update 3 -  `powershell -File ./automation/setup.ps1 -sitecoreVersion 8.1.160519` 
+* 8.2 Initial  -  `powershell -File ./automation/setup.ps1 -sitecoreVersion 8.2.160729` 
+
 
 If Powershell complains about execution policy please do the following and try again
 
