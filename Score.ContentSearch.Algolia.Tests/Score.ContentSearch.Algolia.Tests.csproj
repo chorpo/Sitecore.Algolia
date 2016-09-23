@@ -116,6 +116,7 @@
     <Compile Include="Fakes\FakeFactory.cs" />
     <Compile Include="FieldReaders\GeoLocationFieldReaderTests.cs" />
     <Compile Include="FieldReaders\ReferenceFieldReaderTests.cs" />
+    <Compile Include="FrameworkTests.cs" />
     <Compile Include="Helpers\QueryExtentions.cs" />
     <Compile Include="Integrations\AddItemsIntegrations.cs" />
     <Compile Include="AlgoliaCrawlerTests.cs" />
