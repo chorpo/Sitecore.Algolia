@@ -44,6 +44,12 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(SitecoreVersion)' != '' And '$(SitecoreVersion)' &gt;= 8">
+    <DefineConstants>SITECORE8</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(SitecoreVersion)' != '' And '$(SitecoreVersion)' &gt;= 8.1">
+    <DefineConstants>SITECORE8;SITECORE81</DefineConstants>
+  </PropertyGroup> 
   <PropertyGroup Condition="'$(SitecoreVersion)' != '' And '$(SitecoreVersion)' &gt;= 8.2">
     <DefineConstants>SITECORE8;SITECORE81;SITECORE82</DefineConstants>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
