@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
+using Sitecore.Data.Items;
 
 namespace Score.ContentSearch.Algolia.Tests
 {
@@ -32,6 +33,27 @@ namespace Score.ContentSearch.Algolia.Tests
             expected = "4.5.2";
 #endif
             attribute.FrameworkName.Should().Be($".NETFramework,Version=v{expected}");
+        }
+
+        [Test]
+        public void ShouldTargetSitecoreVersion()
+        {
+            //Arrange
+            var assembly = Assembly.GetAssembly(typeof (Item));
+
+            //Act
+            var version = assembly.GetName().Version.Major;
+
+            //Assert
+
+            var expected = 7;
+#if (SITECORE8)
+            expected = 8;
+#endif
+#if (SITECORE82)
+            expected = 10;
+#endif
+            version.Should().Be(expected);
         }
     }
 }
