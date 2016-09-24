@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Score.ContentSearch.Algolia", "Score.ContentSearch.Algolia\Score.ContentSearch.Algolia.csproj", "{E3738FD4-B555-4810-B730-6344481DA163}"
 EndProject
@@ -32,7 +32,6 @@ Global
 		{FBBBFB78-831A-4D66-AB1C-4B290CA042DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FBBBFB78-831A-4D66-AB1C-4B290CA042DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBBBFB78-831A-4D66-AB1C-4B290CA042DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FBBBFB78-831A-4D66-AB1C-4B290CA042DB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FBBBFB78-831A-4D66-AB1C-4B290CA042DB}.Sandbox|Any CPU.ActiveCfg = Sandbox|Any CPU
 		{FBBBFB78-831A-4D66-AB1C-4B290CA042DB}.Sandbox|Any CPU.Build.0 = Sandbox|Any CPU
 		{95FAB4CB-E7B7-4DA2-8CC7-C322F5AD78C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
