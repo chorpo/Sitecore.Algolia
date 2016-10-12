@@ -4,16 +4,16 @@
     <id>Algolia.Sitecore.$sitecore$</id>
     <version>$version$</version>
     <title>Sitecore Search provider for Algolia</title>
-    <authors>Brainjocks</authors>
-    <owners>Brainjocks</owners>
-    <licenseUrl>https://github.com/dharnitski/Sitecore.Algolia/blob/master/LICENSE</licenseUrl>
+    <authors>Dmitry Harnitski, BrainJocks</authors>
+    <owners>Dmitry Harnitski, BrainJocks</owners>
+    <licenseUrl>https://github.com/dharnitski/Sitecore.Algolia/blob/master/LICENSE.txt</licenseUrl>
     <projectUrl>https://github.com/dharnitski/Sitecore.Algolia</projectUrl>
     <iconUrl>http://www.brainjocks.com/~/media/Images/BrainJocks/Branding/brainjocks_score_icon</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Algolia ContenSearch provider for Sitecore $sitecore$</description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2016</copyright>
-    <tags>Sitecore SCORE Algolia ContentSearch BrainJocks</tags>
+    <tags>Sitecore Algolia ContentSearch BrainJocks</tags>
     <dependencies>
       <dependency id="Mono.Security" version="3.2.3.0" />
       <dependency id="PCLCrypto" version="1.0.2.15130" />
@@ -21,7 +21,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="Score.ContentSearch.Algolia\bin\$configuration$\Algolia.Search.dll" target="lib/net45" />
-    <file src="Score.ContentSearch.Algolia\bin\$configuration$\Score.ContentSearch.Algolia.dll" target="lib/net45" />
+    <file src="Score.ContentSearch.Algolia\bin\$configuration$\Algolia.Search.dll" target="lib/$framework$" />
+    <file src="Score.ContentSearch.Algolia\bin\$configuration$\Score.ContentSearch.Algolia.dll" target="lib/$framework$" />
   </files>
 </package>       
