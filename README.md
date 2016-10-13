@@ -6,6 +6,7 @@ Algolia is a Hosted Search API that delivers instant and relevant results. This 
 
 Find right Nuget package for your Sitecore version. Currenly project supports all Sitecore versions from 7.0 to 8.1 you can find versions matrix below:
 
+* [Algolia.Sitecore.8.2](https://www.nuget.org/packages/Algolia.Sitecore.8.2/) for Sitecore 8.2
 * [Algolia.Sitecore.8.1](https://www.nuget.org/packages/Algolia.Sitecore.8.1/) for Sitecore 8.1
 * [Algolia.Sitecore.8](https://www.nuget.org/packages/Algolia.Sitecore.8/) for Sitecore 8.0
 * [Algolia.Sitecore.7](https://www.nuget.org/packages/Algolia.Sitecore.7/) for Sitecore 7.0-7.2
