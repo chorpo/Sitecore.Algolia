@@ -77,3 +77,6 @@ Because it is different:
 Algolia is a razor comparing to swiss army knife. Index designed for speed and easy use and do not implement all the features that generic search engine has.
 As a result Algolia cannot replace default Sitecore indexes.
 
+This provider includes only crawling part (code that sends data to the index). Linq to Search is not included and not on the roadmap. 
+To make it fast, search has to be run on client side. Check Algloa JS UI [instantsearch.js](https://community.algolia.com/instantsearch.js) or join me in [Algolia simple UI for Sitecore](https://github.com/dharnitski/Algolia.Sitecore.UI)  
+
