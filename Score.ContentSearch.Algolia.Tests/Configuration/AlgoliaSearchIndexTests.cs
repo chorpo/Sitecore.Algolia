@@ -52,6 +52,30 @@ namespace Score.ContentSearch.Algolia.Tests.Configuration
         }
 
         [Test]
+        public void ShouldUseDefaultMaxFieldLength()
+        {
+            //Act
+            var index = LoadIndexConfiguration("Algolia.Search.config");
+            var configuration = index.Configuration as AlgoliaIndexConfiguration;
+
+            //Assert
+            configuration.Should().NotBeNull();
+            configuration.MaxFieldLength.Should().Be(4000);
+        }
+
+        [Test]
+        public void ShouldLoadMaxFieldLength()
+        {
+            //Act
+            var index = LoadIndexConfiguration("TagsProcessorMaxFieldLength.config");
+            var configuration = index.Configuration as AlgoliaIndexConfiguration;
+
+            //Assert
+            configuration.Should().NotBeNull();
+            configuration.MaxFieldLength.Should().Be(8000);
+        }
+
+        [Test]
         public void ShouldLoadCrawler()
         {
             //Act

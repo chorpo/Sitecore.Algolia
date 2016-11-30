@@ -167,6 +167,40 @@ namespace Score.ContentSearch.Algolia.Tests
             }
         }
 
+        [TestCase(10, "/sitecore/...")]
+        [TestCase(1000, "/sitecore/content/source")]
+        public void AddOperationShouldUseMaxFieldLength(int maxLenth, string expected)
+        {
+            // arrange
+            using (var db = new Db { new ItemBuilder().AddSubItem().Build() })
+            {
+                var item = db.GetItem("/sitecore/content/source");
+                var indexable = new SitecoreIndexableItem(item);
+                IEnumerable<JObject> docs = null;
+
+                var index = new IndexBuilder().WithMaxFieldLength(maxLenth).Build();
+                var algoliaRepository = new Mock<IAlgoliaRepository>();
+                algoliaRepository.Setup(
+                    t => t.SaveObjectsAsync(It.IsAny<IEnumerable<JObject>>()))
+                    .Callback(
+                        (IEnumerable<JObject> objects) =>
+                            docs = objects)
+                    .ReturnsAsync(new JObject());
+
+                var context = new AlgoliaUpdateContext(index, algoliaRepository.Object);
+
+                var operations = new AlgoliaIndexOperations(index);
+
+                //Act
+                operations.Add(indexable, context, index.Configuration);
+                context.Commit();
+
+                //Assert
+                var itemDoc = docs.First(t => (string)t["_name"] == "source");
+                ((string) itemDoc["_fullpath"]).Should().Be(expected);
+            }
+        }
+
         //[Test]
         //public void AddOperationShouldLoadItemFields()
         //{

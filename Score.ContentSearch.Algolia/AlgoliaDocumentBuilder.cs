@@ -11,7 +11,7 @@ using Sitecore.Data.Items;
 
 namespace Score.ContentSearch.Algolia
 {
-    public class AlgoliaDocumentBuilder : AbstractDocumentBuilder<JObject>
+    public class AlgoliaDocumentBuilder : AbstractDocumentBuilder<JObject>, ILenghtConstraint
     {
         private readonly ITagsProcessor _tagsProcessor;
 
@@ -23,7 +23,6 @@ namespace Score.ContentSearch.Algolia
             {
                 _tagsProcessor = config.TagsProcessor;
             }
-
         }
 
         #region AbstractDocumentBuilder
@@ -130,7 +129,16 @@ namespace Score.ContentSearch.Algolia
                 if (string.IsNullOrWhiteSpace(stringValue))
                     //not added but next processor should be skipped
                     return true;
-                fieldValue = stringValue.Trim();
+                stringValue = stringValue.Trim();
+
+                if (MaxFieldLength > 0 && stringValue.Length > MaxFieldLength)
+                {
+                    stringValue = stringValue.Substring(0, MaxFieldLength) + "...";
+                    CrawlingLog.Log.Debug(
+                        $"Cut field value for {Indexable.Id}.{fieldName} to {MaxFieldLength} characters");
+                }
+
+                fieldValue = stringValue;
             }
 
             Document[fieldName] = new JValue(fieldValue);
@@ -272,5 +280,7 @@ namespace Score.ContentSearch.Algolia
             }
             return true;
         }
+
+        public int MaxFieldLength { get; set; }
     }
 }

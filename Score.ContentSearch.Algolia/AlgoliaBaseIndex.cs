@@ -74,8 +74,8 @@ namespace Score.ContentSearch.Algolia
             CrawlingLog.Log.Debug($"{LogPreffix} {Name} PerformRebuild()");
 
 #if (SITECORE8)
-            CrawlingLog.Log.Debug(string.Format("PerformRebuild - Disposed - {0}", isDisposed), null);
-            CrawlingLog.Log.Debug(string.Format("PerformRebuild - Initialized - {0}", initialized), null);
+            CrawlingLog.Log.Debug($"PerformRebuild - Disposed - {isDisposed}", null);
+            CrawlingLog.Log.Debug($"PerformRebuild - Initialized - {initialized}", null);
 #endif
 
             if (!base.ShouldStartIndexing(indexingOptions))
@@ -142,7 +142,7 @@ namespace Score.ContentSearch.Algolia
             stopwatch.Stop();
             if ((base.IndexingState & IndexingState.Stopped) != IndexingState.Stopped)
             {
-                this.PropertyStore.Set(IndexProperties.RebuildTime, stopwatch.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture));
+                this. PropertyStore.Set(IndexProperties.RebuildTime, stopwatch.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture));
             }
         }
 
@@ -288,7 +288,7 @@ namespace Score.ContentSearch.Algolia
         public override IIndexPropertyStore PropertyStore { get; set; }
         public override AbstractFieldNameTranslator FieldNameTranslator { get; set; }
         public override ProviderIndexConfiguration Configuration { get; set; }
-        public override IIndexOperations Operations { get { return new AlgoliaIndexOperations(this); } }
+        public override IIndexOperations Operations => new AlgoliaIndexOperations(this);
 
 
 #if (SITECORE8)

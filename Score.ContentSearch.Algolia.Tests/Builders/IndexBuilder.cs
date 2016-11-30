@@ -45,6 +45,12 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
             return this;
         }
 
+        public IndexBuilder WithMaxFieldLength(int maxfieldLength)
+        {
+            (_index.Configuration as ILenghtConstraint).MaxFieldLength = maxfieldLength;
+            return this;
+        }
+
         public IndexBuilder WithIncludedTemplate(string templateId)
         {
             _index.Configuration.IncludeTemplate(templateId);
@@ -95,16 +101,15 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
         private void AddStandardFieldReader(string fieldTypeName, string fieldReaderType)
         {
             var fieldTypes = fieldTypeName.Split('|');
-            string readerType = string.Format("Sitecore.ContentSearch.FieldReaders.{0}, Sitecore.ContentSearch",
-                fieldReaderType);
+            string readerType = $"Sitecore.ContentSearch.FieldReaders.{fieldReaderType}, Sitecore.ContentSearch";
             _index.Configuration.FieldReaders.AddFieldReaderByFieldTypeName(readerType, fieldTypes);
         }
 
         private void AddCustomFieldReader(string fieldTypeName, string fieldReaderType)
         {
             var fieldTypes = fieldTypeName.Split('|');
-            string readerType = string.Format("Score.ContentSearch.Algolia.FieldReaders.{0}, Score.ContentSearch.Algolia",
-                fieldReaderType);
+            string readerType =
+                $"Score.ContentSearch.Algolia.FieldReaders.{fieldReaderType}, Score.ContentSearch.Algolia";
             _index.Configuration.FieldReaders.AddFieldReaderByFieldTypeName(readerType, fieldTypes);
         }
     }

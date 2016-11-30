@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
+using Score.ContentSearch.Algolia.Abstract;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Diagnostics;
 using Sitecore.ContentSearch.Linq.Common;
@@ -112,6 +113,24 @@ namespace Score.ContentSearch.Algolia
             {
                 return new JObject();
             }
+            var documentBuilder = CreateDocumentBuilder(indexable, context);
+            AssignLenghtConstraint(_index.Configuration as ILenghtConstraint, documentBuilder as ILenghtConstraint);
+
+            documentBuilder.AddSpecialFields();
+            documentBuilder.AddItemFields();
+            documentBuilder.AddComputedIndexFields();
+            //Sitecore8 does not implement this
+            //documentBuilder.AddProviderCustomFields();
+            documentBuilder.AddBoost();
+
+            var algoliaDocumentBuilder = documentBuilder as AlgoliaDocumentBuilder;
+            algoliaDocumentBuilder?.GenerateTags();
+
+            return documentBuilder.Document;
+        }
+
+        private AbstractDocumentBuilder<JObject> CreateDocumentBuilder(IIndexable indexable, IProviderUpdateContext context)
+        {
             var documentBuilder =
                 (AbstractDocumentBuilder<JObject>)
                     ReflectionUtil.CreateObject(context.Index.Configuration.DocumentBuilderType, new object[]
@@ -127,17 +146,18 @@ namespace Score.ContentSearch.Algolia
                 documentBuilder = new AlgoliaDocumentBuilder(indexable, context);
             }
 
-            documentBuilder.AddSpecialFields();
-            documentBuilder.AddItemFields();
-            documentBuilder.AddComputedIndexFields();
-            //Sitecore8 does not implement this
-            //documentBuilder.AddProviderCustomFields();
-            documentBuilder.AddBoost();
+            return documentBuilder;
+        }
 
-            var algoliaDocumentBuilder = documentBuilder as AlgoliaDocumentBuilder;
-            algoliaDocumentBuilder?.GenerateTags();
+        private void AssignLenghtConstraint(ILenghtConstraint source, ILenghtConstraint destination)
+        {
+            if (source == null || destination == null)
+                return;
 
-            return documentBuilder.Document;
+            if (source.MaxFieldLength <= 0)
+                return;
+
+            destination.MaxFieldLength = source.MaxFieldLength;
         }
 
     }
