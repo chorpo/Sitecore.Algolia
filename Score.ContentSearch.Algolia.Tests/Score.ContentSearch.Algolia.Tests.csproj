@@ -49,7 +49,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(SitecoreVersion)' != '' And '$(SitecoreVersion)' &gt;= 8.1">
     <DefineConstants>SITECORE8;SITECORE81</DefineConstants>
-  </PropertyGroup> 
+  </PropertyGroup>
   <PropertyGroup Condition="'$(SitecoreVersion)' != '' And '$(SitecoreVersion)' &gt;= 8.2">
     <DefineConstants>SITECORE8;SITECORE81;SITECORE82</DefineConstants>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
@@ -156,6 +156,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="SampleConfiguration\AlgoliaTestConfiguration.Sc8.config" />
     <None Include="SampleConfiguration\AlgoliaTestConfiguration.Sc81.config" />
     <None Include="SampleConfiguration\AlgoliaTestIndex.Sc7.config" />
     <None Include="SampleConfiguration\AlgoliaTestIndex.Sc8.config" />
