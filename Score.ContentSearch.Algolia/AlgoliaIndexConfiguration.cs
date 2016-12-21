@@ -4,7 +4,7 @@ using Sitecore.ContentSearch;
 
 namespace Score.ContentSearch.Algolia
 {
-    public class AlgoliaIndexConfiguration : ProviderIndexConfiguration, ILenghtConstraint
+    public class AlgoliaIndexConfiguration : ProviderIndexConfiguration, IIndexCustomOptions
     {
         public AlgoliaIndexConfiguration()
         {
@@ -14,5 +14,7 @@ namespace Score.ContentSearch.Algolia
         public ITagsProcessor TagsProcessor { get; set; }
 
         public int MaxFieldLength { get; set; }
+
+        public bool IncludeTemplateId { get; set; }
     }
 }

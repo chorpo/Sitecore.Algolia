@@ -114,7 +114,7 @@ namespace Score.ContentSearch.Algolia
                 return new JObject();
             }
             var documentBuilder = CreateDocumentBuilder(indexable, context);
-            AssignLenghtConstraint(_index.Configuration as ILenghtConstraint, documentBuilder as ILenghtConstraint);
+            AssignCustomOptions(_index.Configuration as IIndexCustomOptions, documentBuilder as IIndexCustomOptions);
 
             documentBuilder.AddSpecialFields();
             documentBuilder.AddItemFields();
@@ -149,15 +149,17 @@ namespace Score.ContentSearch.Algolia
             return documentBuilder;
         }
 
-        private void AssignLenghtConstraint(ILenghtConstraint source, ILenghtConstraint destination)
+        private void AssignCustomOptions(IIndexCustomOptions source, IIndexCustomOptions destination)
         {
             if (source == null || destination == null)
                 return;
 
-            if (source.MaxFieldLength <= 0)
-                return;
+            if (source.MaxFieldLength > 0)
+            {
+                destination.MaxFieldLength = source.MaxFieldLength;
+            }
 
-            destination.MaxFieldLength = source.MaxFieldLength;
+            destination.IncludeTemplateId = source.IncludeTemplateId;
         }
 
     }

@@ -47,7 +47,13 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
 
         public IndexBuilder WithMaxFieldLength(int maxfieldLength)
         {
-            (_index.Configuration as ILenghtConstraint).MaxFieldLength = maxfieldLength;
+            (_index.Configuration as IIndexCustomOptions).MaxFieldLength = maxfieldLength;
+            return this;
+        }
+
+        public IndexBuilder WithIncludeTemplateId()
+        {
+            (_index.Configuration as IIndexCustomOptions).IncludeTemplateId = true;
             return this;
         }
 

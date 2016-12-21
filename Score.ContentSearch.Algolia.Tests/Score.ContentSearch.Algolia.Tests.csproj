@@ -134,13 +134,17 @@
     <None Include="Configuration\CrawlerShowInSearchResults.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Configuration\IncludeTemplateId.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Configuration\Site.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Configuration\ComputedField.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Configuration\TagsProcessorMaxFieldLength.config">
+    <None Include="Configuration\MaxFieldLength.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Configuration\TagsProcessorSecondTagNoPreffix.config">

@@ -11,7 +11,7 @@ using Sitecore.Data.Items;
 
 namespace Score.ContentSearch.Algolia
 {
-    public class AlgoliaDocumentBuilder : AbstractDocumentBuilder<JObject>, ILenghtConstraint
+    public class AlgoliaDocumentBuilder : AbstractDocumentBuilder<JObject>, IIndexCustomOptions
     {
         private readonly ITagsProcessor _tagsProcessor;
 
@@ -45,7 +45,11 @@ namespace Score.ContentSearch.Algolia
                 return;
             //this.AddSpecialField("_database", (object)indexableBuiltinFields.Database, false);
             this.AddSpecialField("_language", (object) indexableBuiltinFields.Language, false);
-            //this.AddSpecialField("_template", indexableBuiltinFields.TemplateId, false);
+
+            if (IncludeTemplateId)
+            {
+                this.AddSpecialField("_template", indexableBuiltinFields.TemplateId.ToString(), false);
+            }
             //this.AddSpecialField("_parent", indexableBuiltinFields.Parent, false);
             //if (indexableBuiltinFields.IsLatestVersion)
             //    this.AddSpecialField("_latestversion", (object)true, false);
@@ -60,7 +64,7 @@ namespace Score.ContentSearch.Algolia
             //this.AddSpecialField("_displayname", (object)indexableBuiltinFields.DisplayName, false);
             //this.AddSpecialField("_creator", (object)indexableBuiltinFields.CreatedBy, false);
             //this.AddSpecialField("_editor", (object)indexableBuiltinFields.UpdatedBy, false);
-            //this.AddSpecialField("_templatename", (object)indexableBuiltinFields.TemplateName, false);
+            this.AddSpecialField("_templatename", (object)indexableBuiltinFields.TemplateName, false);
             //this.AddSpecialField("_created", (object)indexableBuiltinFields.CreatedDate, false);
             //this.AddSpecialField("_updated", (object)indexableBuiltinFields.UpdatedDate, false);
             //this.AddSpecialField("_path", (object)indexableBuiltinFields.Paths, false);
@@ -282,5 +286,6 @@ namespace Score.ContentSearch.Algolia
         }
 
         public int MaxFieldLength { get; set; }
+        public bool IncludeTemplateId { get; set; }
     }
 }

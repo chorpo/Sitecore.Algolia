@@ -67,12 +67,25 @@ namespace Score.ContentSearch.Algolia.Tests.Configuration
         public void ShouldLoadMaxFieldLength()
         {
             //Act
-            var index = LoadIndexConfiguration("TagsProcessorMaxFieldLength.config");
+            var index = LoadIndexConfiguration("MaxFieldLength.config");
             var configuration = index.Configuration as AlgoliaIndexConfiguration;
 
             //Assert
             configuration.Should().NotBeNull();
             configuration.MaxFieldLength.Should().Be(8000);
+            configuration.IncludeTemplateId.Should().BeFalse();
+        }
+
+        [Test]
+        public void ShouldLoadIncludeTemplateId()
+        {
+            //Act
+            var index = LoadIndexConfiguration("IncludeTemplateId.config");
+            var configuration = index.Configuration as AlgoliaIndexConfiguration;
+
+            //Assert
+            configuration.Should().NotBeNull();
+            configuration.IncludeTemplateId.Should().BeTrue();
         }
 
         [Test]
