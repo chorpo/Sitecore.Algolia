@@ -146,6 +146,7 @@
     </None>
     <None Include="Configuration\MaxFieldLength.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Configuration\TagsProcessorSecondTagNoPreffix.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
