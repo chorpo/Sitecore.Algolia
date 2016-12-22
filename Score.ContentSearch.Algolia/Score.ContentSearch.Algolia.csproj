@@ -98,6 +98,7 @@
     <Compile Include="ComputedFields\CurrentItemLinkField.cs" />
     <Compile Include="ComputedFields\CategoriesField.cs" />
     <Compile Include="ComputedFields\ParentIdsField.cs" />
+    <Compile Include="ComputedFields\ReferenceField.cs" />
     <Compile Include="DefaultAlgoliaDocumentTypeMapper.cs" />
     <Compile Include="Dto\AlgoliaIndexInfo.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />

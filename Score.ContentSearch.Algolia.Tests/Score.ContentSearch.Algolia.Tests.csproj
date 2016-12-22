@@ -117,6 +117,7 @@
     <Compile Include="AlgoliaIndexOperationsTests.cs" />
     <Compile Include="Builders\IndexBuilder.cs" />
     <Compile Include="Builders\ItemBuilder.cs" />
+    <Compile Include="ComputedFields\ReferenceFieldTests.cs" />
     <Compile Include="Configuration\AlgoliaSearchIndexTests.cs" />
     <Compile Include="Dto\AlgoliaIndexInfoTests.cs" />
     <Compile Include="Fakes\FakeFactory.cs" />

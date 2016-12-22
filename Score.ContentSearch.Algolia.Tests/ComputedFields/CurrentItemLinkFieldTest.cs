@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NUnit.Framework;
 using Score.ContentSearch.Algolia.ComputedFields;
 using Score.ContentSearch.Algolia.Tests.Builders;
@@ -11,7 +6,6 @@ using Sitecore;
 using Sitecore.ContentSearch;
 using Sitecore.FakeDb;
 using Sitecore.FakeDb.Sites;
-using Sitecore.Links;
 
 namespace Score.ContentSearch.Algolia.Tests.ComputedFields
 {

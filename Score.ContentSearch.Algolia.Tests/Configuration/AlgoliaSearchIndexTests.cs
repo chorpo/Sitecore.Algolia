@@ -123,8 +123,9 @@ namespace Score.ContentSearch.Algolia.Tests.Configuration
 
             //Assert
             index.Configuration.DocumentOptions.ComputedIndexFields.Count.Should().Be(1);
-            index.Configuration.DocumentOptions.ComputedIndexFields.First()
-                .Should().BeOfType<SmallCreatedDate>();
+            var computedField = index.Configuration.DocumentOptions.ComputedIndexFields.First();
+            computedField.Should().BeOfType<SmallCreatedDate>();
+            computedField.FieldName.Should().Be("__smallcreateddate");
         }
 
         [Test]

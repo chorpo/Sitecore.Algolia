@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Sitecore;
 using Sitecore.Data;
 using Sitecore.FakeDb;
@@ -10,6 +12,7 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
     {
         private readonly DbItem _item;
         private DbItem _subitem;
+        private DbItem _subitem2;
 
         public ItemBuilder()
         {
@@ -23,6 +26,7 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
         public const string PriceFieldName = "Price";
         public const string ReferenceFieldName = "Reference";
         public static ID SubitemId = ID.NewID;
+        public static ID Subitem2Id = ID.NewID;
 
 
         public ItemBuilder AddSubItem()
@@ -30,6 +34,25 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
             _subitem = new DbItem("subitem", SubitemId);
             _item.Children.Add(_subitem);
             _subitem.ParentID = _item.ID;
+            return this;
+        }
+
+        public ItemBuilder AddSubItemWithField(string name, string value)
+        {
+            _subitem = new DbItem("subitem", SubitemId)
+            {
+                {name, value}
+            };
+            _item.Children.Add(_subitem);
+            _subitem.ParentID = _item.ID;
+            return this;
+        }
+
+        public ItemBuilder AddSecondSubItem()
+        {
+            _subitem2 = new DbItem("subitem2", Subitem2Id);
+            _item.Children.Add(_subitem2);
+            _subitem2.ParentID = _item.ID;
             return this;
         }
 
@@ -41,7 +64,7 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
                 Type = "text",
                 Name = DispalyNameFieldName
             };
-            _item.Fields.Add(field);
+            _item.Add(field);
             return this;
         }
 
@@ -53,7 +76,7 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
                 Type = "number",
                 Name = CountFieldName
             };
-            _item.Fields.Add(field);
+            _item.Add(field);
             return this;
         }
 
@@ -65,7 +88,7 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
                 Type = "geolocation",
                 Name = LocationFieldName
             };
-            _item.Fields.Add(field);
+            _item.Add(field);
             return this;
         }
 
@@ -77,7 +100,7 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
                 Type = "datetime",
                 Name = DateFieldName
             };
-            _item.Fields.Add(field);
+            _item.Add(field);
             return this;
         }
 
@@ -86,11 +109,11 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
             var field = new DbField(ID.NewID)
             {
                 //"20141217T033000"
-                Value = Sitecore.DateUtil.ToIsoDate(value),
+                Value = DateUtil.ToIsoDate(value),
                 Type = "datetime",
                 Name = DateFieldName
             };
-            _item.Fields.Add(field);
+            _item.Add(field);
             return this;
         }
 
@@ -102,7 +125,7 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
                 Type = "number",
                 Name = PriceFieldName
             };
-            _item.Fields.Add(field);
+            _item.Add(field);
             return this;
         }
 
@@ -114,7 +137,21 @@ namespace Score.ContentSearch.Algolia.Tests.Builders
                 Type = fieldType,
                 Name = ReferenceFieldName
             };
-            _item.Fields.Add(field);
+            //_item.Fields.Add(field);
+            _item.Add(field);
+            return this;
+        }
+
+        public ItemBuilder WithReference(IEnumerable<ID> referenceIds)
+        {
+            var field = new DbField(ID.NewID)
+            {
+                Value = string.Join("|", referenceIds.Select(t => t.ToString())),
+                Type = "multiselect",
+                Name = ReferenceFieldName
+            };
+            //_item.Fields.Add(field);
+            _item.Add(field);
             return this;
         }
 
