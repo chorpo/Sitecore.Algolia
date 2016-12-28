@@ -10,8 +10,7 @@ namespace Score.ContentSearch.Algolia.ComputedFields
 {
     public class ReferenceField : IComputedIndexField
     {
-        private readonly List<XmlNode> target;
-
+ 
         public ReferenceField()
             : this((XmlNode) null)
         {
@@ -19,7 +18,6 @@ namespace Score.ContentSearch.Algolia.ComputedFields
 
         public ReferenceField(XmlNode configurationNode)
         {
-            target = new List<XmlNode>();
             Initialize(configurationNode);
         }
 
@@ -55,7 +53,7 @@ namespace Score.ContentSearch.Algolia.ComputedFields
             MultilistField field = item.Item.Fields[FieldName];
             if (field == null)
             {
-                CrawlingLog.Log.Error($"ReferenceField: cannot find filed '{FieldName}'");
+                CrawlingLog.Log.Debug($"ReferenceField: cannot find filed '{FieldName}'");
                 return string.Empty;
             }
 

@@ -8,6 +8,7 @@ using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.ComputedFields;
 using Sitecore.ContentSearch.Diagnostics;
 using Sitecore.Data.Items;
+using Sitecore.Diagnostics;
 
 namespace Score.ContentSearch.Algolia
 {
@@ -29,7 +30,7 @@ namespace Score.ContentSearch.Algolia
 
         public override void AddSpecialFields()
         {
-            var item = (Item) (this.Indexable as SitecoreIndexableItem);
+            var item = (Item)(this.Indexable as SitecoreIndexableItem);
             this.AddSpecialField("objectID", item.Language.Name + "_" + item.ID.ToGuid(), false);
             this.AddSpecialField("_id", this.Indexable.Id.ToString(), false);
 
@@ -44,7 +45,7 @@ namespace Score.ContentSearch.Algolia
             if (indexableBuiltinFields == null)
                 return;
             //this.AddSpecialField("_database", (object)indexableBuiltinFields.Database, false);
-            this.AddSpecialField("_language", (object) indexableBuiltinFields.Language, false);
+            this.AddSpecialField("_language", (object)indexableBuiltinFields.Language, false);
 
             if (IncludeTemplateId)
             {
@@ -57,10 +58,10 @@ namespace Score.ContentSearch.Algolia
             //this.AddSpecialField("_group", indexableBuiltinFields.Group, false);
             //if (indexableBuiltinFields.IsClone)
             //    this.AddSpecialField("_isclone", (object)true, false);
-            this.AddSpecialField("_fullpath", (object) indexableBuiltinFields.FullPath, false);
+            this.AddSpecialField("_fullpath", (object)indexableBuiltinFields.FullPath, false);
             if (this.Options.ExcludeAllSpecialFields)
                 return;
-            this.AddSpecialField("_name", (object) indexableBuiltinFields.Name, false);
+            this.AddSpecialField("_name", (object)indexableBuiltinFields.Name, false);
             //this.AddSpecialField("_displayname", (object)indexableBuiltinFields.DisplayName, false);
             //this.AddSpecialField("_creator", (object)indexableBuiltinFields.CreatedBy, false);
             //this.AddSpecialField("_editor", (object)indexableBuiltinFields.UpdatedBy, false);
@@ -72,7 +73,7 @@ namespace Score.ContentSearch.Algolia
             //this.AddSpecialField("_content", (object)indexableBuiltinFields.DisplayName, false);
             //if (this.Options.Tags == null || this.Options.Tags.Length <= 0)
             //    return;
-            this.AddField("_tags", new List<string> {"id_" + this.Indexable.Id});
+            this.AddField("_tags", new List<string> { "id_" + this.Indexable.Id });
         }
 
         #region AddField
@@ -169,7 +170,7 @@ namespace Score.ContentSearch.Algolia
         /// <param name="fieldName"></param>
         /// <param name="fieldValue"></param>
         /// <param name="append"></param>
-        /// <returns>true if added</returns>
+        /// <returns>true if value processed and no extra work required</returns>
         private bool AddFieldAsEnumarable(string fieldName, object fieldValue, bool append = false)
         {
             if (fieldValue is string)
@@ -182,6 +183,12 @@ namespace Score.ContentSearch.Algolia
                 var array = new JArray(enumerable);
                 if (!array.Any())
                     return true;
+
+                if (Document.Property(fieldName) != null)
+                {
+                    CrawlingLog.Log.Error($"Skipped duplicated filed '{fieldName}' in document '{Indexable.Id}'");
+                    return true;
+                }
                 Document.Add(fieldName, array);
                 return true;
             }
@@ -196,11 +203,18 @@ namespace Score.ContentSearch.Algolia
             var jvalue = fieldValue as JObject;
             if (jvalue != null)
             {
-                //Available in 6.0
+                //Available in 6.0 but cannot be used with Sitecore 7
                 //Document.Merge(jvalue);
 
                 if (jvalue.Count == 1)
                 {
+                    var property = jvalue.First as JProperty;
+                    if (property != null &&  Document.Property(property.Name) != null)
+                    {
+                        CrawlingLog.Log.Error($"Skipped duplicated property '{property.Name}' in document '{Indexable.Id}'");
+                        return true;
+                    }
+
                     Document.Add(jvalue.First);
                 }
                 else

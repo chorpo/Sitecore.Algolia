@@ -198,6 +198,37 @@ namespace Score.ContentSearch.Algolia.Tests.AlgoliaDocumentBuilderTests
         }
 
         [Test]
+        public void DuplicatedFieldShouldNotFail()
+        {
+            // arrange
+            using (var db = new Db { new ItemBuilder().WithHardcodedDate().Build() })
+            {
+                var item = db.GetItem("/sitecore/content/source");
+                var indexable = new SitecoreIndexableItem(item);
+
+
+                var context = new Mock<IProviderUpdateContext>();
+                var index = new IndexBuilder()
+                    .Build();
+                context.Setup(t => t.Index).Returns(index);
+                var sut = new AlgoliaDocumentBuilder(indexable, context.Object);
+
+                var value = JObject.Parse(@"{'_geoloc': {
+        'lat': 33.7489954,
+        'lng': -84.3879824
+      }}");
+                //Act
+                sut.AddField(ItemBuilder.LocationFieldName, value);
+                sut.AddField(ItemBuilder.LocationFieldName, value);
+
+                //Assert
+                JObject doc = sut.Document;
+                Assert.AreEqual(33.7489954, (double)doc["_geoloc"]["lat"]);
+                Assert.AreEqual(-84.3879824, (double)doc["_geoloc"]["lng"]);
+            }
+        }
+
+        [Test]
         public void AddSimpleDoubleFieldTest()
         {
             // arrange
@@ -336,6 +367,38 @@ namespace Score.ContentSearch.Algolia.Tests.AlgoliaDocumentBuilderTests
                 };
 
                 //Act
+                sut.AddField("keywords", value);
+
+                var actual = sut.Document;
+
+                //Assert
+                Assert.AreEqual("one", (string)actual["keywords"][0]);
+                Assert.AreEqual("two", (string)actual["keywords"][1]);
+            }
+        }
+
+        [Test]
+        public void TwoFieldsWithSameNameShouldNotFail()
+        {
+            // arrange
+            using (var db = new Db { new ItemBuilder().Build() })
+            {
+                var item = db.GetItem("/sitecore/content/source");
+                var indexable = new SitecoreIndexableItem(item);
+
+                var context = new Mock<IProviderUpdateContext>();
+                var index = new IndexBuilder()
+                    .Build();
+                context.Setup(t => t.Index).Returns(index);
+                var sut = new AlgoliaDocumentBuilder(indexable, context.Object);
+                var value = new List<string>
+                {
+                    "one",
+                    "two"
+                };
+
+                //Act
+                sut.AddField("keywords", value);
                 sut.AddField("keywords", value);
 
                 var actual = sut.Document;
