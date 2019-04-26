@@ -4,20 +4,17 @@ Algolia is a Hosted Search API that delivers instant and relevant results. This 
 
 ## How to setup
 
-Find right Nuget package for your Sitecore version. Currenly project supports all Sitecore versions from 7.0 to 8.1 you can find versions matrix below:
+Generate DLLs out of solution projects.
 
-* [Algolia.Sitecore.8.2](https://www.nuget.org/packages/Algolia.Sitecore.8.2/) for Sitecore 8.2
-* [Algolia.Sitecore.8.1](https://www.nuget.org/packages/Algolia.Sitecore.8.1/) for Sitecore 8.1
-* [Algolia.Sitecore.8](https://www.nuget.org/packages/Algolia.Sitecore.8/) for Sitecore 8.0
-* [Algolia.Sitecore.7](https://www.nuget.org/packages/Algolia.Sitecore.7/) for Sitecore 7.0-7.2
+Reference them in your Visual Studio web project for Sitecore. Config files should be implemented manually.
 
-Add Nuget package to your Visual Studio web project for Sitecore. Package will add all required DLLs. Config files should be implemented manually.
+Below you can find instructions for configs setup applicable for Sitecore 9.1. Different Sitecore versions may requre slightly different configuration. Use default Lucene search config files to identify these variations.
 
-Below you can find instructions for configs setup applicable for Sitecore 8.1. Different Sitecore versions may requre slightly different configuration. Use default Lucene search config files to identify these variations.
+For Sitecore 7 and 8 take a look in [original GitHub Repository](https://github.com/dharnitski/Sitecore.Algolia/) prepared by [Dmitry Harnitski](https://github.com/dharnitski)
 
 Test project includes sample configuration files:
-* [Index Configuration](https://github.com/dharnitski/Sitecore.Algolia/blob/develop/Score.ContentSearch.Algolia.Tests/SampleConfiguration/AlgoliaTestConfiguration.Sc81.config) 
-* [Index Definition](https://github.com/dharnitski/Sitecore.Algolia/blob/develop/Score.ContentSearch.Algolia.Tests/SampleConfiguration/AlgoliaTestIndex.Sc8.config) 
+* [Index Configuration](https://github.com/chorpo/Sitecore.Algolia/blob/sitecore91/Score.ContentSearch.Algolia.Tests/SampleConfiguration/AlgoliaTestConfiguration.Sc91.config) 
+* [Index Definition](https://github.com/chorpo/Sitecore.Algolia/blob/sitecore91/Score.ContentSearch.Algolia.Tests/SampleConfiguration/AlgoliaTestIndex.Sc91.config) 
 
 Copy these files into *site-root/App_Config/Include* folder. Now we need to make some changes to connect index with your Algolia account and filter data to include only relevant content.
 
