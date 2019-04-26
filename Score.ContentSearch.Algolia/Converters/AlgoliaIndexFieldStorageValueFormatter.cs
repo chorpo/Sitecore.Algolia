@@ -1,10 +1,11 @@
-﻿using Sitecore.ContentSearch.Converters;
+﻿using Sitecore.ContentSearch;
+using Sitecore.ContentSearch.Converters;
 using Sitecore.Diagnostics;
 using System;
 using System.ComponentModel;
 using System.Xml;
 
-namespace Sitecore.ContentSearch.Azure.Converters
+namespace Score.ContentSearch.Algolia.Converters
 {
     public class AlgoliaIndexFieldStorageValueFormatter : IndexFieldStorageValueFormatter, ISearchIndexInitializable
     {
@@ -41,9 +42,8 @@ namespace Sitecore.ContentSearch.Azure.Converters
 
         public new void Initialize(ISearchIndex searchIndex)
         {
+            this._searchIndex = searchIndex;
             base.Initialize(searchIndex);
-
-            throw new NotImplementedException();
         }
 
         private static bool TryConvertToPrimitiveType(object value, Type expectedType, out object result)

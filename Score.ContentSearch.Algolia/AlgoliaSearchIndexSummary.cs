@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Algolia.Search;
 using Score.ContentSearch.Algolia.Abstract;
 using Sitecore;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Maintenance;
 using Sitecore.Diagnostics;
 using Newtonsoft.Json;
-using Score.ContentSearch.Algolia.Dto;
 
 namespace Score.ContentSearch.Algolia
 {
@@ -47,13 +45,23 @@ namespace Score.ContentSearch.Algolia
         {
             get
             {
-                DateTime d;
-                DateTime.TryParse(_propertyStore.Get(IndexProperties.LastUpdatedKey), out d);
-                return d;
+                if (_propertyStore == null)
+                {
+                    return DateTime.MinValue;
+                }
+
+                var isoDate = _propertyStore.Get(IndexProperties.LastUpdatedKey);
+
+                if (isoDate.Length <= 0)
+                {
+                    return DateUtil.IsoDateToDateTime(isoDate, DateTime.MinValue);
+                }
+
+                return DateUtil.IsoDateToDateTime(isoDate, DateTime.MinValue, true);
             }
             set
             {
-                _propertyStore.Set(IndexProperties.LastUpdatedKey, value.ToString(CultureInfo.InvariantCulture));
+                _propertyStore?.Set(IndexProperties.LastUpdatedKey, DateUtil.ToIsoDate(value, true, true));
             }
         }
 
@@ -67,12 +75,29 @@ namespace Score.ContentSearch.Algolia
         public int NumberOfBadSegments => 0;
         public bool OutOfDateIndex { get; private set; }
         public IDictionary<string, string> UserData { get; private set; }
-        public long? LastUpdatedTimestamp { get; set; }
+
+        public long? LastUpdatedTimestamp
+        {
+            get
+            {
+                var s = _propertyStore.Get(IndexProperties.LastUpdatedTimestamp);
+                if (string.IsNullOrEmpty(s))
+                {
+                    return new long?();
+                }
+                return long.Parse(s, CultureInfo.InvariantCulture);
+            }
+            set
+            {
+                var str = value?.ToString(CultureInfo.InvariantCulture) ?? string.Empty;
+                _propertyStore.Set(IndexProperties.LastUpdatedTimestamp, str);
+            }
+        }
 
 
-        private IIndexableInfo lastIndexedEntry;
+        private IndexableInfo lastIndexedEntry;
 
-        public IIndexableInfo LastIndexedEntry
+        public IndexableInfo LastIndexedEntry
         {
             get
             {

@@ -8,7 +8,6 @@ using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.ComputedFields;
 using Sitecore.ContentSearch.Diagnostics;
 using Sitecore.Data.Items;
-using Sitecore.Diagnostics;
 
 namespace Score.ContentSearch.Algolia
 {
@@ -26,9 +25,7 @@ namespace Score.ContentSearch.Algolia
             }
         }
 
-        #region AbstractDocumentBuilder
-
-        public override void AddSpecialFields()
+        protected override void AddSpecialFields()
         {
             var item = (Item)(this.Indexable as SitecoreIndexableItem);
             this.AddSpecialField("objectID", item.Language.Name + "_" + item.ID.ToGuid(), false);
@@ -76,9 +73,7 @@ namespace Score.ContentSearch.Algolia
             this.AddField("_tags", new List<string> { "id_" + this.Indexable.Id });
         }
 
-        #region AddField
-
-        public override void AddField(IIndexableDataField field)
+        protected override void AddField(IIndexableDataField field)
         {
             if (!ShouldAddField(field))
             {
@@ -94,7 +89,7 @@ namespace Score.ContentSearch.Algolia
             AddField(field.Name, value);
         }
 
-        public override void AddField(string fieldName, object fieldValue, bool append = false)
+        protected override void AddField(string fieldName, object fieldValue, bool append = false)
         {
             //Empty values should be skipped
             if (AddFieldAsEmpty(fieldName, fieldValue, append))
@@ -186,7 +181,7 @@ namespace Score.ContentSearch.Algolia
 
                 if (Document.Property(fieldName) != null)
                 {
-                    CrawlingLog.Log.Error($"Skipped duplicated filed '{fieldName}' in document '{Indexable.Id}'");
+                    CrawlingLog.Log.Error($"Skipped duplicated field '{fieldName}' in document '{Indexable.Id}'");
                     return true;
                 }
                 Document.Add(fieldName, array);
@@ -226,16 +221,14 @@ namespace Score.ContentSearch.Algolia
             return false;
         }
 
-        #endregion
-
-        public override void AddBoost()
+        protected override void AddBoost()
         {
             //Algolia manages boost in GUI
         }
 
-        public override void AddComputedIndexFields()
+        protected override void AddComputedIndexField(IComputedIndexField computedIndexField, object fieldValue)
         {
-            foreach (IComputedIndexField current in base.Options.ComputedIndexFields)
+            foreach (IComputedIndexField current in Options.ComputedIndexFields)
             {
                 var siteSpecificField = current as ISiteSpecificField;
                 if (siteSpecificField != null)
@@ -248,10 +241,10 @@ namespace Score.ContentSearch.Algolia
                     }
                 }
 
-                object obj;
+                object computedFieldValue;
                 try
                 {
-                    obj = current.ComputeFieldValue(base.Indexable);
+                    computedFieldValue = current.ComputeFieldValue(Indexable);
                 }
                 catch (Exception exception)
                 {
@@ -265,17 +258,9 @@ namespace Score.ContentSearch.Algolia
                     continue;
                 }
 
-                this.AddField(current.FieldName, obj, false);
+                this.AddField(current.FieldName, computedFieldValue, false);
             }
         }
-
-#if (SITECORE8)
-#else
-    public override void AddProviderCustomFields()
-         {
-            //no logic so far
-        }
-#endif
 
         public virtual void GenerateTags()
         {
@@ -285,11 +270,9 @@ namespace Score.ContentSearch.Algolia
             _tagsProcessor.ProcessDocument(Document);
         }
 
-        #endregion
-
         private bool ShouldAddField(IIndexableDataField field)
         {
-            if (!base.Index.Configuration.IndexAllFields)
+            if (!base.Index.Configuration.DocumentOptions.IndexAllFields)
             {
                 if (field.Value == null)
                 {

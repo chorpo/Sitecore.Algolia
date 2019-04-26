@@ -1,24 +1,27 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Score.ContentSearch.Algolia.Abstract;
 using Score.ContentSearch.Algolia.Extensions;
+using Sitecore.Abstractions;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Diagnostics;
 using Sitecore.ContentSearch.Linq.Common;
-using Sitecore.Data;
-#if (SITECORE8)
 using Sitecore.ContentSearch.Sharding;
-#endif
+using Sitecore.Data;
 
 namespace Score.ContentSearch.Algolia
 {
-    public class AlgoliaUpdateContext: IProviderUpdateContext
+    public class AlgoliaUpdateContext: IProviderUpdateContext, ITrackingIndexingContext
     {
         private readonly ISearchIndex _index;
         private readonly IAlgoliaRepository _repository;
+        private readonly IEvent _events;
+        private volatile bool _isDisposed;
+        private volatile bool _isDisposing;
 
         /// <summary>
         /// Items that needs to be Updated in Index
@@ -29,6 +32,11 @@ namespace Score.ContentSearch.Algolia
         /// Items that needs to be deleted in Index
         /// </summary>
         private readonly List<ID> _deleteIds;
+
+        public ConcurrentDictionary<IIndexableUniqueId, object> Processed
+        {
+            get; set;
+        }
 
         public AlgoliaUpdateContext(
             ISearchIndex index,
@@ -42,20 +50,31 @@ namespace Score.ContentSearch.Algolia
 
             _updateDocs = new Dictionary<string, JObject>();
             _deleteIds = new List<ID>();
+            Processed = new ConcurrentDictionary<IIndexableUniqueId, object>();
+            CommitPolicyExecutor = new NullCommitPolicyExecutor();
+            _events = _index.Locator.GetInstance<IEvent>();
         }
 
         #region IProviderUpdateContext
 
         public void Dispose()
         {
-            
+            if (_isDisposed)
+                return;
+            lock (this)
+            {
+                _isDisposing = true;
+                _isDisposed = true;
+            }
+            CrawlingLog.Log.Debug($"Algolia: Disposed");
         }
 
         public void Commit()
         {
-            CrawlingLog.Log.Debug("   Starting Algolia Commit");
+            CrawlingLog.Log.Debug("Starting Algolia Commit");
             var data = _updateDocs.Select(t => t.Value).ToList();
             CrawlingLog.Log.Debug($"Have {data.Count} documents to to Update");
+            _events.RaiseEvent("indexing:committing", _index.Name);
             var chunks = data.ChunkBy(100).ToList();
             CrawlingLog.Log.Debug($"Documents split into {chunks.Count} Chunks");
             chunks.ForEach(chunk => _repository.SaveObjectsAsync(chunk).Wait());
@@ -68,6 +87,8 @@ namespace Score.ContentSearch.Algolia
                 _repository.DeleteAllObjByTag("id_" + id).Wait();
             }
             _deleteIds.Clear();
+            CommitPolicyExecutor.Committed();
+            _events.RaiseEvent("indexing:committed", _index.Name);
             CrawlingLog.Log.Info($"Update Context Committed: {data.Count} updated, {stringsToDelete.Count} deleted");
         }
 
@@ -88,14 +109,32 @@ namespace Score.ContentSearch.Algolia
 
         public void UpdateDocument(object itemToUpdate, object criteriaForUpdate, IExecutionContext executionContext)
         {
+            if (_isDisposed || _isDisposing)
+            {
+                CrawlingLog.Log.Debug($"Algolia: cannot update doc, disposed");
+                return;
+            }
+
             var doc = itemToUpdate as JObject;
 
             if (doc == null)
+            {
+                CrawlingLog.Log.Debug($"Algolia: doc is null, not adding");
                 throw new Exception("Context only can save JObjects");
+            }
 
             var id = GetItemId(doc);
 
+            CrawlingLog.Log.Debug($"Algolia: Keeping doc {doc}");
             KeepDocForIndexUpdate(id, doc);
+
+            var job = Sitecore.Context.Job;
+            if (job == null)
+            {
+                return;
+            }
+            ++job.Status.Processed;
+            CommitPolicyExecutor.IndexModified(this, itemToUpdate, IndexOperation.Update);
         }
 
         public void UpdateDocument(object itemToUpdate, object criteriaForUpdate,
@@ -107,11 +146,13 @@ namespace Score.ContentSearch.Algolia
         public void Delete(IIndexableUniqueId id)
         {
             _deleteIds.Add(id.Value as ID);
+            CommitPolicyExecutor.IndexModified(this, id, IndexOperation.Delete);
         }
 
         public void Delete(IIndexableId id)
         {
             _deleteIds.Add(id.Value as ID);
+            CommitPolicyExecutor.IndexModified(this, id, IndexOperation.Delete);
         }
 
         public bool IsParallel { get; private set; }
@@ -121,14 +162,7 @@ namespace Score.ContentSearch.Algolia
 
         public ICommitPolicyExecutor CommitPolicyExecutor { get; private set; }
 
-#if (SITECORE8)
         public IEnumerable<Shard> ShardsWithPendingChanges { get; private set; }
-#endif
-
-        #endregion
-
-
-        #region Helpers
 
         private static string GetItemId(JObject item)
         {
@@ -148,6 +182,16 @@ namespace Score.ContentSearch.Algolia
             {
                 _updateDocs.Add(id, item);
             }
+        }
+
+        public void Delete(IIndexableUniqueId id, params IExecutionContext[] executionContexts)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(IIndexableId id, params IExecutionContext[] executionContexts)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

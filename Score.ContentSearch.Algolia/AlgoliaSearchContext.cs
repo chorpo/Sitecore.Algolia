@@ -9,8 +9,12 @@ using Sitecore.Diagnostics;
 
 namespace Score.ContentSearch.Algolia
 {
-    public class AlgoliaSearchContext: IProviderSearchContext
+    public class AlgoliaSearchContext : IProviderSearchContext
     {
+        public ISearchIndex Index { get; private set; }
+        public bool ConvertQueryDatesToUtc { get; set; }
+        public SearchSecurityOptions SecurityOptions { get; private set; }
+
         public AlgoliaSearchContext(AlgoliaBaseIndex index,
             SearchSecurityOptions securityOptions = SearchSecurityOptions.EnableSecurityCheck)
         {
@@ -22,45 +26,31 @@ namespace Score.ContentSearch.Algolia
 
         public void Dispose()
         {
-            
+            GC.SuppressFinalize(this);
         }
 
         public IQueryable<TItem> GetQueryable<TItem>()
         {
-            return GetQueryable<TItem>((IExecutionContext)null);
+            return this.GetQueryable<TItem>(Array.Empty<IExecutionContext>());
         }
 
         public IQueryable<TItem> GetQueryable<TItem>(IExecutionContext executionContext)
         {
-            var index = new LinqToAlgoliaIndex<TItem>(this, executionContext);
-            return index.GetQueryable();
+            return this.GetQueryable<TItem>(new IExecutionContext[1]
+                  {
+                    executionContext
+                  });
         }
-
-        //public IQueryable<TItem> GetQueryable<TItem>(IExecutionContext executionContext) where TItem : new()
-        //{
-        //    var index = new LinqToXmlIndex<TItem>(this, executionContext);
-        //    //START: logging
-        //    if (ContentSearchConfigurationSettings.EnableSearchDebug)
-        //    {
-        //        var writeable = (IHasTraceWriter)index;
-        //        writeable.TraceWriter = new LoggingTraceWriter(SearchLog.Log);
-        //    }
-        //    //END: logging
-        //    return index.GetQueryable();
-        //}
 
         public IQueryable<TItem> GetQueryable<TItem>(params IExecutionContext[] executionContexts)
         {
-            throw new NotImplementedException();
+            var instance = new LinqToAlgoliaIndex<TItem>(this, executionContexts);
+            return instance.GetQueryable();
         }
 
         public IEnumerable<SearchIndexTerm> GetTermsByFieldName(string fieldName, string prefix)
         {
-            throw new NotImplementedException();
-        }
-
-        public ISearchIndex Index { get; private set; }
-        public bool ConvertQueryDatesToUtc { get; set; }
-        public SearchSecurityOptions SecurityOptions { get; private set; }
+            yield break;
+        }        
     }
 }

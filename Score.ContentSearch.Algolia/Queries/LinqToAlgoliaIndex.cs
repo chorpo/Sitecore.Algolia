@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using Score.ContentSearch.Algolia.Abstract;
+using Score.ContentSearch.Algolia.Converters;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Diagnostics;
 using Sitecore.ContentSearch.Linq.Common;
+using Sitecore.ContentSearch.Linq.Factories;
 using Sitecore.ContentSearch.Linq.Indexing;
 using Sitecore.ContentSearch.Linq.Parsing;
 using Sitecore.ContentSearch.Security;
@@ -15,21 +17,22 @@ namespace Score.ContentSearch.Algolia.Queries
     public class LinqToAlgoliaIndex<TItem> : Index<TItem, AlgoliaQuery>
     {
         private readonly AlgoliaSearchContext _context;
+        private readonly IExecutionContext[] _executionContexts;
         private readonly IAlgoliaRepository _repository;
         private readonly ProviderIndexConfiguration _configuration;
         private readonly AlgoliaQueryOptimizer _queryOptimizer;
         private readonly AlgoliaQueryMapper _mapper;
         private readonly AbstractFieldNameTranslator _fieldNameTranslator;
 
-        public LinqToAlgoliaIndex(AlgoliaSearchContext context) : this(context, null)
-        {
-        }
-
         public LinqToAlgoliaIndex(AlgoliaSearchContext context,
-            IExecutionContext executionContext)
+            IExecutionContext[] executionContexts)
+            : base(new AlgoliaQueryOptimizer(), new AlgoliaQueryMapper(), context.Index.FieldNameTranslator, new AlgoliaIndexFieldStorageValueFormatter(), new DefaultQueryableFactory(), new ExpressionParser(typeof(TItem), typeof(TItem), context.Index.FieldNameTranslator))
         {
             Assert.ArgumentNotNull(context, "context");
+            Assert.ArgumentNotNull(executionContexts, "executionContexts");
+
             _context = context;
+            _executionContexts = executionContexts;
 
             var index = context.Index as AlgoliaBaseIndex;
 
@@ -43,28 +46,16 @@ namespace Score.ContentSearch.Algolia.Queries
             _fieldNameTranslator = context.Index.FieldNameTranslator;
         }
 
-        //public override IQueryable<TItem> GetQueryable()
-        //{
-        //    IQueryable<TItem> queryable = new GenericQueryable<TItem, AlgoliaQuery>(this, this.QueryMapper, this.QueryOptimizer, this.FieldNameTranslator);
-        //    //(queryable as IHasTraceWriter).TraceWriter = this.TraceWriter;
-        //    foreach (IPredefinedQueryAttribute predefinedQueryAttribute in 
-        //        GetTypeInheritanceEx(typeof(TItem))
-        //        .SelectMany((t => t.GetCustomAttributes(typeof(IPredefinedQueryAttribute), true)
-        //            .Cast<IPredefinedQueryAttribute>())).ToList())
-        //        queryable = predefinedQueryAttribute.ApplyFilter(queryable, ValueFormatter);
-        //    return queryable;
-        //}
-
-        //private IEnumerable<Type> GetTypeInheritanceEx(Type type)
-        //{
-        //    yield return type;
-        //    for (Type baseType = type.BaseType; baseType != (Type)null; baseType = baseType.BaseType)
-        //        yield return baseType;
-        //}
+        private IEnumerable<Type> GetTypeInheritanceEx(Type type)
+        {
+            yield return type;
+            for (Type baseType = type.BaseType; baseType != (Type)null; baseType = baseType.BaseType)
+                yield return baseType;
+        }
 
         public override TResult Execute<TResult>(AlgoliaQuery query)
         {
-            return default(TResult); 
+            return default(TResult);
         }
 
         public override IEnumerable<TElement> FindElements<TElement>(AlgoliaQuery query)
@@ -85,8 +76,7 @@ namespace Score.ContentSearch.Algolia.Queries
                     if (jobj == null)
                         throw new Exception("Wrong type");
 
-                    yield return   new DefaultAlgoliaDocumentTypeMapper().MapToType<TElement>(jobj, null, null, 
-                        SearchSecurityOptions.DisableSecurityCheck);
+                    yield return new DefaultAlgoliaDocumentTypeMapper().MapToType<TElement>(jobj, null, null, _executionContexts, SearchSecurityOptions.DisableSecurityCheck);
                 }
             }
         }

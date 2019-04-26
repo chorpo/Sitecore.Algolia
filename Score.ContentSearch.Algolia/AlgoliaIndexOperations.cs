@@ -1,9 +1,12 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
 using Score.ContentSearch.Algolia.Abstract;
+using Sitecore.Abstractions;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Diagnostics;
 using Sitecore.ContentSearch.Linq.Common;
+using Sitecore.ContentSearch.Pipelines.CleanUp;
+using Sitecore.ContentSearch.Pipelines.IndexingFilters;
 using Sitecore.Diagnostics;
 using Sitecore.Events;
 using Sitecore.Reflection;
@@ -83,15 +86,23 @@ namespace Score.ContentSearch.Algolia
 
         private JObject BuildDataToIndex(IProviderUpdateContext context, IIndexable version)
         {
+            var instance = context.Index.Locator.GetInstance<ICorePipeline>();
+            version = CleanUpPipeline.Run(instance, new CleanUpArgs(version, context));
+            if (InboundIndexFilterPipeline.Run(instance, new InboundIndexFilterArgs(version)))
+            {
+                Event.RaiseEvent("indexing:excludedfromindex", _index.Name, version.UniqueId);
+                return null;
+            }
+
             //bool flag = InboundIndexFilterPipeline.Run(context.Index.Locator.GetInstance<ICorePipeline>(), new InboundIndexFilterArgs(version));
             //if (flag)
             //{
-                //this.events.RaiseEvent("indexing:excludedfromindex", new object[]
-                //{
-                //    this.index.Name,
-                //    version.UniqueId
-                //});
-                //return null;
+            //this.events.RaiseEvent("indexing:excludedfromindex", new object[]
+            //{
+            //    this.index.Name,
+            //    version.UniqueId
+            //});
+            //return null;
             //}
             var indexData = this.GetIndexData(version, context);
             //if (indexData.IsEmpty)
@@ -116,12 +127,14 @@ namespace Score.ContentSearch.Algolia
             var documentBuilder = CreateDocumentBuilder(indexable, context);
             AssignCustomOptions(_index.Configuration as IIndexCustomOptions, documentBuilder as IIndexCustomOptions);
 
-            documentBuilder.AddSpecialFields();
-            documentBuilder.AddItemFields();
-            documentBuilder.AddComputedIndexFields();
-            //Sitecore8 does not implement this
-            //documentBuilder.AddProviderCustomFields();
-            documentBuilder.AddBoost();
+            //documentBuilder.AddSpecialFields();
+            //documentBuilder.AddItemFields();
+            //documentBuilder.AddComputedIndexFields();
+            ////Sitecore8 does not implement this
+            ////documentBuilder.AddProviderCustomFields();
+            //documentBuilder.AddBoost();
+
+            documentBuilder.BuildDocument();
 
             var algoliaDocumentBuilder = documentBuilder as AlgoliaDocumentBuilder;
             algoliaDocumentBuilder?.GenerateTags();

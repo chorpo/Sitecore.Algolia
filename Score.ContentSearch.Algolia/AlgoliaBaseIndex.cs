@@ -7,16 +7,16 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Score.ContentSearch.Algolia.Abstract;
+using Score.ContentSearch.Algolia.Factories;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Diagnostics;
+using Sitecore.ContentSearch.Events;
 using Sitecore.ContentSearch.Maintenance;
 using Sitecore.ContentSearch.Maintenance.Strategies;
 using Sitecore.ContentSearch.Security;
-
-#if (SITECORE8)
 using Sitecore.ContentSearch.Sharding;
-#endif
-
+using Sitecore.Eventing;
+using Sitecore.Events;
 
 namespace Score.ContentSearch.Algolia
 {
@@ -26,28 +26,32 @@ namespace Score.ContentSearch.Algolia
         protected object IndexUpdateLock = new object();
         private const string LogPreffix = "AlgoliaIndexOperations: ";
 
+        private readonly HashSet<IIndexUpdateStrategy> _strategies = new HashSet<IIndexUpdateStrategy>();
+
         public AlgoliaBaseIndex(string name, IAlgoliaRepository repository)
+            : base(new AlgoliaContextFactory(), null)
         {
-            if (repository == null) throw new ArgumentNullException(nameof(repository));
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentOutOfRangeException(nameof(name));
 
             Name = name;
 
-            _repository = repository;
-            this.Strategies = new List<IIndexUpdateStrategy>();
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
         private ISearchIndexSummary _summary;
         private readonly ISearchIndexSchema schema;
 
-
-        public List<IIndexUpdateStrategy> Strategies { get; private set; }
+        public override IEnumerable<IIndexUpdateStrategy> UpdateStrategies
+        {
+            get
+            {
+                return (IEnumerable<IIndexUpdateStrategy>)this._strategies;
+            }
+        }
 
         public string Site { get; set; }
 
         public IAlgoliaRepository Repository => _repository;
-
-        #region ISearchIndex
 
         public override void AddCrawler(IProviderCrawler crawler)
         {
@@ -73,15 +77,11 @@ namespace Score.ContentSearch.Algolia
         {
             CrawlingLog.Log.Debug($"{LogPreffix} {Name} PerformRebuild()");
 
-#if (SITECORE8)
-            CrawlingLog.Log.Debug($"PerformRebuild - Disposed - {isDisposed}", null);
-            CrawlingLog.Log.Debug($"PerformRebuild - Initialized - {initialized}", null);
-#endif
-
             if (!base.ShouldStartIndexing(indexingOptions))
             {
                 return;
             }
+
             lock (this.GetFullRebuildLockObject())
             {
                 using (IProviderUpdateContext providerUpdateContext = this.CreateFullRebuildContext())
@@ -104,8 +104,9 @@ namespace Score.ContentSearch.Algolia
 
         public override void AddStrategy(IIndexUpdateStrategy strategy)
         {
+            Sitecore.Diagnostics.Assert.IsNotNull((object)strategy, "The strategy cannot be null");
             strategy.Initialize(this);
-            this.Strategies.Add(strategy);
+            this._strategies.Add(strategy);
         }
 
         public override void Rebuild()
@@ -142,7 +143,7 @@ namespace Score.ContentSearch.Algolia
             stopwatch.Stop();
             if ((base.IndexingState & IndexingState.Stopped) != IndexingState.Stopped)
             {
-                this. PropertyStore.Set(IndexProperties.RebuildTime, stopwatch.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture));
+                this.PropertyStore.Set(IndexProperties.RebuildTime, stopwatch.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture));
             }
         }
 
@@ -192,6 +193,17 @@ namespace Score.ContentSearch.Algolia
 
         public override void Update(IEnumerable<IIndexableUniqueId> indexableUniqueIds, IndexingOptions indexingOptions)
         {
+            if (!ShouldStartIndexing(indexingOptions))
+                return;
+
+            CrawlingLog.Log.Debug($"Algolia: Updating {indexableUniqueIds.Count()} with indexing options {indexingOptions}");
+            Event.RaiseEvent("indexing:start", (object)this.Name, (object)false);
+            IndexingStartedEvent indexingStartedEvent = new IndexingStartedEvent();
+            indexingStartedEvent.IndexName = this.Name;
+            indexingStartedEvent.FullRebuild = false;
+            EventManager.QueueEvent<IndexingStartedEvent>(indexingStartedEvent);
+
+
             using (var context = this.CreateUpdateContext())
             {
                 foreach (var crawler in this.Crawlers)
@@ -203,6 +215,13 @@ namespace Score.ContentSearch.Algolia
                 }
                 context.Commit();
             }
+
+            Event.RaiseEvent("indexing:end", (object)this.Name, (object)false);
+            IndexingFinishedEvent indexingFinishedEvent = new IndexingFinishedEvent();
+            indexingFinishedEvent.IndexName = this.Name;
+            indexingFinishedEvent.FullRebuild = false;
+            EventManager.QueueEvent<IndexingFinishedEvent>(indexingFinishedEvent);
+            CrawlingLog.Log.Debug($"Algolia: End Updating {indexableUniqueIds.Count()} with indexing options {indexingOptions}");
         }
 
         public override void Update(IEnumerable<IndexableInfo> indexableInfo)
@@ -246,22 +265,30 @@ namespace Score.ContentSearch.Algolia
 
         public override void Reset()
         {
-            
+
         }
 
         public override void Initialize()
         {
-            _summary = new AlgoliaSearchIndexSummary(_repository, PropertyStore);
-
-            var config = this.Configuration as AlgoliaIndexConfiguration;
-            if (config == null)
+            try
             {
-                throw new ConfigurationErrorsException("Index has no configuration.");
+                _summary = new AlgoliaSearchIndexSummary(_repository, PropertyStore);
+
+                var config = this.Configuration as AlgoliaIndexConfiguration;
+                if (config == null)
+                {
+                    throw new ConfigurationErrorsException("Index has no configuration.");
+                }
+
+                initialized = true;
+                Sitecore.Diagnostics.Log.Info(string.Format("Algolia Provider is initialized for index {0}", Name), this);
             }
-           
-#if SITECORE8
-            initialized = true;
-#endif
+            catch (Exception ex)
+            {
+                initialized = false;
+                Sitecore.Diagnostics.Log.Info(string.Format("Initialization failed for index {0}", Name), this);
+            }
+
         }
 
         public override IProviderUpdateContext CreateUpdateContext()
@@ -290,49 +317,48 @@ namespace Score.ContentSearch.Algolia
         public override ProviderIndexConfiguration Configuration { get; set; }
         public override IIndexOperations Operations => new AlgoliaIndexOperations(this);
 
+        public override bool EnableItemLanguageFallback {
+            get { return false; }
 
-#if (SITECORE8)
-        public override bool IsSharded
-        {
-            get { return false;}
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
 
+        public override bool EnableFieldLanguageFallback {
+            get { return false; }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
         public override IShardingStrategy ShardingStrategy { get; set; }
 
         public override IShardFactory ShardFactory
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                return (IShardFactory)null;
+            }
         }
 
         public override IEnumerable<Shard> Shards
         {
-            get { throw new NotImplementedException(); }
-        }
-#endif
-
-#if SITECORE81
-        public override bool EnableItemLanguageFallback
-        {
-            get { return false; }
-
-            set
+            get
             {
-                throw new NotImplementedException();
+                yield break;
             }
         }
 
-        public override bool EnableFieldLanguageFallback
+        public override bool IsSharded
         {
-            get { return false; }
-
-            set
+            get
             {
-                throw new NotImplementedException();
+                return false;
             }
         }
-#endif
-
-        #endregion
 
         protected virtual void DoRebuild(IndexingOptions indexingOptions)
         {
