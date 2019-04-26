@@ -16,11 +16,5 @@ namespace Score.ContentSearch.Algolia
         {
             throw new NotImplementedException();
         }
-
-        [Obsolete]
-        protected override void ReadDocumentFields<TElement>(JObject document, IEnumerable<string> fieldNames, DocumentTypeMapInfo documentTypeMapInfo, IEnumerable<Sitecore.ContentSearch.Linq.Common.IFieldQueryTranslator> virtualFieldProcessors, TElement result)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

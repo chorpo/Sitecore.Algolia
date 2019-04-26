@@ -2,7 +2,7 @@
 
 namespace Score.ContentSearch.Algolia
 {
-    public class AlgoliaConfig: IAlgoliaConfig
+    public class AlgoliaConfig : IAlgoliaConfig
     {
         public string ApplicationId { get; set; }
         public string SearchApiKey { get; set; }

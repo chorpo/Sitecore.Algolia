@@ -6,7 +6,6 @@ using Algolia.Search;
 using Newtonsoft.Json.Linq;
 using Score.ContentSearch.Algolia.Abstract;
 using Score.ContentSearch.Algolia.Dto;
-using Sitecore.Common;
 
 namespace Score.ContentSearch.Algolia
 {
