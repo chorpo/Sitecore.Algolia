@@ -19,7 +19,10 @@ namespace Score.ContentSearch.Algolia.ComputedFields
             var item = (SitecoreIndexableItem)indexable;
 
             if (UrlOptions == null)
+            {
                 UrlOptions = UrlOptions.DefaultOptions;
+                UrlOptions.AlwaysIncludeServerUrl = true;
+            }
 
             AdjustOptions(item);
 
