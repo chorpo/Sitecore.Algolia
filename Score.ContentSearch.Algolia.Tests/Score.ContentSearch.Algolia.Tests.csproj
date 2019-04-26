@@ -167,8 +167,10 @@
     <None Include="packages.config" />
     <None Include="SampleConfiguration\AlgoliaTestConfiguration.Sc8.config" />
     <None Include="SampleConfiguration\AlgoliaTestConfiguration.Sc81.config" />
+	<None Include="SampleConfiguration\AlgoliaTestConfiguration.Sc91.config" />
     <None Include="SampleConfiguration\AlgoliaTestIndex.Sc7.config" />
     <None Include="SampleConfiguration\AlgoliaTestIndex.Sc8.config" />
+	<None Include="SampleConfiguration\AlgoliaTestIndex.Sc91.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="license.xml">
