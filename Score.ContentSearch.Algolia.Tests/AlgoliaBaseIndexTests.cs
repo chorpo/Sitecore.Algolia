@@ -72,7 +72,7 @@ namespace Score.ContentSearch.Algolia.Tests
                 sut.PropertyStore = new NullPropertyStore();
                 var configuration = new AlgoliaIndexConfiguration();
                 configuration.DocumentOptions = new DocumentBuilderOptions();
-                configuration.ExcludeTemplate(TestData.TestTemplateId.ToString());
+                configuration.DocumentOptions.AddExcludedTemplate(TestData.TestTemplateId.ToString());
 
                 sut.Configuration = configuration;
                 var crawler = new SitecoreItemCrawler();
@@ -106,7 +106,7 @@ namespace Score.ContentSearch.Algolia.Tests
                 sut.PropertyStore = new NullPropertyStore();
                 var configuration = new AlgoliaIndexConfiguration();
                 configuration.DocumentOptions = new DocumentBuilderOptions();
-                configuration.IncludeTemplate(TestData.TestTemplateId.ToString());
+                configuration.DocumentOptions.AddIncludedTemplate(TestData.TestTemplateId.ToString());
 
                 sut.Configuration = configuration;
                 var crawler = new SitecoreItemCrawler();
@@ -141,7 +141,7 @@ namespace Score.ContentSearch.Algolia.Tests
                 var configuration = new AlgoliaIndexConfiguration();
                 configuration.DocumentOptions = new DocumentBuilderOptions();
                 //Our Template should be exluded in IncludeTemplate is not empty
-                configuration.IncludeTemplate(ID.NewID.ToString());
+                configuration.DocumentOptions.AddIncludedTemplate(ID.NewID.ToString());
 
                 sut.Configuration = configuration;
                 var crawler = new SitecoreItemCrawler();
