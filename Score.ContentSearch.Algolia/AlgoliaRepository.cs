@@ -31,7 +31,7 @@ namespace Score.ContentSearch.Algolia
 
         public Task<JObject> AddObjectAsync(object content, string objectId = null)
         {
-            var result = _index.AddObjectAsync(content, objectId);
+            var result = _index.AddObjectAsync(content);
             return result;
         }
 
